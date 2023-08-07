@@ -11,12 +11,21 @@ import (
 // Md5 获取md5值
 //
 // elem: string, []byte
-func Md5(elem any) (string, error) {
+// salt: 加盐
+func Md5(elem any, salt ...string) (string, error) {
 	switch elem.(type) {
 	case string:
-		return fmt.Sprintf("%x", md5.Sum([]byte(elem.(string)))), nil
+		data := elem.(string)
+		for _, v := range salt {
+			data += v
+		}
+		return fmt.Sprintf("%x", md5.Sum([]byte(data))), nil
 	case []byte:
-		return fmt.Sprintf("%x", md5.Sum(elem.([]byte))), nil
+		data := elem.([]byte)
+		for _, v := range salt {
+			data = append(data, []byte(v)...)
+		}
+		return fmt.Sprintf("%x", md5.Sum(data)), nil
 	default:
 		return "", errors.New("not support type")
 	}

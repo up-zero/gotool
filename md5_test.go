@@ -6,7 +6,9 @@ import (
 
 func TestMd5(t *testing.T) {
 	t.Log(Md5("123456"))                           // e10adc3949ba59abbe56e057f20f883e
+	t.Log(Md5("1234", "5", "6"))                   // e10adc3949ba59abbe56e057f20f883e
 	t.Log(Md5([]byte("123456")))                   // e10adc3949ba59abbe56e057f20f883e
+	t.Log(Md5([]byte("1234"), "5", "6"))           // e10adc3949ba59abbe56e057f20f883e
 	t.Log(Md5("e10adc3949ba59abbe56e057f20f883e")) // 14e1b600b1fd579f47433b88e8d85291
 }
 

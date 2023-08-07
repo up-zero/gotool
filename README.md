@@ -10,4 +10,25 @@ go get -u github.com/up-zero/gotool
 
 ## 快速开始
 
+例如 `Md5()` 方法，使用方式如下所示，其它方法参考功能列表及其测试案例。
 
+```go
+package main
+
+import "github.com/up-zero/gotool"
+import "log"
+
+func main() {
+	data, err := gotool.Md5("123456")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println(data)
+}
+```
+
+## 功能列表
+
++ **Md5** 获取md5值
++ **Md5Iterations** 迭代多次求md5
++ **Md5File** 获取文件的MD5
