@@ -34,3 +34,4 @@ func main() {
 + **Md5File** 获取文件的MD5
 + **FileCopy** 文件拷贝
 + **FileDownload** 文件下载
++ **DirCopy** 绝对目录文件拷贝
