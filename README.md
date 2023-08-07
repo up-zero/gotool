@@ -32,3 +32,5 @@ func main() {
 + **Md5** 获取md5值
 + **Md5Iterations** 迭代多次求md5
 + **Md5File** 获取文件的MD5
++ **FileCopy** 文件拷贝
++ **FileDownload** 文件下载

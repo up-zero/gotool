@@ -2,7 +2,6 @@ package gotool
 
 import (
 	"crypto/md5"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -27,7 +26,7 @@ func Md5(elem any, salt ...string) (string, error) {
 		}
 		return fmt.Sprintf("%x", md5.Sum(data)), nil
 	default:
-		return "", errors.New("not support type")
+		return "", ErrNotSupportType
 	}
 }
 
