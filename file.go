@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 )
 
 // FileCopy 文件拷贝
@@ -63,4 +64,43 @@ func FileDownload(url, filePath string) error {
 		return err
 	}
 	return nil
+}
+
+// FileCount 获取指定目录下的文件个数
+//
+// dir 目录路径
+//
+// Examples:
+//
+//	gotool.FileCount("/home/xxx") // 指定目录的文件个数
+//	gotool.FileCount("/home/xxx", ".jpg") // 指定目录的指定后缀名的文件个数
+//	gotool.FileCount("/home/xxx", ".jpg", ".png") // 指定目录的多个后缀名的文件个数
+func FileCount(dir string, args ...string) (int, error) {
+	var cnt = 0
+	var suffix = make(map[string]struct{})
+	fileInfo, err := os.Stat(dir)
+	if err != nil {
+		return cnt, err
+	}
+	if !fileInfo.IsDir() {
+		return cnt, ErrNotIsDir
+	}
+	if len(args) > 0 {
+		for _, v := range args {
+			suffix[v] = struct{}{}
+		}
+	}
+	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			if len(suffix) == 0 {
+				cnt++
+			} else {
+				if _, ok := suffix[filepath.Ext(path)]; ok {
+					cnt++
+				}
+			}
+		}
+		return nil
+	})
+	return cnt, nil
 }

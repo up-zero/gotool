@@ -35,3 +35,4 @@ func main() {
 + **FileCopy** 文件拷贝
 + **FileDownload** 文件下载
 + **DirCopy** 绝对目录文件拷贝
++ **FileCount** 获取指定目录下的文件个数
