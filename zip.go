@@ -16,7 +16,7 @@ func Zip(dest, src string) error {
 	return ZipWithNotify(dest, src, nil)
 }
 
-// ZipWithNotify 文件夹压缩(带通知的)
+// ZipWithNotify 带通知的文件夹压缩
 //
 // destZip 压缩到的文件 例如：/var/xxx.zip
 // srcFile 源文件夹 例如：/var/xxx

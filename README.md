@@ -36,3 +36,5 @@ func main() {
 + **FileDownload** 文件下载
 + **DirCopy** 绝对目录文件拷贝
 + **FileCount** 获取指定目录下的文件个数
++ **Zip** 文件夹压缩
++ **ZipWithNotify** 带通知的文件夹压缩
