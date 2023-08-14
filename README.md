@@ -40,5 +40,7 @@ func main() {
 + **ZipWithNotify** 带通知的文件夹压缩
 + **Unzip** 文件解压
 + **UnzipWithNotify** 带通知的文件解压
-+ **RunShell** 运行shell命令或脚本
-+ **RunCommand** 运行命令
++ **ExecShell** 运行shell命令或脚本
++ **ExecCommand** 运行命令
++ **ExecShellWithNotify** 带通知的运行shell命令或脚本
++ **ExecCommandWithNotify** 带通知的运行命令
