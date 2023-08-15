@@ -44,3 +44,4 @@ func main() {
 + **ExecCommand** 运行命令
 + **ExecShellWithNotify** 带通知的运行shell命令或脚本
 + **ExecCommandWithNotify** 带通知的运行命令
++ **PsByName** 根据程序名查询进程列表
