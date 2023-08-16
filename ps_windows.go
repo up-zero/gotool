@@ -1,6 +1,7 @@
 package gotool
 
 import (
+	"os/exec"
 	"strings"
 )
 
@@ -34,10 +35,14 @@ func PsByName(name string) ([]Process, error) {
 		}
 	}()
 	err := ExecShellWithNotify(ch, "tasklist /NH /FO CSV | findstr /I "+name)
-	if err != nil {
+	finish <- struct{}{}
+	if exitErr, ok := err.(*exec.ExitError); ok {
+		if exitErr.ExitCode() != 1 {
+			return nil, err
+		}
+	} else {
 		return nil, err
 	}
-	finish <- struct{}{}
 
 	return processes, nil
 }

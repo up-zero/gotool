@@ -2,6 +2,11 @@
 
 package gotool
 
+import (
+	"regexp"
+	"strings"
+)
+
 // PsByName 根据程序名查询进程列表
 //
 // name: 程序名
@@ -32,10 +37,14 @@ func PsByName(name string) ([]Process, error) {
 		}
 	}()
 	err := ExecShellWithNotify(ch, "ps -e -o pid,ppid,cmd | grep '"+name+"'"+" | grep -v 'grep'")
-	if err != nil {
+	finish <- struct{}{}
+	if exitErr, ok := err.(*exec.ExitError); ok {
+		if exitErr.ExitCode() != 1 {
+			return nil, err
+		}
+	} else {
 		return nil, err
 	}
-	finish <- struct{}{}
 
 	return processes, nil
 }

@@ -2,6 +2,8 @@
 
 package gotool
 
+import "os/exec"
+
 // ExecShell 运行shell命令或脚本
 //
 // shell: shell 命令或脚本
