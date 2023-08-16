@@ -36,11 +36,11 @@ func PsByName(name string) ([]Process, error) {
 	}()
 	err := ExecShellWithNotify(ch, "tasklist /NH /FO CSV | findstr /I "+name)
 	finish <- struct{}{}
-	if exitErr, ok := err.(*exec.ExitError); ok {
-		if exitErr.ExitCode() != 1 {
-			return nil, err
+	if err != nil {
+		exitErr, ok := err.(*exec.ExitError)
+		if ok && exitErr.ExitCode() == 1 {
+			return processes, nil
 		}
-	} else {
 		return nil, err
 	}
 

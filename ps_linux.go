@@ -39,11 +39,11 @@ func PsByName(name string) ([]Process, error) {
 	}()
 	err := ExecShellWithNotify(ch, "ps -e -o pid,ppid,cmd | grep '"+name+"'"+" | grep -v 'grep'")
 	finish <- struct{}{}
-	if exitErr, ok := err.(*exec.ExitError); ok {
-		if exitErr.ExitCode() != 1 {
-			return nil, err
+	if err != nil {
+		exitErr, ok := err.(*exec.ExitError)
+		if ok && exitErr.ExitCode() == 1 {
+			return processes, nil
 		}
-	} else {
 		return nil, err
 	}
 
