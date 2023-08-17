@@ -46,5 +46,7 @@ func main() {
 + **ExecCommandWithNotify** 带通知的运行命令
 + **PsByName** 根据程序名查询进程列表
 + **HmacSHA256** 计算 SHA256
++ **HmacSHA384** 计算 HmacSHA384
++ **HmacSHA512** 计算 HmacSHA512
 + **JWTGenerate** 生成JWT
 + **JWTParse** 解析JWT
