@@ -50,3 +50,5 @@ func main() {
 + **HmacSHA512** 计算 HmacSHA512
 + **JWTGenerate** 生成JWT
 + **JWTParse** 解析JWT
++ **RFC3339ToNormalTime** RFC3339 日期格式标准化
++ **RFC1123ToNormalTime** RFC1123 日期格式标准化
