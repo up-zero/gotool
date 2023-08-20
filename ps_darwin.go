@@ -1,4 +1,4 @@
-//go:build linux
+//go:build darwin
 
 package gotool
 
@@ -27,7 +27,7 @@ func PsByName(name string) ([]Process, error) {
 				if len(fields) >= 3 {
 					ps := Process{
 						Pid:  fields[0],
-						PPid: fields[1],
+						PPid: "",
 						Cmd:  strings.Join(fields[2:], " "),
 					}
 					processes = append(processes, ps)
@@ -37,7 +37,7 @@ func PsByName(name string) ([]Process, error) {
 			}
 		}
 	}()
-	err := ExecShellWithNotify(ch, "ps -e -o pid,ppid,cmd | grep '"+name+"'"+" | grep -v 'grep'")
+	err := ExecShellWithNotify(ch, "pgrep -fl "+name+"")
 	finish <- struct{}{}
 	if err != nil {
 		exitErr, ok := err.(*exec.ExitError)
