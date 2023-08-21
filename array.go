@@ -16,3 +16,17 @@ func ArrayDuplicate[T int64 | int32 | int16 | int8 | int | string](elems ...[]T)
 	}
 	return ans
 }
+
+// ArrayIn 数组目标值是否存在的判断
+//
+// target 目标值
+// arr 待遍历的数组
+func ArrayIn[T int64 | int32 | int16 | int8 | int | uint | uint8 | uint16 | uint32 | uint64 | string |
+	bool | float64 | float32](target T, arr []T) bool {
+	for _, v := range arr {
+		if target == v {
+			return true
+		}
+	}
+	return false
+}
