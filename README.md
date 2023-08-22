@@ -53,4 +53,9 @@ func main() {
 + **RFC3339ToNormalTime** RFC3339 日期格式标准化
 + **RFC1123ToNormalTime** RFC1123 日期格式标准化
 + **If** 三元运算符
-+ **ArrayIn** 数组目标值是否存在的判断
++ **ArrayDuplicate** 数组去重
++ **ArrayIn** 数组是否包含某个值
++ **RandomStr** 随机字符串
++ **RandomNumber** 随机数字
++ **RandomAlpha** 随机字母
++ **RandomAlphaNumber** 随机字母数字

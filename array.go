@@ -17,7 +17,7 @@ func ArrayDuplicate[T int64 | int32 | int16 | int8 | int | string](elems ...[]T)
 	return ans
 }
 
-// ArrayIn 数组目标值是否存在的判断
+// ArrayIn 数组是否包含某个值
 //
 // target 目标值
 // arr 待遍历的数组
