@@ -59,3 +59,9 @@ func main() {
 + **RandomNumber** 随机数字
 + **RandomAlpha** 随机字母
 + **RandomAlphaNumber** 随机字母数字
++ **StrToInt64** 字符串转换为int64
++ **StrToUint64** 字符串转换为uint64
++ **StrToFloat64** 字符串转换为float64
++ **Int64ToStr** int64转换为字符串
++ **Uint64ToStr** uint64转换为字符串
++ **Float64ToStr** float64转换为字符串
