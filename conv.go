@@ -1,6 +1,9 @@
 package gotool
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 // StrToInt64 字符串转换为int64
 //
@@ -49,4 +52,28 @@ func Float64ToStr(num float64, prec ...int) string {
 		return strconv.FormatFloat(num, 'f', prec[0], 64)
 	}
 	return strconv.FormatFloat(num, 'f', -1, 64)
+}
+
+// Int64ToHex int64转换为十六进制字符串
+//
+// num: int64
+// args: 可选参数, 用于指定填充的位数以及填充的字
+//
+// Examples:
+//	gotool.Int64ToHex(15) // 返回 F
+//	gotool.Int64ToHex(15, "08") // 返回 000F
+func Int64ToHex(num int64, args ...string) string {
+	var format string
+	if len(args) > 0 {
+		format = args[0]
+	}
+	return fmt.Sprintf("%"+format+"X", num)
+}
+
+// HexToInt64 十六进制字符串转换为int64
+//
+// str: 十六进制字符串
+func HexToInt64(str string) int64 {
+	num, _ := strconv.ParseInt(str, 16, 64)
+	return num
 }

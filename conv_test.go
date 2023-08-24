@@ -26,3 +26,12 @@ func TestFloat64ToStr(t *testing.T) {
 	t.Log(Float64ToStr(123.123))
 	t.Log(Float64ToStr(123.123, 2))
 }
+
+func TestInt64ToHex(t *testing.T) {
+	t.Log(Int64ToHex(15))
+	t.Log(Int64ToHex(447, "08"))
+}
+
+func TestHexToInt64(t *testing.T) {
+	t.Log(HexToInt64("000001BF"))
+}

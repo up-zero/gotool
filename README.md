@@ -65,3 +65,5 @@ func main() {
 + **Int64ToStr** int64转换为字符串
 + **Uint64ToStr** uint64转换为字符串
 + **Float64ToStr** float64转换为字符串
++ **Int64ToHex** int64转换为十六进制字符串
++ **HexToInt64** 十六进制字符串转换为int64
