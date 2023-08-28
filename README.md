@@ -68,3 +68,4 @@ func main() {
 + **Int64ToHex** int64转换为十六进制字符串
 + **HexToInt64** 十六进制字符串转换为int64
 + **SendMail** 发送邮件
++ **Ipv4sLocal** 获取本地ipv4地址
