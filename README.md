@@ -27,7 +27,7 @@ func main() {
 }
 ```
 
-## 功能列表
+## 方法列表
 
 + **Md5** 获取md5值
 + **Md5Iterations** 迭代多次求md5
@@ -55,6 +55,7 @@ func main() {
 + **If** 三元运算符
 + **ArrayDuplicate** 数组去重
 + **ArrayIn** 数组是否包含某个值
++ **ArrayJoin** 整型拼接
 + **RandomStr** 随机字符串
 + **RandomNumber** 随机数字
 + **RandomAlpha** 随机字母

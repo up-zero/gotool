@@ -11,7 +11,13 @@ type shouldBindJSONStruct struct {
 	Both string `json:"both"`
 }
 
+type shouldBindQueryBase struct {
+	A string `json:"a"`
+	B string `json:"b"`
+}
+
 type shouldBindQueryStruct struct {
+	*shouldBindQueryBase
 	Z    string  `json:"z"`
 	Both string  `json:"both"`
 	Num  int     `json:"num"`
@@ -34,7 +40,7 @@ func TestShouldBindJSON(t *testing.T) {
 
 // TestShouldBindQuery query入参绑定
 func TestShouldBindQuery(t *testing.T) {
-	r, err := http.NewRequest("GET", "/test?z=z&both=both&num=100000000&f=100000.121", bytes.NewBuffer([]byte(`{"z":"z","both":"both"}`)))
+	r, err := http.NewRequest("GET", "/test?a=a&b=b&z=z&both=both&num=100000000&f=100000.121", bytes.NewBuffer([]byte(`{"z":"z","both":"both"}`)))
 	if err != nil {
 		t.Fatal(err)
 	}
