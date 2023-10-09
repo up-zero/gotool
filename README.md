@@ -73,3 +73,4 @@ func main() {
 + **ShouldBindJson** json入参绑定
 + **ShouldBindQuery** query入参绑定
 + **UUID** 生成uuid
++ **SignalSnowflake** 单节点的雪花码
