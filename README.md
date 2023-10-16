@@ -72,5 +72,6 @@ func main() {
 + **Ipv4sLocal** 获取本地ipv4地址
 + **ShouldBindJson** json入参绑定
 + **ShouldBindQuery** query入参绑定
-+ **UUID** 生成uuid
++ **UUID** uuid
++ **UUIDGenerate** 生成UUID
 + **SignalSnowflake** 单节点的雪花码

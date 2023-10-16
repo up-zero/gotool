@@ -37,3 +37,8 @@ func TestUUID(t *testing.T) {
 	}
 	log.Println("pass")
 }
+
+func TestUUIDGenerate(t *testing.T) {
+	log.Println(UUIDGenerate())
+	log.Println(UUIDGenerate())
+}

@@ -42,3 +42,9 @@ func UUID() (string, error) {
 	uuid := fmt.Sprintf("%x-%x-%x-%x-%x", hash[0:4], hash[4:6], hash[6:8], hash[8:10], hash[10:])
 	return uuid, nil
 }
+
+// UUIDGenerate UUID 生成
+func UUIDGenerate() string {
+	uuid, _ := UUID()
+	return uuid
+}
