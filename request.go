@@ -47,11 +47,11 @@ func ShouldBindQuery(req *http.Request, data any) error {
 		case reflect.String:
 			fieldValue.SetString(param)
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			intValue, err := strconv.Atoi(param)
+			intValue, err := strconv.ParseInt(param, 10, 64)
 			if err != nil {
 				return err
 			}
-			fieldValue.SetInt(int64(intValue))
+			fieldValue.SetInt(intValue)
 		case reflect.Float64, reflect.Float32:
 			floatValue, err := strconv.ParseFloat(param, 64)
 			if err != nil {
