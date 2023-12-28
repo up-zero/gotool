@@ -44,7 +44,7 @@ func FileCopy(dst, src string) error {
 // filePath 文件路径
 func FileDownload(url, filePath string) error {
 	// 创建文件夹
-	if err := os.MkdirAll(path.Dir(filePath), os.ModePerm); err != nil {
+	if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
 		return err
 	}
 	// 创建目录源文件
