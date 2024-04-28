@@ -1,6 +1,7 @@
 package gotool
 
 import (
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -50,4 +51,59 @@ func DirCopy(dst, src string) error {
 		}
 		return nil
 	})
+}
+
+// CurrentDirCount 当前文件夹下(不迭代子文件夹)文件或文件夹的个数
+//
+// dir 目录路径
+//
+// Examples:
+//
+//	gotool.CurrentDirCount("/home/xxx") // 当前文件夹下所有文件及文件夹的个数
+//	gotool.CurrentDirCount("/home/xxx", "file") // 当前文件夹下文件的个数
+//	gotool.CurrentDirCount("/home/xxx", "dir") // 当前文件夹下文件夹的个数
+func CurrentDirCount(dir string, args ...string) (int, error) {
+	info, err := os.Stat(dir)
+	if err != nil {
+		return 0, err
+	}
+	if !info.IsDir() {
+		return 0, ErrNotIsDir
+	}
+	var fileType = make(map[string]struct{})
+	var cnt = 0
+	var batchSize = 100
+	if len(args) > 0 {
+		for _, v := range args {
+			fileType[v] = struct{}{}
+		}
+	}
+	f, err := os.Open(dir)
+	if err != nil {
+		return 0, err
+	}
+	defer f.Close()
+	for {
+		entries, err := f.ReadDir(batchSize)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return 0, err
+		}
+		if len(fileType) == 0 {
+			cnt += len(entries)
+			continue
+		}
+		for _, entry := range entries {
+			if _, ok := fileType["file"]; ok && !entry.IsDir() {
+				cnt++
+			}
+			if _, ok := fileType["dir"]; ok && entry.IsDir() {
+				cnt++
+			}
+		}
+	}
+
+	return cnt, nil
 }
