@@ -76,3 +76,4 @@ func main() {
 + **UUID** uuid
 + **UUIDGenerate** 生成UUID
 + **SignalSnowflake** 单节点的雪花码
++ **UrlBase**  获取URL路径的基础名称
