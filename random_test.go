@@ -17,3 +17,7 @@ func TestRandomNumber(t *testing.T) {
 func TestRandomAlphaNumber(t *testing.T) {
 	t.Log(RandomAlphaNumber(6))
 }
+
+func TestRandomRangeInt(t *testing.T) {
+	t.Log(RandomRangeInt(5, 100))
+}

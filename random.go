@@ -14,9 +14,9 @@ func RandomStr(str string, length int) string {
 		return ""
 	}
 	var ans string
-	rand.Seed(time.Now().UnixNano())
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := 0; i < length; i++ {
-		ans += string(str[rand.Intn(len(str))])
+		ans += string(str[r.Intn(len(str))])
 	}
 	return ans
 }
@@ -40,4 +40,16 @@ func RandomAlpha(length int) string {
 // length: 随机字母数字长度
 func RandomAlphaNumber(length int) string {
 	return RandomStr("0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz", length)
+}
+
+// RandomRangeInt 指定范围内的随机数 [最小值, 最大值)
+//
+// minValue 最小值（包含）
+// maxValue 最大值（不包含）
+func RandomRangeInt(minValue, maxValue int) int {
+	if minValue >= maxValue {
+		return 0
+	}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return r.Intn(maxValue-minValue) + minValue
 }
