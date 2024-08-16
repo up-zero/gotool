@@ -2,8 +2,10 @@ package gotool
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"time"
 )
@@ -108,9 +110,23 @@ func httpRequest(url, method string, data, header []byte, timeout time.Duration)
 		}
 	}
 
-	client := http.Client{
-		Timeout: timeout,
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	transport := &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   3 * time.Second, // 连接超时为3秒
+			KeepAlive: 30 * time.Second,
+		}).DialContext,
+		TLSHandshakeTimeout:   5 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
 	}
+
+	client := http.Client{
+		Transport: transport,
+		Timeout:   timeout,
+	}
+	request = request.WithContext(ctx)
 	resp, err := client.Do(request)
 	if err != nil {
 		return nil, err
