@@ -78,3 +78,4 @@ func main() {
 + **UUIDGenerate** 生成UUID
 + **SignalSnowflake** 单节点的雪花码
 + **UrlBase**  获取URL路径的基础名称
++ **CPUTemperatures**  获取CPU温度
