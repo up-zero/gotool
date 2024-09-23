@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// DirCopy 绝对目录文件拷贝
+// DirCopy 绝对目录文件拷贝，拷贝 src 文件夹里面的内容到 dst 文件夹中
 //
 // dst: 目标目录
 // src: 源目录
@@ -106,4 +106,11 @@ func CurrentDirCount(dir string, args ...string) (int, error) {
 	}
 
 	return cnt, nil
+}
+
+// MkParentDir 创建父级文件夹
+//
+// filePath 文件路径
+func MkParentDir(filePath string) error {
+	return os.MkdirAll(filepath.Dir(filePath), os.ModePerm)
 }

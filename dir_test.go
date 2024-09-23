@@ -9,3 +9,7 @@ func TestDirCopy(t *testing.T) {
 func TestCurrentDirCount(t *testing.T) {
 	t.Log(CurrentDirCount("."))
 }
+
+func TestMkParentDir(t *testing.T) {
+	t.Log(MkParentDir("/opt/up-zero/gotool/test/1.txt"))
+}
