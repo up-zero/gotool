@@ -38,6 +38,7 @@ func main() {
 + **CurrentDirCount** 当前文件夹下(不迭代子文件夹)文件或文件夹的个数
 + **MkParentDir** 创建父级文件夹
 + **FileCount** 获取指定目录下的文件个数
++ **FileMainName** 获取指定路径的文件名
 + **Zip** 文件夹压缩
 + **ZipWithNotify** 带通知的文件夹压缩
 + **Unzip** 文件解压

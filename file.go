@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 )
 
 // FileCopy 文件拷贝
@@ -103,4 +104,17 @@ func FileCount(dir string, args ...string) (int, error) {
 		return nil
 	})
 	return cnt, nil
+}
+
+// FileMainName 获取指定路径的文件名
+//
+// filePath 文件路径或文件名
+//
+// Examples:
+//
+// gotool.FileMainName("/opt/gotool/test.go") // test
+//
+// gotool.FileMainName("test.go") // test
+func FileMainName(filePath string) string {
+	return strings.TrimSuffix(filepath.Base(filePath), filepath.Ext(filePath))
 }

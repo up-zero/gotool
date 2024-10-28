@@ -15,3 +15,8 @@ func TestFileDownload(t *testing.T) {
 func TestFileCount(t *testing.T) {
 	t.Log(FileCount(".", ".go", ".mod"))
 }
+
+func TestFileMainName(t *testing.T) {
+	t.Log(FileMainName("/opt/gotool/test.go"))
+	t.Log(FileMainName("test.go"))
+}
