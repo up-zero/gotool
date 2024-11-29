@@ -20,3 +20,10 @@ func TestFileMainName(t *testing.T) {
 	t.Log(FileMainName("/opt/gotool/test.go"))
 	t.Log(FileMainName("test.go"))
 }
+
+func TestFileSave(t *testing.T) {
+	err := FileSave("/opt/gotool/test.txt", []byte("hello world"))
+	if err != nil {
+		t.Fatal(err)
+	}
+}

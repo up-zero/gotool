@@ -118,3 +118,16 @@ func FileCount(dir string, args ...string) (int, error) {
 func FileMainName(filePath string) string {
 	return strings.TrimSuffix(filepath.Base(filePath), filepath.Ext(filePath))
 }
+
+// FileSave 保存文件
+//
+// Examples:
+//
+//	gotool.FileSave("/opt/gotool/test.txt", []byte("hello world"))
+func FileSave(p string, data []byte) error {
+	err := os.MkdirAll(filepath.Dir(p), os.ModePerm)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(p, data, os.ModePerm)
+}

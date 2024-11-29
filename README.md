@@ -39,6 +39,7 @@ func main() {
 + **MkParentDir** 创建父级文件夹
 + **FileCount** 获取指定目录下的文件个数
 + **FileMainName** 获取指定路径的文件名
++ **FileSave** 保存文件
 + **Zip** 文件夹压缩
 + **ZipWithNotify** 带通知的文件夹压缩
 + **Unzip** 文件解压
