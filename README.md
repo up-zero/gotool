@@ -33,6 +33,7 @@ func main() {
 + **Md5Iterations** 迭代多次求md5
 + **Md5File** 获取文件的MD5
 + **FileCopy** 文件拷贝
++ **FileMove** 文件移动
 + **FileDownload** 文件下载
 + **DirCopy** 绝对目录文件拷贝
 + **CurrentDirCount** 当前文件夹下(不迭代子文件夹)文件或文件夹的个数

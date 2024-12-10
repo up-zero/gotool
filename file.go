@@ -39,6 +39,22 @@ func FileCopy(dst, src string) error {
 	return nil
 }
 
+// FileMove 文件移动
+//
+// dstDir 目标目录
+// srcFile 源文件
+func FileMove(dstDir, srcFile string) error {
+	srcFileName := filepath.Base(srcFile)
+	dstFile := path.Join(dstDir, srcFileName)
+	if err := os.MkdirAll(dstDir, os.ModePerm); err != nil {
+		return err
+	}
+	if err := os.Rename(srcFile, dstFile); err != nil {
+		return err
+	}
+	return nil
+}
+
 // FileDownload 文件下载
 //
 // url 文件地址

@@ -8,6 +8,10 @@ func TestFileCopy(t *testing.T) {
 	t.Log(FileCopy("LICENSE_BAK", "LICENSE"))
 }
 
+func TestFileMove(t *testing.T) {
+	t.Log(FileMove("/opt/gotool/test", "/opt/gotool/test.txt"))
+}
+
 func TestFileDownload(t *testing.T) {
 	t.Log(FileDownload("https://www.baidu.com/img/bd_logo1.png", "baidu.png"))
 }
