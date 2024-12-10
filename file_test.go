@@ -9,7 +9,7 @@ func TestFileCopy(t *testing.T) {
 }
 
 func TestFileMove(t *testing.T) {
-	t.Log(FileMove("/opt/gotool/test", "/opt/gotool/test.txt"))
+	t.Log(FileMove("/opt/gotool/test/rename.txt", "/opt/gotool/test.txt"))
 }
 
 func TestFileDownload(t *testing.T) {

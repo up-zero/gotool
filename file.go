@@ -41,12 +41,14 @@ func FileCopy(dst, src string) error {
 
 // FileMove 文件移动
 //
-// dstDir 目标目录
+// dstFile 目标文件
 // srcFile 源文件
-func FileMove(dstDir, srcFile string) error {
-	srcFileName := filepath.Base(srcFile)
-	dstFile := path.Join(dstDir, srcFileName)
-	if err := os.MkdirAll(dstDir, os.ModePerm); err != nil {
+func FileMove(dstFile, srcFile string) error {
+	_, err := os.Stat(srcFile)
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(dstFile), os.ModePerm); err != nil {
 		return err
 	}
 	if err := os.Rename(srcFile, dstFile); err != nil {
