@@ -22,3 +22,9 @@ var ErrExpiredJwt = errors.New("expired jwt")
 
 // ErrInvalidJwtAlgorithm jwt 算法不支持
 var ErrInvalidJwtAlgorithm = errors.New("invalid jwt algorithm")
+
+// ErrSrcDstCannotBeNil 源和目标不能为空
+var ErrSrcDstCannotBeNil = errors.New("src and dst cannot be nil")
+
+// ErrDstMustBePointerStruct 目标必须是指针结构体
+var ErrDstMustBePointerStruct = errors.New("dst must be a pointer struct")
