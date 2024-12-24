@@ -32,6 +32,9 @@ func CopyProperties(src, dst any) error {
 	}
 
 	srcValue := reflect.ValueOf(src)
+	if srcValue.Kind() == reflect.Ptr {
+		srcValue = srcValue.Elem()
+	}
 	dstValue := reflect.ValueOf(dst)
 
 	if dstValue.Kind() != reflect.Ptr || dstValue.Elem().Kind() != reflect.Struct {
