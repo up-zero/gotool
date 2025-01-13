@@ -84,3 +84,4 @@ func main() {
 + **UrlBase**  获取URL路径的基础名称
 + **CPUTemperatures**  获取CPU温度
 + **CopyProperties**  复制结构体的属性
++ **ImageCompression**  图片压缩

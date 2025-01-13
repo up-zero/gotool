@@ -20,6 +20,7 @@ func TestCopyProperties(t *testing.T) {
 	if err := CopyProperties(s1, s2); err != nil {
 		t.Fatal(err)
 	}
+	// &{test map[a:1] 0}
 	t.Log(s2)
 
 	// 2. ptr struct
@@ -28,5 +29,6 @@ func TestCopyProperties(t *testing.T) {
 	if err := CopyProperties(s3, s4); err != nil {
 		t.Fatal(err)
 	}
+	// &{test map[a:3] 0}
 	t.Log(s4)
 }
