@@ -20,7 +20,7 @@ func ImageCompression(dstFile, srcFile string, quality int) error {
 		return err
 	}
 	defer file.Close()
-	img, imgType, err := image.Decode(file)
+	img, _, err := image.Decode(file)
 	if err != nil {
 		return err
 	}
@@ -36,13 +36,14 @@ func ImageCompression(dstFile, srcFile string, quality int) error {
 
 	compressionLevel := int((100 - quality) / 10) // 从质量 100 映射到 0（无压缩），质量 0 映射到 9（最大压缩）
 
+	imgType := filepath.Ext(dstFile)
 	switch imgType {
-	case "jpeg", "jpg":
+	case ".jpeg", ".jpg":
 		err = jpeg.Encode(outFile, img, &jpeg.Options{Quality: quality})
 		if err != nil {
 			return err
 		}
-	case "png":
+	case ".png":
 		encoder := png.Encoder{CompressionLevel: png.CompressionLevel(compressionLevel)}
 		err = encoder.Encode(outFile, img)
 		if err != nil {
