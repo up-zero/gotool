@@ -1,6 +1,7 @@
 package gotool
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -54,6 +55,68 @@ func FileMove(dstFile, srcFile string) error {
 	if err := os.Rename(srcFile, dstFile); err != nil {
 		return err
 	}
+	return nil
+}
+
+type DownloadProgress struct {
+	Total    uint64
+	FileSize uint64
+}
+
+func (dp *DownloadProgress) Write(p []byte) (int, error) {
+	n := len(p)
+	dp.Total += uint64(n)
+	return n, nil
+}
+
+// FileDownloadWithNotify 带通知的文件下载
+//
+// ch 通知进度
+// url 文件地址
+// filePath 文件路径
+func FileDownloadWithNotify(ch chan DownloadProgress, url, filePath string) error {
+	// 创建文件夹
+	if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
+		return err
+	}
+
+	w, err := os.Create(filePath + ".tmp")
+	if err != nil {
+		return err
+	}
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	fileSize := resp.ContentLength
+	if fileSize <= 0 {
+		return fmt.Errorf("invalid Content-Length")
+	}
+
+	// 通知进度
+	progress := &DownloadProgress{FileSize: uint64(fileSize)}
+	go func() {
+		for {
+			if progress.Total == progress.FileSize {
+				break
+			}
+			ch <- *progress
+		}
+	}()
+
+	// 下载文件
+	_, err = io.Copy(w, io.TeeReader(resp.Body, progress))
+	if err != nil {
+		return err
+	}
+	w.Close()
+
+	// 重命名文件
+	if err := os.Rename(filePath+".tmp", filePath); err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -35,6 +35,7 @@ func main() {
 + **FileCopy** 文件拷贝
 + **FileMove** 文件移动
 + **FileDownload** 文件下载
++ **FileDownloadWithNotify** 带通知的文件下载
 + **DirCopy** 绝对目录文件拷贝
 + **CurrentDirCount** 当前文件夹下(不迭代子文件夹)文件或文件夹的个数
 + **MkParentDir** 创建父级文件夹
