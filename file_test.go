@@ -17,16 +17,23 @@ func TestFileDownload(t *testing.T) {
 	t.Log(FileDownload("https://www.baidu.com/img/bd_logo1.png", "baidu.png"))
 }
 
+func (dp *DownloadProgress) printProgress() {
+	progress := float64(dp.Total) / float64(dp.FileSize) * 100
+	fmt.Printf("\rDownloading... %.2f%% complete (%d/%d)", progress, dp.Total, dp.FileSize)
+}
+
 func TestFileDownloadWithNotify(t *testing.T) {
 	dp := make(chan DownloadProgress)
-	defer close(dp)
 	go func() {
 		for data := range dp {
-			progress := float64(data.Total) / float64(data.FileSize) * 100
-			fmt.Printf("\rDownloading... %.2f%% complete (%d/%d)", progress, data.Total, data.FileSize)
+			data.printProgress()
 		}
 	}()
-	t.Log(FileDownloadWithNotify(dp, "https://www.baidu.com/img/bd_logo1.png", "baidu.png"))
+	data, err := FileDownloadWithNotify(dp, "https://www.baidu.com/img/bd_logo1.png", "baidu.png")
+	if err != nil {
+		t.Fatal(err)
+	}
+	data.printProgress()
 }
 
 func TestFileCount(t *testing.T) {
