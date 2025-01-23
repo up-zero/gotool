@@ -6,11 +6,11 @@ import (
 )
 
 func TestFileCopy(t *testing.T) {
-	t.Log(FileCopy("LICENSE_BAK", "LICENSE"))
+	t.Log(FileCopy("LICENSE", "LICENSE_BAK"))
 }
 
 func TestFileMove(t *testing.T) {
-	t.Log(FileMove("/opt/gotool/test/rename.txt", "/opt/gotool/test.txt"))
+	t.Log(FileMove("/opt/gotool/test.txt", "/opt/gotool/test/rename.txt"))
 }
 
 func TestFileDownload(t *testing.T) {

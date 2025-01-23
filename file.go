@@ -14,9 +14,9 @@ import (
 
 // FileCopy 文件拷贝
 //
-// dst: 目标文件
 // src: 源文件
-func FileCopy(dst, src string) error {
+// dst: 目标文件
+func FileCopy(src, dst string) error {
 	// 打开源文件
 	reader, err := os.Open(src)
 	if err != nil {
@@ -44,9 +44,13 @@ func FileCopy(dst, src string) error {
 
 // FileMove 文件移动
 //
-// dstFile 目标文件
 // srcFile 源文件
-func FileMove(dstFile, srcFile string) error {
+// dstFile 目标文件
+//
+// Examples:
+//
+//	gotool.FileMove("/opt/gotool/test.txt", "/opt/gotool/test/rename.txt")
+func FileMove(srcFile, dstFile string) error {
 	_, err := os.Stat(srcFile)
 	if err != nil {
 		return err

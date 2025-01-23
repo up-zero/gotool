@@ -11,10 +11,10 @@ import (
 
 // ImageCompression 图片压缩
 //
-// dstFile 目标图片路径
 // srcFile 源图片路径
+// dstFile 目标图片路径
 // quality 压缩质量，范围 1-100（值越低，压缩率越高，质量越低），对于 PNG 图片，映射到 0-9 的压缩级别（0：无压缩，9：最大压缩）
-func ImageCompression(dstFile, srcFile string, quality int) error {
+func ImageCompression(srcFile, dstFile string, quality int) error {
 	file, err := os.Open(srcFile)
 	if err != nil {
 		return err

@@ -3,7 +3,7 @@ package gotool
 import "testing"
 
 func TestDirCopy(t *testing.T) {
-	t.Log(DirCopy("/Users/getcharzp/repo/github/up-zero/gotool/test/dst", "/Users/getcharzp/repo/github/up-zero/gotool/test/src"))
+	t.Log(DirCopy("/Users/getcharzp/repo/github/up-zero/gotool/test/src", "/Users/getcharzp/repo/github/up-zero/gotool/test/dst"))
 }
 
 func TestCurrentDirCount(t *testing.T) {

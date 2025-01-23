@@ -9,9 +9,9 @@ import (
 
 // DirCopy 绝对目录文件拷贝，拷贝 src 文件夹里面的内容到 dst 文件夹中
 //
-// dst: 目标目录
 // src: 源目录
-func DirCopy(dst, src string) error {
+// dst: 目标目录
+func DirCopy(src, dst string) error {
 	// 判断目标和源是否相同
 	if strings.TrimSpace(dst) == strings.TrimSpace(src) {
 		return ErrDstSrcSame
@@ -44,7 +44,7 @@ func DirCopy(dst, src string) error {
 				return err
 			}
 		} else {
-			err = FileCopy(dstPath, srcPath)
+			err = FileCopy(srcPath, dstPath)
 			if err != nil {
 				return err
 			}
