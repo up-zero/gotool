@@ -55,3 +55,23 @@ func ImageCompression(srcFile, dstFile string, quality int) error {
 
 	return nil
 }
+
+// ImageSize 图片尺寸
+// 说明：当图片类型不是标准库提供的，需要导入扩展库中的image golang.org/x/image
+//
+// imagePath 图片路径
+func ImageSize(imagePath string) (*ImageSizeReply, error) {
+	file, err := os.Open(imagePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	imgConfig, _, err := image.DecodeConfig(file)
+	if err != nil {
+		return nil, err
+	}
+	return &ImageSizeReply{
+		Height: imgConfig.Height,
+		Width:  imgConfig.Width,
+	}, nil
+}
