@@ -1,6 +1,6 @@
 # GoTool
 
-> 一个轻量级的Go语言工具集合，提倡的核心理念为：基于Golang原生库、无第三方依赖。
+> 一个轻量级的Go语言工具库，提倡的核心理念为：基于Golang原生库、无第三方依赖。
 
 ## 安装
 
@@ -87,3 +87,4 @@ func main() {
 + **CopyProperties**  复制结构体的属性
 + **ImageCompression**  图片压缩
 + **ImageSize**  图片尺寸
++ **GenerateCaptcha**  验证码图片生成
