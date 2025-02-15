@@ -88,3 +88,4 @@ func main() {
 + **ImageCompression**  图片压缩
 + **ImageSize**  图片尺寸
 + **GenerateCaptcha**  验证码图片生成
++ **MathAbs**  绝对值
