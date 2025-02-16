@@ -6,9 +6,21 @@ type Number interface {
 		float32 | float64
 }
 
+// MathAbs 绝对值
 func MathAbs[T Number](v T) T {
 	if v < 0 {
 		return -v
 	}
 	return v
+}
+
+// MathMin 最小值
+func MathMin[T Number](arg ...T) T {
+	res := arg[0]
+	for _, v := range arg {
+		if v < res {
+			res = v
+		}
+	}
+	return res
 }

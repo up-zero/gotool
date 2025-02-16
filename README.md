@@ -89,3 +89,4 @@ func main() {
 + **ImageSize**  图片尺寸
 + **GenerateCaptcha**  验证码图片生成
 + **MathAbs**  绝对值
++ **MathMin**  最小值
