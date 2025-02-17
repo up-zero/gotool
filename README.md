@@ -90,3 +90,4 @@ func main() {
 + **GenerateCaptcha**  验证码图片生成
 + **MathAbs**  绝对值
 + **MathMin**  最小值
++ **MathMax**  最大值

@@ -18,3 +18,8 @@ func TestMathMin(t *testing.T) {
 	fmt.Println(MathMin(12, 20, -1))   // 输出: -1
 	fmt.Println(MathMin(12, 20, -1.1)) // 输出: -1.1
 }
+
+func TestMathMax(t *testing.T) {
+	fmt.Println(MathMax(12, 200, -1))       // 输出: 200
+	fmt.Println(MathMax(-100, -1.12, -1.1)) // 输出: -1.1
+}
