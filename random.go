@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+var r = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 // RandomStr 随机字符串
 //
 // str: 待随机的字符串
@@ -14,7 +16,6 @@ func RandomStr(str string, length int) string {
 		return ""
 	}
 	var ans string
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := 0; i < length; i++ {
 		ans += string(str[r.Intn(len(str))])
 	}
@@ -50,6 +51,5 @@ func RandomRangeInt(minValue, maxValue int) int {
 	if minValue >= maxValue {
 		return 0
 	}
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return r.Intn(maxValue-minValue) + minValue
 }
