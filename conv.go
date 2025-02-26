@@ -5,27 +5,63 @@ import (
 	"strconv"
 )
 
+// StrToInt8 字符串转换为int8
+func StrToInt8(s string) int8 {
+	num, _ := strconv.ParseInt(s, 10, 8)
+	return int8(num)
+}
+
+// StrToInt16 字符串转换为int16
+func StrToInt16(s string) int16 {
+	num, _ := strconv.ParseInt(s, 10, 16)
+	return int16(num)
+}
+
+// StrToInt32 字符串转换为int32
+func StrToInt32(s string) int32 {
+	num, _ := strconv.ParseInt(s, 10, 32)
+	return int32(num)
+}
+
 // StrToInt64 字符串转换为int64
-//
-// str: 字符串
-func StrToInt64(str string) int64 {
-	num, _ := strconv.ParseInt(str, 10, 64)
+func StrToInt64(s string) int64 {
+	num, _ := strconv.ParseInt(s, 10, 64)
 	return num
+}
+
+// StrToUint8 字符串转换为uint8
+func StrToUint8(s string) uint8 {
+	num, _ := strconv.ParseUint(s, 10, 8)
+	return uint8(num)
+}
+
+// StrToUint16 字符串转换为uint16
+func StrToUint16(s string) uint16 {
+	num, _ := strconv.ParseUint(s, 10, 16)
+	return uint16(num)
+}
+
+// StrToUint32 字符串转换为uint32
+func StrToUint32(s string) uint32 {
+	num, _ := strconv.ParseUint(s, 10, 32)
+	return uint32(num)
 }
 
 // StrToUint64 字符串转换为uint64
-//
-// str: 字符串
-func StrToUint64(str string) uint64 {
-	num, _ := strconv.ParseUint(str, 10, 64)
+func StrToUint64(s string) uint64 {
+	num, _ := strconv.ParseUint(s, 10, 64)
 	return num
 }
 
+// StrToFloat32 字符串转换为float32
+func StrToFloat32(s string) float32 {
+	num, _ := strconv.ParseFloat(s, 32)
+	return float32(num)
+}
+
 // StrToFloat64 字符串转换为float64
-//
-// str: 字符串
-func StrToFloat64(str string) float64 {
-	num, _ := strconv.ParseFloat(str, 64)
+func StrToFloat64(s string) float64 {
+	num, _ := strconv.ParseFloat(s, 64)
 	return num
 }
 
@@ -60,6 +96,7 @@ func Float64ToStr(num float64, prec ...int) string {
 // args: 可选参数, 用于指定填充的位数以及填充的字
 //
 // Examples:
+//
 //	gotool.Int64ToHex(15) // 返回 F
 //	gotool.Int64ToHex(15, "08") // 返回 000F
 func Int64ToHex(num int64, args ...string) string {

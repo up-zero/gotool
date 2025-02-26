@@ -67,8 +67,15 @@ func main() {
 + **RandomAlpha** 随机字母
 + **RandomAlphaNumber** 随机字母数字
 + **RandomRangeInt** 指定范围内的随机数 [最小值, 最大值)
++ **StrToInt8** 字符串转换为int8
++ **StrToInt16** 字符串转换为int16
++ **StrToInt32** 字符串转换为int32
 + **StrToInt64** 字符串转换为int64
++ **StrToUint8** 字符串转换为uint8
++ **StrToUint16** 字符串转换为uint16
++ **StrToUint32** 字符串转换为uint32
 + **StrToUint64** 字符串转换为uint64
++ **StrToFloat32** 字符串转换为float32
 + **StrToFloat64** 字符串转换为float64
 + **Int64ToStr** int64转换为字符串
 + **Uint64ToStr** uint64转换为字符串
