@@ -19,7 +19,7 @@ import "github.com/up-zero/gotool"
 import "log"
 
 func main() {
-	data, err := gotool.Md5("123456")
+	data, err := gotool.Md5("123456") // e10adc3949ba59abbe56e057f20f883e
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -29,9 +29,8 @@ func main() {
 
 ## 方法列表
 
-+ **Md5** 获取md5值
-+ **Md5Iterations** 迭代多次求md5
-+ **Md5File** 获取文件的MD5
+### 文件
+
 + **FileCopy** 文件拷贝
 + **FileMove** 文件移动
 + **FileDownload** 文件下载
@@ -46,27 +45,20 @@ func main() {
 + **ZipWithNotify** 带通知的文件夹压缩
 + **Unzip** 文件解压
 + **UnzipWithNotify** 带通知的文件解压
-+ **ExecShell** 运行shell命令或脚本
-+ **ExecCommand** 运行命令
-+ **ExecShellWithNotify** 带通知的运行shell命令或脚本
-+ **ExecCommandWithNotify** 带通知的运行命令
-+ **PsByName** 根据程序名查询进程列表
+
+### 加解密
+
++ **Md5** 获取md5值
++ **Md5Iterations** 迭代多次求md5
++ **Md5File** 获取文件的MD5
 + **HmacSHA256** 计算 SHA256
 + **HmacSHA384** 计算 HmacSHA384
 + **HmacSHA512** 计算 HmacSHA512
 + **JWTGenerate** 生成JWT
 + **JWTParse** 解析JWT
-+ **RFC3339ToNormalTime** RFC3339 日期格式标准化
-+ **RFC1123ToNormalTime** RFC1123 日期格式标准化
-+ **If** 三元运算符
-+ **ArrayDuplicate** 数组去重
-+ **ArrayIn** 数组是否包含某个值
-+ **ArrayJoin** 整型拼接
-+ **RandomStr** 随机字符串
-+ **RandomNumber** 随机数字
-+ **RandomAlpha** 随机字母
-+ **RandomAlphaNumber** 随机字母数字
-+ **RandomRangeInt** 指定范围内的随机数 [最小值, 最大值)
+
+### 类型转换
+
 + **StrToInt8** 字符串转换为int8
 + **StrToInt16** 字符串转换为int16
 + **StrToInt32** 字符串转换为int32
@@ -82,19 +74,59 @@ func main() {
 + **Float64ToStr** float64转换为字符串
 + **Int64ToHex** int64转换为十六进制字符串
 + **HexToInt64** 十六进制字符串转换为int64
++ **CopyProperties**  复制结构体的属性
+
+### 数学
+
++ **RandomStr** 随机字符串
++ **RandomNumber** 随机数字
++ **RandomAlpha** 随机字母
++ **RandomAlphaNumber** 随机字母数字
++ **RandomRangeInt** 指定范围内的随机数 [最小值, 最大值)
++ **MathAbs**  绝对值
++ **MathMin**  最小值
++ **MathMax**  最大值
+
+### 网络
+
 + **SendMail** 发送邮件
 + **Ipv4sLocal** 获取本地ipv4地址
 + **ShouldBindJson** json入参绑定
 + **ShouldBindQuery** query入参绑定
++ **UrlBase**  获取URL路径的基础名称
+
+### 系统
+
++ **ExecShell** 运行shell命令或脚本
++ **ExecCommand** 运行命令
++ **ExecShellWithNotify** 带通知的运行shell命令或脚本
++ **ExecCommandWithNotify** 带通知的运行命令
++ **PsByName** 根据程序名查询进程列表
++ **CPUTemperatures**  获取CPU温度
+
+### 日期&时间
+
++ **RFC3339ToNormalTime** RFC3339 日期格式标准化
++ **RFC1123ToNormalTime** RFC1123 日期格式标准化
+
+### 唯一ID
+
 + **UUID** uuid
 + **UUIDGenerate** 生成UUID
 + **SignalSnowflake** 单节点的雪花码
-+ **UrlBase**  获取URL路径的基础名称
-+ **CPUTemperatures**  获取CPU温度
-+ **CopyProperties**  复制结构体的属性
+
+### 数组
+
++ **ArrayDuplicate** 数组去重
++ **ArrayIn** 数组是否包含某个值
++ **ArrayJoin** 整型拼接
+
+### 图片
+
 + **ImageCompression**  图片压缩
 + **ImageSize**  图片尺寸
 + **GenerateCaptcha**  验证码图片生成
-+ **MathAbs**  绝对值
-+ **MathMin**  最小值
-+ **MathMax**  最大值
+
+### 条件判断
+
++ **If** 三元运算符

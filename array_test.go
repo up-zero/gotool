@@ -7,9 +7,9 @@ func TestArrayDuplicate(t *testing.T) {
 }
 
 func TestArrayIn(t *testing.T) {
-	t.Log(ArrayIn(12, []int{12, 13, 1}))
+	t.Log(ArrayIn(12, []int{12, 13, 1})) // true
 }
 
 func TestArrayJoin(t *testing.T) {
-	t.Log(ArrayJoin([]int{12, 22, 12}, ","))
+	t.Log(ArrayJoin([]int{12, 22, 12}, ",")) // 12,22,12
 }
