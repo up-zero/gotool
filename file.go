@@ -227,3 +227,17 @@ func FileSave(p string, data []byte) error {
 	}
 	return os.WriteFile(p, data, os.ModePerm)
 }
+
+// FileSync 文件同步（将内存中的文件刷新到硬盘中）
+//
+// filePath 文件路径
+func FileSync(filePath string) error {
+	f, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+	if err := f.Sync(); err != nil {
+		return err
+	}
+	return nil
+}

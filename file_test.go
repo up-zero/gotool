@@ -51,3 +51,9 @@ func TestFileSave(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestFileSync(t *testing.T) {
+	if err := FileSync("/opt/gotool/test.txt"); err != nil {
+		t.Fatal(err)
+	}
+}
