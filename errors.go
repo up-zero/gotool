@@ -31,3 +31,6 @@ var ErrDstMustBePointerStruct = errors.New("dst must be a pointer struct")
 
 // ErrNotSupportFormat 数据格式不支持
 var ErrNotSupportFormat = errors.New("not support format")
+
+// ErrInvalidUptimeFile uptime 文件无效
+var ErrInvalidUptimeFile = errors.New("invalid uptime file")

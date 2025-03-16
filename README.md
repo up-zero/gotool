@@ -104,6 +104,7 @@ func main() {
 + **ExecCommandWithNotify** 带通知的运行命令
 + **PsByName** 根据程序名查询进程列表
 + **CPUTemperatures**  获取CPU温度
++ **SysUptime**  系统启动时间
 
 ### 日期&时间
 
