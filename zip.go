@@ -16,18 +16,21 @@ type UnzipNotify struct {
 
 // Zip 文件夹压缩
 //
-// dest 压缩到的文件 例如：/var/xxx.zip
 // src 源文件夹 例如：/var/xxx
-func Zip(dest, src string) error {
-	return ZipWithNotify(dest, src, nil)
+//
+// dest 压缩到的文件 例如：/var/xxx.zip
+func Zip(src, dest string) error {
+	return ZipWithNotify(src, dest, nil)
 }
 
 // ZipWithNotify 带通知的文件夹压缩
 //
-// dest 压缩到的文件 例如：/var/xxx.zip
 // src 源文件夹 例如：/var/xxx
+//
+// dest 压缩到的文件 例如：/var/xxx.zip
+//
 // ch 用于通知压缩进度
-func ZipWithNotify(dest, src string, ch chan int) error {
+func ZipWithNotify(src, dest string, ch chan int) error {
 	zipFile, err := os.Create(dest)
 	if err != nil {
 		return err
@@ -76,18 +79,21 @@ func ZipWithNotify(dest, src string, ch chan int) error {
 
 // Unzip 文件解压
 //
-// dest 解压到的路径 例如：/var/xxx
 // src 文件路径 例如：/var/xxx.zip
-func Unzip(dest, src string) error {
-	return UnzipWithNotify(dest, src, nil)
+//
+// dest 解压到的路径 例如：/var/xxx
+func Unzip(src, dest string) error {
+	return UnzipWithNotify(src, dest, nil)
 }
 
 // UnzipWithNotify 带通知的文件解压
 //
-// dest 解压到的路径 例如：/var/xxx
 // src 文件路径 例如：/var/xxx.zip
+//
+// dest 解压到的路径 例如：/var/xxx
+//
 // ch 用于通知解压进度
-func UnzipWithNotify(dest, src string, ch chan *UnzipNotify) error {
+func UnzipWithNotify(src, dest string, ch chan *UnzipNotify) error {
 	r, err := zip.OpenReader(src)
 	if err != nil {
 		return err

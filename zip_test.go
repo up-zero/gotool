@@ -5,7 +5,7 @@ import (
 )
 
 func TestZip(t *testing.T) {
-	t.Log(Zip("E:\\github\\up-zero\\gotool\\tmp\\dir.zip", "E:\\github\\up-zero\\gotool\\tmp\\a"))
+	t.Log(Zip("E:\\github\\up-zero\\gotool\\tmp\\a", "E:\\github\\up-zero\\gotool\\tmp\\dir.zip"))
 }
 
 func TestZipWithNotify(t *testing.T) {
@@ -25,11 +25,11 @@ func TestZipWithNotify(t *testing.T) {
 			}
 		}
 	}()
-	t.Log(ZipWithNotify(dest, src, ch))
+	t.Log(ZipWithNotify(src, dest, ch))
 }
 
 func TestUnzip(t *testing.T) {
-	t.Log(Unzip("E:\\github\\up-zero\\gotool\\tmp\\b", "E:\\github\\up-zero\\gotool\\tmp\\dir.zip"))
+	t.Log(Unzip("E:\\github\\up-zero\\gotool\\tmp\\dir.zip", "E:\\github\\up-zero\\gotool\\tmp\\b"))
 }
 
 func TestUnzipWithNotify(t *testing.T) {
@@ -49,7 +49,7 @@ func TestUnzipWithNotify(t *testing.T) {
 			}
 		}
 	}()
-	if err := UnzipWithNotify(dest, src, ch); err != nil {
+	if err := UnzipWithNotify(src, dest, ch); err != nil {
 		t.Fatal(err)
 	}
 	finish <- struct{}{}
