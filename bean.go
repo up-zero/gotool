@@ -1,7 +1,6 @@
 package gotool
 
 import (
-	"errors"
 	"reflect"
 )
 
@@ -38,7 +37,7 @@ func CopyProperties(src, dst any) error {
 	dstValue := reflect.ValueOf(dst)
 
 	if dstValue.Kind() != reflect.Ptr || dstValue.Elem().Kind() != reflect.Struct {
-		return errors.New("dst must be a pointer to a struct")
+		return ErrDstMustBePointerStruct
 	}
 
 	// 使用 Elem 解引用指针（获取指针指向的实际结构体值）

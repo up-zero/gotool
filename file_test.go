@@ -57,3 +57,24 @@ func TestFileSync(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestFileRead(t *testing.T) {
+	type ss struct {
+		Name string `json:"name"`
+	}
+	// 写文件
+	s := ss{
+		Name: "test",
+	}
+	if err := FileSave("/opt/gotool/test.txt", s); err != nil {
+		t.Fatal(err)
+	}
+
+	// 读文件
+	s1 := new(ss)
+	if err := FileRead("/opt/gotool/test.txt", s1); err != nil {
+		t.Fatal(err)
+	} else {
+		t.Log(s1)
+	}
+}

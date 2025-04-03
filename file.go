@@ -2,12 +2,15 @@ package gotool
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"path"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"time"
 )
@@ -220,12 +223,29 @@ func FileMainName(filePath string) string {
 // Examples:
 //
 //	gotool.FileSave("/opt/gotool/test.txt", []byte("hello world"))
-func FileSave(p string, data []byte) error {
-	err := os.MkdirAll(filepath.Dir(p), os.ModePerm)
+//	gotool.FileSave("/opt/gotool/test.txt", struct{ Message string }{Message: "hello world"})
+func FileSave(p string, data any) error {
+	var content []byte
+	var err error
+
+	// 判断 data 类型
+	if reflect.TypeOf(data).Kind() == reflect.Slice && reflect.TypeOf(data).Elem().Kind() == reflect.Uint8 {
+		content = data.([]byte)
+	} else {
+		content, err = json.MarshalIndent(data, "", "  ")
+		if err != nil {
+			return err
+		}
+	}
+
+	// 创建目录
+	err = os.MkdirAll(filepath.Dir(p), os.ModePerm)
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(p, data, os.ModePerm)
+
+	// 写文件
+	return os.WriteFile(p, content, os.ModePerm)
 }
 
 // FileSync 文件同步（将内存中的文件刷新到硬盘中）
@@ -237,6 +257,24 @@ func FileSync(filePath string) error {
 		return err
 	}
 	if err := f.Sync(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// FileRead 读文件（结构体）
+//
+// filePath 文件路径
+// dst 目标结构体
+func FileRead(filePath string, dst any) error {
+	if reflect.TypeOf(dst).Kind() != reflect.Ptr || reflect.TypeOf(dst).Elem().Kind() != reflect.Struct {
+		return ErrDstMustBePointerStruct
+	}
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return fs.ErrNotExist
+	}
+	if err := json.Unmarshal(data, dst); err != nil {
 		return err
 	}
 	return nil

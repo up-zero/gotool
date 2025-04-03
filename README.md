@@ -42,6 +42,7 @@ func main() {
 + **FileMainName** 获取指定路径的文件名
 + **FileSave** 保存文件
 + **FileSync** 文件同步
++ **FileRead** 读文件（结构体）
 + **Zip** 文件夹压缩
 + **ZipWithNotify** 带通知的文件夹压缩
 + **Unzip** 文件解压
