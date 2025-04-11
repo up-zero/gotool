@@ -95,7 +95,16 @@ func main() {
 + **Ipv4sLocal** 获取本地ipv4地址
 + **ShouldBindJson** json入参绑定
 + **ShouldBindQuery** query入参绑定
-+ **UrlBase**  获取URL路径的基础名称
++ **UrlBase** 获取URL路径的基础名称
++ **HttpGet** http get 请求
++ **HttpPost** http post 请求
++ **HttpPut** http put 请求
++ **HttpDelete** http delete 请求
++ **HttpGetWithTimeout** 带超时时间的 http get 请求
++ **HttpPostWithTimeout** 带超时时间的 http post 请求
++ **HttpPutWithTimeout** 带超时时间的 http put 请求
++ **HttpDeleteWithTimeout** 带超时时间的 http delete 请求
++ **ParseResponse** 解析响应结果
 
 ### 系统
 

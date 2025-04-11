@@ -36,3 +36,12 @@ func TestHttpPutWithTimeout(t *testing.T) {
 func TestHttpDeleteWithTimeout(t *testing.T) {
 	t.Log(HttpDeleteWithTimeout("http://baidu.com", []byte(""), 10*time.Second))
 }
+
+func TestParseResponse(t *testing.T) {
+	type resp struct {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+		Data any    `json:"data"`
+	}
+	t.Log(ParseResponse[resp](HttpGet("http://192.168.110.253:9000/api/v1/loom/list")))
+}

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"reflect"
@@ -87,6 +87,22 @@ func HttpDeleteWithTimeout(url string, data any, timeout time.Duration, header .
 	return httpRequest(url, "DELETE", data, header, timeout)
 }
 
+// ParseResponse 解析响应
+//
+// T 为返回值类型
+// respBytes 为响应字节数组
+// err httpRequest 错误
+func ParseResponse[T any](respBytes []byte, err error) (T, error) {
+	var reply T
+	if err != nil {
+		return reply, err
+	}
+	if err := json.Unmarshal(respBytes, &reply); err != nil {
+		return reply, err
+	}
+	return reply, nil
+}
+
 // httpRequest .
 func httpRequest(url, method string, data any, header []byte, timeout time.Duration) ([]byte, error) {
 	var dataBytes []byte
@@ -146,7 +162,7 @@ func httpRequest(url, method string, data any, header []byte, timeout time.Durat
 	}
 	defer resp.Body.Close()
 
-	respBytes, err := ioutil.ReadAll(resp.Body)
+	respBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
