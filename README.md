@@ -142,3 +142,10 @@ func main() {
 ### 条件判断
 
 + **If** 三元运算符
+
+### 流
+
++ **NewStream** 初始化 Stream
++ **Filter** 数据过滤
++ **Map** 数据处理与转换
++ **StreamMap** 数据处理与转换
