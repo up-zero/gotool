@@ -29,8 +29,14 @@ func (s *Stream[T]) Filter(f func(T) bool) *Stream[T] {
 	return s
 }
 
-// Map 数据处理与转换
-func (s *Stream[T]) Map(fn func(item T) any) *Stream[any] {
+// Map 数据处理
+//
+// # Examples:
+//
+// s := NewStream([]int{1, 2, 3, 4, 5})
+//
+// s.Map(func(v int) int { return v * 2 })
+func (s *Stream[T]) Map(fn func(item T) T) *Stream[T] {
 	return StreamMap[T](s, fn)
 }
 

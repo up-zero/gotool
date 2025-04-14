@@ -13,9 +13,9 @@ func TestStreamFilter(t *testing.T) {
 
 func TestStreamMap(t *testing.T) {
 	s := NewStream([]int{1, 2, 3, 4, 5})
-	s2 := s.Map(func(v int) any { return fmt.Sprintf("data: %d", v) })
-	// []interface {}{"data: 1", "data: 2", "data: 3", "data: 4", "data: 5"}
-	fmt.Printf("%#v \n", s2.ToSlice())
+	s.Map(func(v int) int { return v * 2 })
+	// []int{2, 4, 6, 8, 10}
+	fmt.Printf("%#v \n", s.ToSlice())
 }
 
 func TestStreamMap2(t *testing.T) {
