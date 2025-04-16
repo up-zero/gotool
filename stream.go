@@ -40,6 +40,23 @@ func (s *Stream[T]) Map(fn func(item T) T) *Stream[T] {
 	return StreamMap[T](s, fn)
 }
 
+// Max 数据最大值, a > b
+//
+// # Examples:
+//
+// s := NewStream([]int{1, 2, 3, 4, 5})
+//
+// s.Max(func(a, b int) bool { return a > b }) // 5
+func (s *Stream[T]) Max(fn func(a, b T) bool) T {
+	var result T
+	for i, v := range s.data {
+		if fn(v, result) || i == 0 {
+			result = v
+		}
+	}
+	return result
+}
+
 // StreamMap 数据处理与转换
 //
 // # Examples:
