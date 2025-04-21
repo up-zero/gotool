@@ -25,7 +25,18 @@ func TestStreamMap(t *testing.T) {
 	fmt.Printf("%#v \n", s2.ToSlice())
 }
 
+func TestStream_Extreme(t *testing.T) {
+	s := NewStream([]int{1, 2, 3, 4, 5})
+	println(s.Extreme(func(a, b int) bool { return a > b })) // 5
+	println(s.Extreme(func(a, b int) bool { return a < b })) // 1
+}
+
 func TestStream_Max(t *testing.T) {
 	s := NewStream([]int{1, 2, 3, 4, 5})
-	println(s.Max(func(a, b int) bool { return a > b }))
+	println(s.Max(func(a, b int) bool { return a > b })) // 5
+}
+
+func TestStream_Min(t *testing.T) {
+	s := NewStream([]int{1, 2, 3, 4, 5})
+	println(s.Min(func(a, b int) bool { return a < b })) // 1
 }

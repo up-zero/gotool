@@ -146,7 +146,9 @@ func main() {
 ### 流
 
 + **NewStream** 初始化 Stream
-+ **Filter** 数据过滤
-+ **Map** 数据处理
++ **Filter** Stream方法，数据过滤
++ **Map** Stream方法，数据处理
 + **StreamMap** 数据处理与转换
-+ **Max** 数据最大值
++ **Extreme** Stream方法，返回流中的极值
++ **Max** Stream方法，数据最大值
++ **Min** Stream方法，数据最小值

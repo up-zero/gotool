@@ -40,6 +40,29 @@ func (s *Stream[T]) Map(fn func(item T) T) *Stream[T] {
 	return StreamMap[T](s, fn)
 }
 
+// Extreme 返回流中的极值，比较函数决定是最大值还是最小值
+//
+// 要获取最大值，传入 func(a, b T) bool { return a > b }
+//
+// 要获取最小值，传入 func(a, b T) bool { return a < b }
+//
+// # Examples:
+//
+// s := NewStream([]int{1, 2, 3, 4, 5})
+//
+// max := s.Extreme(func(a, b int) bool { return a > b }) // 5
+//
+// min := s.Extreme(func(a, b int) bool { return a < b }) // 1
+func (s *Stream[T]) Extreme(fn func(a, b T) bool) T {
+	var result T
+	for i, v := range s.data {
+		if fn(v, result) || i == 0 {
+			result = v
+		}
+	}
+	return result
+}
+
 // Max 数据最大值, a > b
 //
 // # Examples:
@@ -48,13 +71,18 @@ func (s *Stream[T]) Map(fn func(item T) T) *Stream[T] {
 //
 // s.Max(func(a, b int) bool { return a > b }) // 5
 func (s *Stream[T]) Max(fn func(a, b T) bool) T {
-	var result T
-	for i, v := range s.data {
-		if fn(v, result) || i == 0 {
-			result = v
-		}
-	}
-	return result
+	return s.Extreme(fn)
+}
+
+// Min 数据最小值, a < b
+//
+// # Examples:
+//
+// s := NewStream([]int{1, 2, 3, 4, 5})
+//
+// s.Min(func(a, b int) bool { return a < b }) // 1
+func (s *Stream[T]) Min(fn func(a, b T) bool) T {
+	return s.Extreme(fn)
 }
 
 // StreamMap 数据处理与转换
