@@ -78,13 +78,16 @@ func main() {
 + **HexToInt64** 十六进制字符串转换为int64
 + **CopyProperties**  复制结构体的属性
 
-### 数学
+### 随机数
 
 + **RandomStr** 随机字符串
 + **RandomNumber** 随机数字
 + **RandomAlpha** 随机字母
 + **RandomAlphaNumber** 随机字母数字
 + **RandomRangeInt** 指定范围内的随机数 [最小值, 最大值)
+
+### 数学
+
 + **MathAbs**  绝对值
 + **MathMin**  最小值
 + **MathMax**  最大值
