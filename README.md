@@ -29,7 +29,7 @@ func main() {
 
 ## 方法列表
 
-### 文件
+### 文件（fileutil）
 
 + **FileCopy** 文件拷贝
 + **FileMove** 文件移动
@@ -48,7 +48,7 @@ func main() {
 + **Unzip** 文件解压
 + **UnzipWithNotify** 带通知的文件解压
 
-### 加解密
+### 加解密（cryptoutil）
 
 + **Md5** 获取md5值
 + **Md5Iterations** 迭代多次求md5
@@ -59,7 +59,7 @@ func main() {
 + **JWTGenerate** 生成JWT
 + **JWTParse** 解析JWT
 
-### 类型转换
+### 类型转换（convertutil）
 
 + **StrToInt8** 字符串转换为int8
 + **StrToInt16** 字符串转换为int16
@@ -78,7 +78,7 @@ func main() {
 + **HexToInt64** 十六进制字符串转换为int64
 + **CopyProperties**  复制结构体的属性
 
-### 随机数
+### 随机数（randomutil）
 
 + **RandomStr** 随机字符串
 + **RandomNumber** 随机数字
@@ -86,13 +86,13 @@ func main() {
 + **RandomAlphaNumber** 随机字母数字
 + **RandomRangeInt** 指定范围内的随机数 [最小值, 最大值)
 
-### 数学
+### 数学（mathutil）
 
 + **MathAbs**  绝对值
 + **MathMin**  最小值
 + **MathMax**  最大值
 
-### 网络
+### 网络（netutil）
 
 + **SendMail** 发送邮件
 + **Ipv4sLocal** 获取本地ipv4地址
@@ -109,7 +109,7 @@ func main() {
 + **HttpDeleteWithTimeout** 带超时时间的 http delete 请求
 + **ParseResponse** 解析响应结果
 
-### 系统
+### 系统（sysutil）
 
 + **ExecShell** 运行shell命令或脚本
 + **ExecCommand** 运行命令
@@ -119,34 +119,34 @@ func main() {
 + **CPUTemperatures**  获取CPU温度
 + **SysUptime**  系统启动时间
 
-### 日期&时间
+### 日期&时间（timeutil）
 
 + **RFC3339ToNormalTime** RFC3339 日期格式标准化
 + **RFC1123ToNormalTime** RFC1123 日期格式标准化
 
-### 唯一ID
+### 唯一ID（idutil）
 
 + **UUID** uuid
 + **UUIDGenerate** 生成UUID
 + **SignalSnowflake** 单节点的雪花码
 
-### 数组
+### 数组（arrayutil）
 
 + **ArrayDuplicate** 数组去重
 + **ArrayIn** 数组是否包含某个值
 + **ArrayJoin** 整型拼接
 
-### 图片
+### 图片（imageutil）
 
 + **ImageCompression**  图片压缩
 + **ImageSize**  图片尺寸
 + **GenerateCaptcha**  验证码图片生成
 
-### 条件判断
+### 条件判断（conditionutil）
 
 + **If** 三元运算符
 
-### 流
+### 流（streamutil）
 
 + **NewStream** 初始化 Stream
 + **Filter** Stream方法，数据过滤
