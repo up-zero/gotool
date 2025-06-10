@@ -6,16 +6,16 @@ type Number interface {
 		~float32 | ~float64
 }
 
-// MathAbs 绝对值
-func MathAbs[T Number](v T) T {
+// Abs 绝对值
+func Abs[T Number](v T) T {
 	if v < 0 {
 		return -v
 	}
 	return v
 }
 
-// MathMin 最小值
-func MathMin[T Number](arg ...T) T {
+// Min 最小值
+func Min[T Number](arg ...T) T {
 	res := arg[0]
 	for _, v := range arg {
 		if v < res {
@@ -25,8 +25,8 @@ func MathMin[T Number](arg ...T) T {
 	return res
 }
 
-// MathMax 最大值
-func MathMax[T Number](arg ...T) T {
+// Max 最大值
+func Max[T Number](arg ...T) T {
 	res := arg[0]
 	for _, v := range arg {
 		if v > res {
