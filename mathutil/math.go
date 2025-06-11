@@ -1,13 +1,9 @@
 package mathutil
 
-type Number interface {
-	~int | ~int8 | ~int16 | ~int32 | ~int64 |
-		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
-		~float32 | ~float64
-}
+import "github.com/up-zero/gotool"
 
 // Abs 绝对值
-func Abs[T Number](v T) T {
+func Abs[T gotool.Number](v T) T {
 	if v < 0 {
 		return -v
 	}
@@ -15,7 +11,7 @@ func Abs[T Number](v T) T {
 }
 
 // Min 最小值
-func Min[T Number](arg ...T) T {
+func Min[T gotool.Number](arg ...T) T {
 	res := arg[0]
 	for _, v := range arg {
 		if v < res {
@@ -26,7 +22,7 @@ func Min[T Number](arg ...T) T {
 }
 
 // Max 最大值
-func Max[T Number](arg ...T) T {
+func Max[T gotool.Number](arg ...T) T {
 	res := arg[0]
 	for _, v := range arg {
 		if v > res {
@@ -34,4 +30,18 @@ func Max[T Number](arg ...T) T {
 		}
 	}
 	return res
+}
+
+// Sum 求和
+func Sum[T gotool.Number](arg ...T) T {
+	var sum T
+	for _, v := range arg {
+		sum += v
+	}
+	return sum
+}
+
+// Average 平均值
+func Average[T gotool.Number](arg ...T) T {
+	return Sum(arg...) / T(len(arg))
 }

@@ -88,9 +88,11 @@ func main() {
 
 ### 数学（mathutil）
 
-+ **MathAbs**  绝对值
-+ **MathMin**  最小值
-+ **MathMax**  最大值
++ **Abs**  绝对值
++ **Min**  最小值
++ **Max**  最大值
++ **Sum**  求和
++ **Average**  平均值
 
 ### 网络（netutil）
 

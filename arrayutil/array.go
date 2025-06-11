@@ -1,15 +1,16 @@
 package arrayutil
 
 import (
-	"github.com/up-zero/gotool/mathutil"
 	"reflect"
 	"strconv"
+
+	"github.com/up-zero/gotool"
 )
 
 // ArrayDuplicate 数组去重
 //
 // elems 传入同种类型数组
-func ArrayDuplicate[T mathutil.Number | string](elems ...[]T) []T {
+func ArrayDuplicate[T gotool.Number | string](elems ...[]T) []T {
 	var ans = make([]T, 0)
 	var m = make(map[T]struct{})
 	for _, elem := range elems {
@@ -27,7 +28,7 @@ func ArrayDuplicate[T mathutil.Number | string](elems ...[]T) []T {
 //
 // target 目标值
 // arr 待遍历的数组
-func ArrayIn[T mathutil.Number | string | bool](target T, arr []T) bool {
+func ArrayIn[T gotool.Number | string | bool](target T, arr []T) bool {
 	for _, v := range arr {
 		if target == v {
 			return true
