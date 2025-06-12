@@ -1,16 +1,19 @@
 package arrayutil
 
 import (
-	"reflect"
+	"fmt"
 	"strconv"
+	"strings"
+
+	"slices"
 
 	"github.com/up-zero/gotool"
 )
 
-// ArrayDuplicate 数组去重
+// Duplicate 数组去重
 //
 // elems 传入同种类型数组
-func ArrayDuplicate[T gotool.Number | string](elems ...[]T) []T {
+func Duplicate[T gotool.Number | string](elems ...[]T) []T {
 	var ans = make([]T, 0)
 	var m = make(map[T]struct{})
 	for _, elem := range elems {
@@ -24,33 +27,37 @@ func ArrayDuplicate[T gotool.Number | string](elems ...[]T) []T {
 	return ans
 }
 
-// ArrayIn 数组是否包含某个值
+// Contains 数组是否包含某个值
 //
-// target 目标值
 // arr 待遍历的数组
-func ArrayIn[T gotool.Number | string | bool](target T, arr []T) bool {
-	for _, v := range arr {
-		if target == v {
-			return true
-		}
-	}
-	return false
+// target 目标值
+func Contains[T gotool.Number | string | bool](arr []T, target T) bool {
+	return slices.Contains(arr, target)
 }
 
-// ArrayJoin 整型拼接
+// Join 数组拼接
 //
 // elems 待拼接的数值
 // sep 拼接用的字符串
-func ArrayJoin[T int | int8 | int16 | int32 | int64 | uint | uint8 | uint16 | uint32 | uint64](elems []T, sep string) string {
-	var ans string
-	for _, elem := range elems {
-		switch reflect.TypeOf(elem).Kind() {
-		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			ans = ans + strconv.Itoa(int(elem)) + sep
+func Join[T gotool.Number | string](elems []T, sep string) string {
+	var ans strings.Builder
+	for i, elem := range elems {
+		if i > 0 {
+			ans.WriteString(sep)
+		}
+		switch v := any(elem).(type) {
+		case int, int8, int16, int32, int64,
+			uint, uint8, uint16, uint32, uint64:
+			ans.WriteString(fmt.Sprint(v))
+		case float32:
+			ans.WriteString(strconv.FormatFloat(float64(v), 'f', -1, 32))
+		case float64:
+			ans.WriteString(strconv.FormatFloat(v, 'f', -1, 64))
+		case string:
+			ans.WriteString(v)
+		default:
+			ans.WriteString(fmt.Sprint(v))
 		}
 	}
-	if ans == "" {
-		return ""
-	}
-	return ans[:len(ans)-len(sep)]
+	return ans.String()
 }

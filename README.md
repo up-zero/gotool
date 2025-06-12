@@ -134,9 +134,9 @@ func main() {
 
 ### 数组（arrayutil）
 
-+ **ArrayDuplicate** 数组去重
-+ **ArrayIn** 数组是否包含某个值
-+ **ArrayJoin** 整型拼接
++ **Duplicate** 数组去重
++ **Contains** 数组是否包含某个值
++ **Join** 整型拼接
 
 ### 图片（imageutil）
 
