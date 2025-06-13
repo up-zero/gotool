@@ -35,7 +35,7 @@ func Contains[T gotool.Number | string | bool](arr []T, target T) bool {
 	return slices.Contains(arr, target)
 }
 
-// Join 数组拼接
+// Join 数组拼接成字符串
 //
 // elems 待拼接的数值
 // sep 拼接用的字符串
@@ -60,4 +60,17 @@ func Join[T gotool.Number | string](elems []T, sep string) string {
 		}
 	}
 	return ans.String()
+}
+
+// Concat 数组合并
+func Concat[T any](elems ...[]T) []T {
+	var l int
+	for _, elem := range elems {
+		l += len(elem)
+	}
+	var ans = make([]T, 0, l)
+	for _, elem := range elems {
+		ans = append(ans, elem...)
+	}
+	return ans
 }

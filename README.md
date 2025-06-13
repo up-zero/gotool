@@ -137,6 +137,7 @@ func main() {
 + **Duplicate** 数组去重
 + **Contains** 数组是否包含某个值
 + **Join** 整型拼接
++ **Concat** 数组拼接
 
 ### 图片（imageutil）
 
