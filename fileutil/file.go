@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/up-zero/gotool"
 	"io"
 	"io/fs"
 	"net/http"
@@ -14,6 +13,8 @@ import (
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/up-zero/gotool"
 )
 
 // FileCopy 文件拷贝

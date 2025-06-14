@@ -74,3 +74,42 @@ func Concat[T any](elems ...[]T) []T {
 	}
 	return ans
 }
+
+// Intersect 求多个数组的交集，元素存在时会先去重
+//
+// elems 多个数组
+//
+// 例如：Intersect([]int{12, 22, 12}, []int{12, 22})  ->  [12 22]
+func Intersect[T comparable](elems ...[]T) []T {
+	if len(elems) == 0 {
+		return []T{}
+	}
+
+	var common = make(map[T]struct{})
+	for _, v := range elems[0] {
+		common[v] = struct{}{}
+	}
+	for i := 1; i < len(elems); i++ {
+		set := make(map[T]struct{})
+		for _, v := range elems[i] {
+			set[v] = struct{}{}
+		}
+		for k := range common {
+			if _, ok := set[k]; !ok {
+				delete(common, k)
+			}
+		}
+		if len(common) == 0 {
+			return []T{}
+		}
+	}
+
+	var ans = make([]T, 0)
+	for _, v := range elems[0] {
+		if _, ok := common[v]; ok {
+			ans = append(ans, v)
+			delete(common, v)
+		}
+	}
+	return ans
+}

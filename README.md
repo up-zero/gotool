@@ -138,6 +138,7 @@ func main() {
 + **Contains** 数组是否包含某个值
 + **Join** 整型拼接
 + **Concat** 数组拼接
++ **Intersect** 求多个数组的交集，数组中的元素存在时会先去重
 
 ### 图片（imageutil）
 
