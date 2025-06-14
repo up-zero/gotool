@@ -1,17 +1,20 @@
 package fileutil
 
 import (
-	"github.com/up-zero/gotool"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/up-zero/gotool"
 )
 
 // DirCopy 绝对目录文件拷贝，拷贝 src 文件夹里面的内容到 dst 文件夹中
 //
-// src: 源目录
-// dst: 目标目录
+// # Params:
+//
+//	src: 源目录
+//	dst: 目标目录
 func DirCopy(src, dst string) error {
 	// 判断目标和源是否相同
 	if strings.TrimSpace(dst) == strings.TrimSpace(src) {
@@ -56,13 +59,16 @@ func DirCopy(src, dst string) error {
 
 // CurrentDirCount 当前文件夹下(不迭代子文件夹)文件或文件夹的个数
 //
-// dir 目录路径
+// # Params:
 //
-// Examples:
+//	dir: 目录路径
+//	fileType: 文件类型, 默认为空, 即所有文件及文件夹, 可选值: file, dir
 //
-//	gotool.CurrentDirCount("/home/xxx") // 当前文件夹下所有文件及文件夹的个数
-//	gotool.CurrentDirCount("/home/xxx", "file") // 当前文件夹下文件的个数
-//	gotool.CurrentDirCount("/home/xxx", "dir") // 当前文件夹下文件夹的个数
+// # Examples:
+//
+//	CurrentDirCount("/home/xxx") // 当前文件夹下所有文件及文件夹的个数
+//	CurrentDirCount("/home/xxx", "file") // 当前文件夹下文件的个数
+//	CurrentDirCount("/home/xxx", "dir") // 当前文件夹下文件夹的个数
 func CurrentDirCount(dir string, args ...string) (int, error) {
 	info, err := os.Stat(dir)
 	if err != nil {

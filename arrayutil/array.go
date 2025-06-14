@@ -12,7 +12,7 @@ import (
 
 // Duplicate 数组去重
 //
-// elems 传入同种类型数组
+//	elems: 传入同种类型数组
 func Duplicate[T gotool.Number | string](elems ...[]T) []T {
 	var ans = make([]T, 0)
 	var m = make(map[T]struct{})
@@ -29,16 +29,16 @@ func Duplicate[T gotool.Number | string](elems ...[]T) []T {
 
 // Contains 数组是否包含某个值
 //
-// arr 待遍历的数组
-// target 目标值
+//	arr: 待遍历的数组
+//	target: 目标值
 func Contains[T gotool.Number | string | bool](arr []T, target T) bool {
 	return slices.Contains(arr, target)
 }
 
 // Join 数组拼接成字符串
 //
-// elems 待拼接的数值
-// sep 拼接用的字符串
+//	elems: 待拼接的数值
+//	sep: 拼接用的字符串
 func Join[T gotool.Number | string](elems []T, sep string) string {
 	var ans strings.Builder
 	for i, elem := range elems {
@@ -77,9 +77,11 @@ func Concat[T any](elems ...[]T) []T {
 
 // Intersect 求多个数组的交集，元素存在时会先去重
 //
-// elems 多个数组
+//	elems: 多个数组
 //
-// 例如：Intersect([]int{12, 22, 12}, []int{12, 22})  ->  [12 22]
+// # Example:
+//
+//	Intersect([]int{12, 22, 12}, []int{12, 22})  // [12 22]
 func Intersect[T comparable](elems ...[]T) []T {
 	if len(elems) == 0 {
 		return []T{}

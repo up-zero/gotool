@@ -19,8 +19,10 @@ import (
 
 // FileCopy 文件拷贝
 //
-// src: 源文件
-// dst: 目标文件
+// # Params:
+//
+//	src: 源文件
+//	dst: 目标文件
 func FileCopy(src, dst string) error {
 	// 打开源文件
 	reader, err := os.Open(src)
@@ -49,12 +51,14 @@ func FileCopy(src, dst string) error {
 
 // FileMove 文件移动
 //
-// srcFile 源文件
-// dstFile 目标文件
+// # Params:
 //
-// Examples:
+//	srcFile: 源文件
+//	dstFile: 目标文件
 //
-//	gotool.FileMove("/opt/gotool/test.txt", "/opt/gotool/test/rename.txt")
+// # Examples:
+//
+//	FileMove("/opt/gotool/test.txt", "/opt/gotool/test/rename.txt")
 func FileMove(srcFile, dstFile string) error {
 	_, err := os.Stat(srcFile)
 	if err != nil {
@@ -82,9 +86,11 @@ func (dp *DownloadProgress) Write(p []byte) (int, error) {
 
 // FileDownloadWithNotify 带通知的文件下载
 //
-// ch 通知进度
-// url 文件地址
-// filePath 文件路径
+// # Params:
+//
+//	ch: 通知进度
+//	url: 文件地址
+//	filePath: 文件路径
 func FileDownloadWithNotify(ch chan DownloadProgress, url, filePath string) (*DownloadProgress, error) {
 	defer close(ch)
 	// 创建文件夹
@@ -142,8 +148,10 @@ func FileDownloadWithNotify(ch chan DownloadProgress, url, filePath string) (*Do
 
 // FileDownload 文件下载
 //
-// url 文件地址
-// filePath 文件路径
+// # Params:
+//
+//	url: 文件地址
+//	filePath: 文件路径
 func FileDownload(url, filePath string) error {
 	// 创建文件夹
 	if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
@@ -170,13 +178,16 @@ func FileDownload(url, filePath string) error {
 
 // FileCount 获取指定目录下的文件个数
 //
-// dir 目录路径
+// # Params:
 //
-// Examples:
+//	dir: 目录路径
+//	suffix: 文件后缀名, 默认为空, 即所有文件
 //
-//	gotool.FileCount("/home/xxx") // 指定目录的文件个数
-//	gotool.FileCount("/home/xxx", ".jpg") // 指定目录的指定后缀名的文件个数
-//	gotool.FileCount("/home/xxx", ".jpg", ".png") // 指定目录的多个后缀名的文件个数
+// # Examples:
+//
+//	FileCount("/home/xxx") // 指定目录的文件个数
+//	FileCount("/home/xxx", ".jpg") // 指定目录的指定后缀名的文件个数
+//	FileCount("/home/xxx", ".jpg", ".png") // 指定目录的多个后缀名的文件个数
 func FileCount(dir string, args ...string) (int, error) {
 	var cnt = 0
 	var suffix = make(map[string]struct{})
@@ -209,23 +220,20 @@ func FileCount(dir string, args ...string) (int, error) {
 
 // FileMainName 获取指定路径的文件名
 //
-// filePath 文件路径或文件名
+// # Examples:
 //
-// Examples:
-//
-// gotool.FileMainName("/opt/gotool/test.go") // test
-//
-// gotool.FileMainName("test.go") // test
+//	FileMainName("/opt/gotool/test.go") // test
+//	FileMainName("test.go") // test
 func FileMainName(filePath string) string {
 	return strings.TrimSuffix(filepath.Base(filePath), filepath.Ext(filePath))
 }
 
 // FileSave 保存文件
 //
-// Examples:
+// # Examples:
 //
-//	gotool.FileSave("/opt/gotool/test.txt", []byte("hello world"))
-//	gotool.FileSave("/opt/gotool/test.txt", struct{ Message string }{Message: "hello world"})
+//	FileSave("/opt/gotool/test.txt", []byte("hello world"))
+//	FileSave("/opt/gotool/test.txt", struct{ Message string }{Message: "hello world"})
 func FileSave(p string, data any) error {
 	var content []byte
 	var err error
@@ -266,8 +274,10 @@ func FileSync(filePath string) error {
 
 // FileRead 读文件（结构体）
 //
-// filePath 文件路径
-// dst 目标结构体
+// # Params:
+//
+//	filePath: 文件路径
+//	dst: 目标结构体
 func FileRead(filePath string, dst any) error {
 	if reflect.TypeOf(dst).Kind() != reflect.Ptr || reflect.TypeOf(dst).Elem().Kind() != reflect.Struct {
 		return gotool.ErrDstMustBePointerStruct

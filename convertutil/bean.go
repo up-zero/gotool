@@ -1,8 +1,9 @@
 package convertutil
 
 import (
-	"github.com/up-zero/gotool"
 	"reflect"
+
+	"github.com/up-zero/gotool"
 )
 
 // CopyProperties 复制结构体的属性
@@ -25,7 +26,7 @@ import (
 //	}
 //	s1 := src{Name: "test", Map: map[string]int{"a": 1}}
 //	s2 := new(dst)
-//	gotool.CopyProperties(s1, s2)
+//	CopyProperties(s1, s2)
 func CopyProperties(src, dst any) error {
 	if src == nil || dst == nil {
 		return gotool.ErrSrcDstCannotBeNil
