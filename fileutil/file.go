@@ -260,7 +260,9 @@ func FileSave(p string, data any) error {
 
 // FileSync 文件同步（将内存中的文件刷新到硬盘中）
 //
-// filePath 文件路径
+// # Params:
+//
+//	filePath: 文件路径
 func FileSync(filePath string) error {
 	f, err := os.Open(filePath)
 	if err != nil {

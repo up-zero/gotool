@@ -3,15 +3,18 @@ package cryptoutil
 import (
 	"crypto/md5"
 	"fmt"
-	"github.com/up-zero/gotool"
 	"io"
 	"os"
+
+	"github.com/up-zero/gotool"
 )
 
 // Md5 获取md5值
 //
-// elem: string, []byte
-// salt: 加盐
+// # Params:
+//
+//	elem: string, []byte
+//	salt: 加盐
 func Md5(elem any, salt ...string) (string, error) {
 	switch elem.(type) {
 	case string:
@@ -33,8 +36,10 @@ func Md5(elem any, salt ...string) (string, error) {
 
 // Md5Iterations 迭代多次求md5
 //
-// elem: string, []byte
-// iterations: 迭代次数
+// # Params:
+//
+//	elem: string, []byte
+//	iterations: 迭代次数
 func Md5Iterations(s any, iterations int) (string, error) {
 	var err error
 	for i := 0; i < iterations; i++ {
@@ -48,7 +53,9 @@ func Md5Iterations(s any, iterations int) (string, error) {
 
 // Md5File 获取文件的MD5
 //
-// path 文件路径
+// # Params:
+//
+//	path: 文件路径
 func Md5File(path string) (string, error) {
 	src, err := os.Open(path)
 	if err != nil {

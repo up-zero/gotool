@@ -4,9 +4,10 @@ import (
 	"crypto/hmac"
 	"encoding/base64"
 	"encoding/json"
-	"github.com/up-zero/gotool"
 	"strings"
 	"time"
+
+	"github.com/up-zero/gotool"
 )
 
 type JwtClaims struct {
@@ -16,9 +17,11 @@ type JwtClaims struct {
 
 // JWTGenerate 生成JWT
 //
-// claims JWT声明
-// secretKey 密钥
-// algorithm 加密算法，默认为 HS256，可选值为 HS256、HS384、HS512
+// # Params:
+//
+//	claims: JWT声明
+//	secretKey: 密钥
+//	algorithm: 加密算法，默认为 HS256，可选值为 HS256、HS384、HS512
 func JWTGenerate(claims JwtClaims, secretKey string, algorithm ...string) (string, error) {
 	if claims.Expires > 0 {
 		claims.Expires += time.Now().Unix()
@@ -68,9 +71,11 @@ func JWTGenerate(claims JwtClaims, secretKey string, algorithm ...string) (strin
 
 // JWTParse 解析JWT
 //
-// jwt JWT字符串
-// secretKey 密钥
-// algorithm 加密算法，默认为 HS256，可选值为 HS256、HS384、HS512
+// # Params:
+//
+//	jwt: JWT字符串
+//	secretKey: 密钥
+//	algorithm: 加密算法，默认为 HS256，可选值为 HS256、HS384、HS512
 func JWTParse(jwt string, secretKey string, algorithm ...string) (*JwtClaims, error) {
 	// 拆分JWT为header、claims和signature
 	parts := strings.Split(jwt, ".")

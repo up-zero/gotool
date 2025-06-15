@@ -2,7 +2,6 @@ package imageutil
 
 import (
 	"fmt"
-	"github.com/up-zero/gotool"
 	"image"
 	"image/color"
 	"image/draw"
@@ -13,13 +12,17 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/up-zero/gotool"
 )
 
 // ImageCompression 图片压缩
 //
-// srcFile 源图片路径
-// dstFile 目标图片路径
-// quality 压缩质量，范围 1-100（值越低，压缩率越高，质量越低），对于 PNG 图片，映射到 0-9 的压缩级别（0：无压缩，9：最大压缩）
+// # Params:
+//
+//	srcFile: 源图片路径
+//	dstFile: 目标图片路径
+//	quality: 压缩质量，范围 1-100（值越低，压缩率越高，质量越低），对于 PNG 图片，映射到 0-9 的压缩级别（0：无压缩，9：最大压缩）
 func ImageCompression(srcFile, dstFile string, quality int) error {
 	file, err := os.Open(srcFile)
 	if err != nil {
@@ -65,7 +68,9 @@ func ImageCompression(srcFile, dstFile string, quality int) error {
 // ImageSize 图片尺寸
 // 说明：当图片类型不是标准库提供的，需要导入扩展库中的image golang.org/x/image
 //
-// imagePath 图片路径
+// # Params:
+//
+//	imagePath: 图片路径
 func ImageSize(imagePath string) (*ImageSizeReply, error) {
 	file, err := os.Open(imagePath)
 	if err != nil {

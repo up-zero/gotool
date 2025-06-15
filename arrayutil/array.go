@@ -10,10 +10,12 @@ import (
 	"github.com/up-zero/gotool"
 )
 
-// Duplicate 数组去重
+// Union 数组去重，求并集
+//
+// # Params:
 //
 //	elems: 传入同种类型数组
-func Duplicate[T gotool.Number | string](elems ...[]T) []T {
+func Union[T gotool.Number | string](elems ...[]T) []T {
 	var ans = make([]T, 0)
 	var m = make(map[T]struct{})
 	for _, elem := range elems {
@@ -29,6 +31,8 @@ func Duplicate[T gotool.Number | string](elems ...[]T) []T {
 
 // Contains 数组是否包含某个值
 //
+// # Params:
+//
 //	arr: 待遍历的数组
 //	target: 目标值
 func Contains[T gotool.Number | string | bool](arr []T, target T) bool {
@@ -36,6 +40,8 @@ func Contains[T gotool.Number | string | bool](arr []T, target T) bool {
 }
 
 // Join 数组拼接成字符串
+//
+// # Params:
 //
 //	elems: 待拼接的数值
 //	sep: 拼接用的字符串

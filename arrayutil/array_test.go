@@ -5,7 +5,7 @@ import (
 )
 
 func TestDuplicate(t *testing.T) {
-	t.Log(Duplicate([]int{1, 2, 3}, []int{2, 3, 4})) // [1 2 3 4]
+	t.Log(Union([]int{1, 2, 3}, []int{2, 3, 4})) // [1 2 3 4]
 }
 
 func TestContain(t *testing.T) {

@@ -18,8 +18,10 @@ type Snowflake struct {
 
 // NewSnowflake 创建 Snowflake 实例
 //
-// epoch: 起始时间戳
-// nodeID: 节点ID
+// # Params:
+//
+//	epoch: 起始时间戳
+//	nodeID: 节点ID
 func NewSnowflake(epoch int64, nodeID uint8) *Snowflake {
 	return &Snowflake{
 		epoch:    epoch,

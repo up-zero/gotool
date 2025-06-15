@@ -6,12 +6,12 @@ import (
 	"github.com/up-zero/gotool"
 )
 
-// CopyProperties 复制结构体的属性
+// CopyProperties 复制结构体的属性，注意：dst必须是指针类型，且指向的结构体类型与src类型相同
 //
-// src: 源对象
-// dst: 目标对象
+// # Params:
 //
-// 注意：dst必须是指针类型，且指向的结构体类型与src类型相同
+//	src: 源对象
+//	dst: 目标对象
 //
 // # Examples:
 //

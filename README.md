@@ -134,7 +134,7 @@ func main() {
 
 ### 数组（arrayutil）
 
-+ **Duplicate** 数组去重
++ **Union** 数组去重，求并集
 + **Contains** 数组是否包含某个值
 + **Join** 整型拼接
 + **Concat** 数组拼接
