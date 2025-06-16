@@ -15,11 +15,11 @@ go get -u github.com/up-zero/gotool
 ```go
 package main
 
-import "github.com/up-zero/gotool"
+import "github.com/up-zero/gotool/cryptoutil"
 import "log"
 
 func main() {
-	data, err := gotool.Md5("123456") // e10adc3949ba59abbe56e057f20f883e
+	data, err := cryptoutil.Md5("123456") // e10adc3949ba59abbe56e057f20f883e
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -58,6 +58,7 @@ func main() {
 + **HmacSHA512** 计算 HmacSHA512
 + **JWTGenerate** 生成JWT
 + **JWTParse** 解析JWT
++ **Sha1** 获取SHA1值
 
 ### 类型转换（convertutil）
 
