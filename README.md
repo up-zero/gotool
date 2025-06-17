@@ -59,6 +59,7 @@ func main() {
 + **JWTGenerate** 生成JWT
 + **JWTParse** 解析JWT
 + **Sha1** 获取SHA1值
++ **Sha256** 获取SHA256值
 
 ### 类型转换（convertutil）
 
