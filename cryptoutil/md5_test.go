@@ -17,5 +17,5 @@ func TestMd5Iterations(t *testing.T) {
 }
 
 func TestMd5File(t *testing.T) {
-	t.Log(Md5File("LICENSE")) // 79b08c4010a4346486fcc7eb63d7edb1
+	t.Log(Md5File("../LICENSE")) // e1510493d50a23aea9d0e2f92fbc2d22
 }

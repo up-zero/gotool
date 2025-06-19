@@ -2,6 +2,7 @@ package cryptoutil
 
 import (
 	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"os"
@@ -68,6 +69,5 @@ func Md5File(path string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	mdByte := md5Hash.Sum(nil)
-	return fmt.Sprintf("%x", mdByte), nil
+	return hex.EncodeToString(md5Hash.Sum(nil)), nil
 }

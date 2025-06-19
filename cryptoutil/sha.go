@@ -5,8 +5,11 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/hex"
-	"github.com/up-zero/gotool"
 	"hash"
+	"io"
+	"os"
+
+	"github.com/up-zero/gotool"
 )
 
 type hashFunc func() hash.Hash
@@ -55,6 +58,21 @@ func shaCommon(fn hashFunc, p any, salt ...string) (string, error) {
 	h.Write(data)
 	for _, s := range salt {
 		h.Write([]byte(s))
+	}
+	return hex.EncodeToString(h.Sum(nil)), nil
+}
+
+// Sha1File 获取文件SHA1值
+func Sha1File(path string) (string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return "", nil
+	}
+	defer f.Close()
+
+	h := sha1.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
 	}
 	return hex.EncodeToString(h.Sum(nil)), nil
 }
