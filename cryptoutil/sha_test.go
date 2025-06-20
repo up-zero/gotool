@@ -25,3 +25,7 @@ func TestSha512(t *testing.T) {
 func TestSha1File(t *testing.T) {
 	t.Log(Sha1File("../LICENSE")) // b69413523239259256bf414415644cce260c4c86
 }
+
+func TestSha256File(t *testing.T) {
+	t.Log(Sha256File("../LICENSE")) // d0b2de5a2177715e84e4fdebdf95714f9ae4b8f6e47238513d6ffe8fdc685e40
+}

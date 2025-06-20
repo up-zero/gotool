@@ -64,13 +64,22 @@ func shaCommon(fn hashFunc, p any, salt ...string) (string, error) {
 
 // Sha1File 获取文件SHA1值
 func Sha1File(path string) (string, error) {
+	return shaFileCommon(sha1.New, path)
+}
+
+// Sha256File 获取文件SHA256值
+func Sha256File(path string) (string, error) {
+	return shaFileCommon(sha256.New, path)
+}
+
+func shaFileCommon(fn hashFunc, path string) (string, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return "", nil
 	}
 	defer f.Close()
 
-	h := sha1.New()
+	h := fn()
 	if _, err := io.Copy(h, f); err != nil {
 		return "", err
 	}

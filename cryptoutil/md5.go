@@ -2,11 +2,7 @@ package cryptoutil
 
 import (
 	"crypto/md5"
-	"encoding/hex"
 	"fmt"
-	"io"
-	"os"
-
 	"github.com/up-zero/gotool"
 )
 
@@ -58,16 +54,5 @@ func Md5Iterations(s any, iterations int) (string, error) {
 //
 //	path: 文件路径
 func Md5File(path string) (string, error) {
-	src, err := os.Open(path)
-	if err != nil {
-		return "", err
-	}
-	defer src.Close()
-
-	md5Hash := md5.New()
-	_, err = io.Copy(md5Hash, src)
-	if err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(md5Hash.Sum(nil)), nil
+	return shaFileCommon(md5.New, path)
 }
