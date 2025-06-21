@@ -72,6 +72,11 @@ func Sha256File(path string) (string, error) {
 	return shaFileCommon(sha256.New, path)
 }
 
+// Sha512File 获取文件SHA512值
+func Sha512File(path string) (string, error) {
+	return shaFileCommon(sha512.New, path)
+}
+
 func shaFileCommon(fn hashFunc, path string) (string, error) {
 	f, err := os.Open(path)
 	if err != nil {

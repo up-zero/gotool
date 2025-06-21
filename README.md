@@ -63,6 +63,7 @@ func main() {
 + **Sha512** 获取SHA512值
 + **Sha1File** 获取文件SHA1值
 + **Sha256File** 获取文件SHA256值
++ **Sha512File** 获取文件SHA512值
 
 ### 类型转换（convertutil）
 
