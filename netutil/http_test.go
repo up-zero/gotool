@@ -18,7 +18,7 @@ func TestHttpPut(t *testing.T) {
 }
 
 func TestHttpDelete(t *testing.T) {
-	t.Log(HttpDelete("http://baidu.com", []byte("")))
+	t.Log(HttpDelete("http://baidu.com"))
 }
 
 func TestHttpGetWithTimeout(t *testing.T) {
@@ -34,7 +34,7 @@ func TestHttpPutWithTimeout(t *testing.T) {
 }
 
 func TestHttpDeleteWithTimeout(t *testing.T) {
-	t.Log(HttpDeleteWithTimeout("http://baidu.com", []byte(""), 10*time.Second))
+	t.Log(HttpDeleteWithTimeout("http://baidu.com", 10*time.Second))
 }
 
 func TestParseResponse(t *testing.T) {

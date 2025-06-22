@@ -9,7 +9,9 @@ import (
 
 // PsByName 根据程序名查询进程列表
 //
-// name: 程序名
+// # Params:
+//
+//	name: 程序名
 func PsByName(name string) ([]Process, error) {
 	ch := make(chan string)
 	defer close(ch)

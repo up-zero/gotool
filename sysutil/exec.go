@@ -8,8 +8,10 @@ import (
 
 // ExecCommand 运行命令
 //
-// name: 命令名称
-// arg: 命令参数
+// # Params:
+//
+//	name: 命令名称
+//	arg: 命令参数
 func ExecCommand(name string, arg ...string) error {
 	cmd := exec.Command(name, arg...)
 	return execCmd(cmd, nil)
@@ -17,8 +19,10 @@ func ExecCommand(name string, arg ...string) error {
 
 // ExecCommandWithNotify 带通知的运行命令
 //
-// name: 命令名称
-// arg: 命令参数
+// # Params:
+//
+//	name: 命令名称
+//	arg: 命令参数
 func ExecCommandWithNotify(ch chan string, name string, arg ...string) error {
 	cmd := exec.Command(name, arg...)
 	return execCmd(cmd, ch)
@@ -26,8 +30,10 @@ func ExecCommandWithNotify(ch chan string, name string, arg ...string) error {
 
 // execCmd 执行命令
 //
-// cmd: 命令
-// ch: 输出通道
+// # Params:
+//
+//	cmd: 命令
+//	ch: 输出通道
 func execCmd(cmd *exec.Cmd, ch chan string) error {
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr

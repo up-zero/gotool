@@ -10,8 +10,10 @@ import (
 
 // ShouldBindJson json入参绑定
 //
-// r *http.Request
-// data any 待绑定数据结构体指针
+// # Params:
+//
+//	req: 请求对象
+//	data: 待绑定数据结构体指针
 func ShouldBindJson(req *http.Request, data any) error {
 	if req == nil || req.Body == nil {
 		return errors.New("invalid request")
@@ -25,8 +27,10 @@ func ShouldBindJson(req *http.Request, data any) error {
 
 // ShouldBindQuery query入参绑定
 //
-// r *http.Request
-// data any 待绑定数据结构体指针
+// # Params:
+//
+//	req: 请求对象
+//	data: 待绑定数据结构体指针
 func ShouldBindQuery(req *http.Request, data any) error {
 	query := req.URL.Query()
 	targetType := reflect.TypeOf(data).Elem()

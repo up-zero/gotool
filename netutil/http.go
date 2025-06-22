@@ -15,83 +15,99 @@ var defaultTimeout = 5 * time.Second
 
 // HttpGet http get 请求
 //
-// url: 请求地址
-// header: 请求头
+// # Params:
+//
+//	url: 请求地址
+//	header: 请求头
 func HttpGet(url string, header ...byte) ([]byte, error) {
 	return httpRequest(url, "GET", []byte{}, header, defaultTimeout)
 }
 
 // HttpPost http post 请求
 //
-// url: 请求地址
-// data: 请求参数
-// header: 请求头
+// # Params:
+//
+//	url: 请求地址
+//	data: 请求参数
+//	header: 请求头
 func HttpPost(url string, data any, header ...byte) ([]byte, error) {
 	return httpRequest(url, "POST", data, header, defaultTimeout)
 }
 
 // HttpPut http put 请求
 //
-// url: 请求地址
-// data: 请求参数
-// header: 请求头
+// # Params:
+//
+//	url: 请求地址
+//	data: 请求参数
+//	header: 请求头
 func HttpPut(url string, data any, header ...byte) ([]byte, error) {
 	return httpRequest(url, "PUT", data, header, defaultTimeout)
 }
 
 // HttpDelete http delete 请求
 //
-// url: 请求地址
-// data: 请求参数
-// header: 请求头
-func HttpDelete(url string, data any, header ...byte) ([]byte, error) {
-	return httpRequest(url, "DELETE", data, header, defaultTimeout)
+// # Params:
+//
+//	url: 请求地址
+//	header: 请求头
+func HttpDelete(url string, header ...byte) ([]byte, error) {
+	return httpRequest(url, "DELETE", []byte{}, header, defaultTimeout)
 }
 
 // HttpGetWithTimeout http get 请求
 //
-// url: 请求地址
-// timeout: 超时时间
-// header: 请求头
+// # Params:
+//
+//	url: 请求地址
+//	timeout: 超时时间
+//	header: 请求头
 func HttpGetWithTimeout(url string, timeout time.Duration, header ...byte) ([]byte, error) {
 	return httpRequest(url, "GET", []byte{}, header, timeout)
 }
 
 // HttpPostWithTimeout http post 请求
 //
-// url: 请求地址
-// timeout: 超时时间
-// data: 请求参数
-// header: 请求头
+// # Params:
+//
+//	url: 请求地址
+//	data: 请求参数
+//	timeout: 超时时间
+//	header: 请求头
 func HttpPostWithTimeout(url string, data any, timeout time.Duration, header ...byte) ([]byte, error) {
 	return httpRequest(url, "POST", data, header, timeout)
 }
 
 // HttpPutWithTimeout http put 请求
 //
-// url: 请求地址
-// timeout: 超时时间
-// data: 请求参数
-// header: 请求头
+// # Params:
+//
+//	url: 请求地址
+//	data: 请求参数
+//	timeout: 超时时间
+//	header: 请求头
 func HttpPutWithTimeout(url string, data any, timeout time.Duration, header ...byte) ([]byte, error) {
 	return httpRequest(url, "PUT", data, header, timeout)
 }
 
 // HttpDeleteWithTimeout http delete 请求带超时时长
 //
-// url: 请求地址
-// timeout: 超时时间
-// data: 请求参数
-// header: 请求头
-func HttpDeleteWithTimeout(url string, data any, timeout time.Duration, header ...byte) ([]byte, error) {
-	return httpRequest(url, "DELETE", data, header, timeout)
+// # Params:
+//
+//	url: 请求地址
+//	timeout: 超时时间
+//	header: 请求头
+func HttpDeleteWithTimeout(url string, timeout time.Duration, header ...byte) ([]byte, error) {
+	return httpRequest(url, "DELETE", []byte{}, header, timeout)
 }
 
 // ParseResponse 解析响应
 //
-// T 为返回值类型
-// respBytes 为响应字节数组
-// err httpRequest 错误
+// # Params:
+//
+//	T: 为返回值类型
+//	respBytes: 响应字节数组
+//	err: httpRequest 错误
 func ParseResponse[T any](respBytes []byte, err error) (T, error) {
 	var reply T
 	if err != nil {

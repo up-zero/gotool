@@ -15,9 +15,8 @@ func NewStream[T any](data []T) *Stream[T] {
 //
 // # Examples:
 //
-// s := NewStream([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
-//
-// s.Filter(func(v int) bool { return v%2 == 0 }) // []int{2, 4, 6, 8, 10}
+//	s := NewStream([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+//	s.Filter(func(v int) bool { return v%2 == 0 }) // []int{2, 4, 6, 8, 10}
 func (s *Stream[T]) Filter(f func(T) bool) *Stream[T] {
 	result := make([]T, 0)
 	for _, v := range s.data {
@@ -33,9 +32,8 @@ func (s *Stream[T]) Filter(f func(T) bool) *Stream[T] {
 //
 // # Examples:
 //
-// s := NewStream([]int{1, 2, 3, 4, 5})
-//
-// s.Map(func(v int) int { return v * 2 })
+//	s := NewStream([]int{1, 2, 3, 4, 5})
+//	s.Map(func(v int) int { return v * 2 }) // []int{2, 4, 6, 8, 10}
 func (s *Stream[T]) Map(fn func(item T) T) *Stream[T] {
 	return StreamMap[T](s, fn)
 }
@@ -48,11 +46,9 @@ func (s *Stream[T]) Map(fn func(item T) T) *Stream[T] {
 //
 // # Examples:
 //
-// s := NewStream([]int{1, 2, 3, 4, 5})
-//
-// max := s.Extreme(func(a, b int) bool { return a > b }) // 5
-//
-// min := s.Extreme(func(a, b int) bool { return a < b }) // 1
+//	s := NewStream([]int{1, 2, 3, 4, 5})
+//	max := s.Extreme(func(a, b int) bool { return a > b }) // 5
+//	min := s.Extreme(func(a, b int) bool { return a < b }) // 1
 func (s *Stream[T]) Extreme(fn func(a, b T) bool) T {
 	var result T
 	for i, v := range s.data {
@@ -67,9 +63,8 @@ func (s *Stream[T]) Extreme(fn func(a, b T) bool) T {
 //
 // # Examples:
 //
-// s := NewStream([]int{1, 2, 3, 4, 5})
-//
-// s.Max(func(a, b int) bool { return a > b }) // 5
+//	s := NewStream([]int{1, 2, 3, 4, 5})
+//	s.Max(func(a, b int) bool { return a > b }) // 5
 func (s *Stream[T]) Max(fn func(a, b T) bool) T {
 	return s.Extreme(fn)
 }
@@ -78,9 +73,8 @@ func (s *Stream[T]) Max(fn func(a, b T) bool) T {
 //
 // # Examples:
 //
-// s := NewStream([]int{1, 2, 3, 4, 5})
-//
-// s.Min(func(a, b int) bool { return a < b }) // 1
+//	s := NewStream([]int{1, 2, 3, 4, 5})
+//	s.Min(func(a, b int) bool { return a < b }) // 1
 func (s *Stream[T]) Min(fn func(a, b T) bool) T {
 	return s.Extreme(fn)
 }
@@ -89,9 +83,8 @@ func (s *Stream[T]) Min(fn func(a, b T) bool) T {
 //
 // # Examples:
 //
-// s := NewStream([]int{1, 2, 3, 4, 5})
-//
-// StreamMap(s, func(v int) string { return fmt.Sprintf("data: %d", v) })
+//	s := NewStream([]int{1, 2, 3, 4, 5})
+//	StreamMap(s, func(v int) string { return fmt.Sprintf("data: %d", v) }) // []string{"data: 1", "data: 2", "data: 3", "data: 4", "data: 5"}
 func StreamMap[T, R any](s *Stream[T], f func(T) R) *Stream[R] {
 	result := make([]R, len(s.data))
 	for i, v := range s.data {

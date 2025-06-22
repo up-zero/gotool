@@ -89,9 +89,11 @@ func ImageSize(imagePath string) (*ImageSizeReply, error) {
 
 // GenerateCaptcha 验证码图片生成（目前只支持数字）
 //
-// text 验证码文本
+// # Params:
 //
-// # Example 1:
+// text: 验证码文本
+//
+// # Example:
 //
 //	// image.Image to bytes
 //	img, _ := GenerateCaptcha("5679")

@@ -15,9 +15,11 @@ type Mail struct {
 
 // SendMail 发送邮件
 //
-// receiveUsers: 接收者
-// subject: 主题
-// content: 正文
+// # Params:
+//
+//	receiveUsers: 接收者
+//	subject: 主题
+//	content: 正文
 func (mail Mail) SendMail(receiveUsers []string, subject, content string) error {
 	// 跳过证书认证
 	tlsConn, err := tls.Dial("tcp", mail.Addr, &tls.Config{InsecureSkipVerify: true, ServerName: strings.Split(mail.Addr, ":")[0]})
