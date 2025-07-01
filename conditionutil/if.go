@@ -7,7 +7,7 @@ package conditionutil
 //	condition: 条件
 //	a: 条件为真时返回的值
 //	b: 条件为假时返回的值
-func If(condition bool, a, b any) any {
+func If[T any](condition bool, a, b T) T {
 	if condition {
 		return a
 	}
