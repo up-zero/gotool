@@ -105,3 +105,69 @@ func AesCbcDecrypt(cipherText string, key []byte) (string, error) {
 
 	return string(unpadded), nil
 }
+
+// AesGcmEncrypt 输入明文字符串和密钥，输出 Base64 编码的密文
+func AesGcmEncrypt(plainText string, key []byte) (string, error) {
+	// 1. 创建 AES 密码器
+	// key 的长度必须是 16, 24, 或 32 字节，以分别对应 AES-128, AES-192, or AES-256
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return "", err
+	}
+
+	// 2. 创建 GCM 实例
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return "", err
+	}
+
+	// 3. 创建 Nonce
+	// Nonce 的长度应该是 GCM 标准的 12 字节。
+	// 对于同一个密钥，绝不要重复使用相同的 Nonce。
+	nonce := make([]byte, gcm.NonceSize())
+	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
+		return "", err
+	}
+
+	// 4. 执行加密和认证
+	ciphertext := gcm.Seal(nonce, nonce, []byte(plainText), []byte{})
+
+	// 5. 将结果进行 Base64 编码，方便传输
+	return base64.StdEncoding.EncodeToString(ciphertext), nil
+}
+
+// AesGcmDecrypt 输入 Base64 编码的密文和密钥，输出明文字符串。
+func AesGcmDecrypt(cipherText string, key []byte) (string, error) {
+	// 1. Base64 解码
+	decodedCiphertext, err := base64.StdEncoding.DecodeString(cipherText)
+	if err != nil {
+		return "", err
+	}
+
+	// 2. 创建 AES 密码器和 GCM 实例
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return "", err
+	}
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return "", err
+	}
+
+	// 3. 分离 Nonce 和真正的密文
+	nonceSize := gcm.NonceSize()
+	if len(decodedCiphertext) < nonceSize {
+		return "", errors.New("ciphertext too short")
+	}
+
+	nonce, actualCiphertext := decodedCiphertext[:nonceSize], decodedCiphertext[nonceSize:]
+
+	// 4. 执行解密和验证
+	plaintext, err := gcm.Open(nil, nonce, actualCiphertext, []byte{})
+	if err != nil {
+		// 常见错误: "cipher: message authentication failed"
+		return "", err
+	}
+
+	return string(plaintext), nil
+}

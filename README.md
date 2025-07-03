@@ -66,6 +66,8 @@ func main() {
 + **Sha512File** 获取文件SHA512值
 + **AesCbcEncrypt** AES CBC 加密
 + **AesCbcDecrypt** AES CBC 解密
++ **AesGcmEncrypt** AES GCM 加密
++ **AesGcmDecrypt** AES GCM 解密
 
 ### 类型转换（convertutil）
 
