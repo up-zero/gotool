@@ -56,6 +56,8 @@ func main() {
 + **HmacSHA256** 计算 SHA256
 + **HmacSHA384** 计算 HmacSHA384
 + **HmacSHA512** 计算 HmacSHA512
++ **Base64Encode** base64 编码
++ **Base64Decode** base64 解码
 + **JWTGenerate** 生成JWT
 + **JWTParse** 解析JWT
 + **Sha1** 获取SHA1值
