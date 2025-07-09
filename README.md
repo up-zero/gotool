@@ -171,3 +171,7 @@ func main() {
 + **Extreme** Stream方法，返回流中的极值
 + **Max** Stream方法，数据最大值
 + **Min** Stream方法，数据最小值
+
+### 结构体（structutil）
+
++ **SetDefaults** 设置结构体默认值
