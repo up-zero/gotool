@@ -1,9 +1,10 @@
 package structutil
 
 import (
-	"github.com/up-zero/gotool"
 	"reflect"
 	"strconv"
+
+	"github.com/up-zero/gotool"
 )
 
 // SetDefaults 设置结构体默认值，根据结构体标签 "default" 为指针指向的结构体实例设置默认值。
@@ -115,4 +116,22 @@ func setField(field reflect.Value, defaultValue string) error {
 		return gotool.ErrNotSupportFormat
 	}
 	return nil
+}
+
+// NewWithDefaults 创建一个类型 T 的新实例，并为其设置 "default" 标签中指定的默认值。
+//
+// # Examples:
+//
+//	type A struct {
+//		A string `default:"a"`
+//		B int    `default:"1"`
+//	}
+//	a, _ := NewWithDefaults[A]()
+//	log.Printf("%+v \n", a) // &{A:a B:1}
+func NewWithDefaults[T any]() (*T, error) {
+	instance := new(T)
+	if err := SetDefaults(instance); err != nil {
+		return nil, err
+	}
+	return instance, nil
 }

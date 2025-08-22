@@ -24,3 +24,21 @@ func TestSetDefaults(t *testing.T) {
 	log.Printf("%+v \n", dd)   // &{E:1 F:f A:0xc0000082d0}
 	log.Printf("%+v \n", dd.A) // &{A:a B:1}
 }
+
+func TestNewWithDefaults(t *testing.T) {
+	type A struct {
+		A string `default:"a"`
+		B int    `default:"1"`
+	}
+	type d struct {
+		E int    `default:"1"`
+		F string `default:"f"`
+		*A
+	}
+	dd, err := NewWithDefaults[d]()
+	if err != nil {
+		t.Fatal("new instance with defaults error.", err)
+	}
+	log.Printf("%+v \n", dd)   // &{E:1 F:f A:0xc000008270}
+	log.Printf("%+v \n", dd.A) // &{A:a B:1}
+}
