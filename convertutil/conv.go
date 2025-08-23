@@ -5,6 +5,12 @@ import (
 	"strconv"
 )
 
+// StrToInt 字符串转换为int
+func StrToInt(s string) int {
+	num, _ := strconv.ParseInt(s, 10, 64)
+	return int(num)
+}
+
 // StrToInt8 字符串转换为int8
 func StrToInt8(s string) int8 {
 	num, _ := strconv.ParseInt(s, 10, 8)
@@ -27,6 +33,12 @@ func StrToInt32(s string) int32 {
 func StrToInt64(s string) int64 {
 	num, _ := strconv.ParseInt(s, 10, 64)
 	return num
+}
+
+// StrToUint 字符串转换为uint
+func StrToUint(s string) uint {
+	num, _ := strconv.ParseUint(s, 10, 64)
+	return uint(num)
 }
 
 // StrToUint8 字符串转换为uint8

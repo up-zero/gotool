@@ -73,10 +73,12 @@ func main() {
 
 ### 类型转换（convertutil）
 
++ **StrToInt** 字符串转换为int
 + **StrToInt8** 字符串转换为int8
 + **StrToInt16** 字符串转换为int16
 + **StrToInt32** 字符串转换为int32
 + **StrToInt64** 字符串转换为int64
++ **StrToUint** 字符串转换为uint
 + **StrToUint8** 字符串转换为uint8
 + **StrToUint16** 字符串转换为uint16
 + **StrToUint32** 字符串转换为uint32

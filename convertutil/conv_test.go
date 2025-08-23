@@ -2,6 +2,10 @@ package convertutil
 
 import "testing"
 
+func TestStrToInt(t *testing.T) {
+	t.Log(StrToInt("123"))
+}
+
 func TestStrToInt8(t *testing.T) {
 	t.Log(StrToInt8("123")) // 123
 	t.Log(StrToInt8("128")) // 127
@@ -19,6 +23,10 @@ func TestStrToInt32(t *testing.T) {
 
 func TestStrToInt64(t *testing.T) {
 	t.Log(StrToInt64("123"))
+}
+
+func TestStrToUint(t *testing.T) {
+	t.Log(StrToUint("123"))
 }
 
 func TestStrToUint8(t *testing.T) {
