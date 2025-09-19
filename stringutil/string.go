@@ -8,3 +8,11 @@ func Reverse(s string) string {
 	}
 	return string(runes)
 }
+
+// Truncate 字符串截断，截取字符串前maxLength个字符
+func Truncate(s string, maxLength int) string {
+	if len(s) > maxLength {
+		return s[:maxLength]
+	}
+	return s
+}

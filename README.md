@@ -182,3 +182,4 @@ func main() {
 ### 字符串（stringutil）
 
 + **Reverse** 字符串反转
++ **Truncate** 字符串截断

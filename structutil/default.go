@@ -1,10 +1,9 @@
 package structutil
 
 import (
+	"github.com/up-zero/gotool"
 	"reflect"
 	"strconv"
-
-	"github.com/up-zero/gotool"
 )
 
 // SetDefaults 设置结构体默认值，根据结构体标签 "default" 为指针指向的结构体实例设置默认值。
