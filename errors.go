@@ -29,6 +29,9 @@ var ErrSrcDstCannotBeNil = errors.New("src and dst cannot be nil")
 // ErrDstMustBePointerStruct 目标必须是指针结构体
 var ErrDstMustBePointerStruct = errors.New("dst must be a pointer struct")
 
+// ErrDstMustBePointer 目标必须为指针
+var ErrDstMustBePointer = errors.New("dst must be a pointer")
+
 // ErrNotSupportFormat 数据格式不支持
 var ErrNotSupportFormat = errors.New("not support format")
 

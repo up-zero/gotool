@@ -5,9 +5,10 @@ import (
 )
 
 const (
-	DateTime = "2006-01-02 15:04:05"
-	DateOnly = "2006-01-02"
-	TimeOnly = "15:04:05"
+	DateTime          = "2006-01-02 15:04:05"
+	DateTimeWithMilli = "2006-01-02 15:04:05.000"
+	DateOnly          = "2006-01-02"
+	TimeOnly          = "15:04:05"
 )
 
 // timeFormat 时间格式化

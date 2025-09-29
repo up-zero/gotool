@@ -281,8 +281,8 @@ func FileSync(filePath string) error {
 //	filePath: 文件路径
 //	dst: 目标结构体
 func FileRead(filePath string, dst any) error {
-	if reflect.TypeOf(dst).Kind() != reflect.Ptr || reflect.TypeOf(dst).Elem().Kind() != reflect.Struct {
-		return gotool.ErrDstMustBePointerStruct
+	if reflect.TypeOf(dst).Kind() != reflect.Ptr {
+		return gotool.ErrDstMustBePointer
 	}
 	data, err := os.ReadFile(filePath)
 	if err != nil {
