@@ -33,6 +33,14 @@ func TestExecCommandWithNotify(t *testing.T) {
 	finish <- struct{}{}
 }
 
+func TestExecCommandWithOutput(t *testing.T) {
+	output, err := ExecCommandWithOutput("go", "version")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(output)
+}
+
 func TestExecShellWithNotify(t *testing.T) {
 	ch := make(chan string)
 	finish := make(chan struct{})

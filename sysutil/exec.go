@@ -28,6 +28,25 @@ func ExecCommandWithNotify(ch chan string, name string, arg ...string) error {
 	return execCmd(cmd, ch)
 }
 
+// ExecCommandWithOutput 执行命令并返回合并后的标准输出和标准错误
+//
+// # Params:
+//
+//	name: 命令名称
+//	arg: 命令参数
+//
+// # Example:
+//
+//	output, err := ExecCommandWithOutput("go", "version")
+func ExecCommandWithOutput(name string, arg ...string) (string, error) {
+	cmd := exec.Command(name, arg...)
+	outputBytes, err := cmd.CombinedOutput()
+	if err != nil {
+		return string(outputBytes), err
+	}
+	return string(outputBytes), nil
+}
+
 // execCmd 执行命令
 //
 // # Params:
