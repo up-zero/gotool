@@ -149,6 +149,7 @@ func main() {
 + **ExecShellWithNotify** 带通知的运行shell命令或脚本
 + **ExecCommandWithNotify** 带通知的运行命令
 + **ExecCommandWithOutput** 执行命令并返回合并后的标准输出和标准错误
++ **ExecCommandWithStream** 执行命令并对 stdout 和 stderr 的每一行实时调用回调函数
 + **PsByName** 根据程序名查询进程列表
 + **CPUTemperatures**  获取CPU温度
 + **SysUptime**  系统启动时间

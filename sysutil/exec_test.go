@@ -33,14 +33,6 @@ func TestExecCommandWithNotify(t *testing.T) {
 	finish <- struct{}{}
 }
 
-func TestExecCommandWithOutput(t *testing.T) {
-	output, err := ExecCommandWithOutput("go", "version")
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Log(output)
-}
-
 func TestExecShellWithNotify(t *testing.T) {
 	ch := make(chan string)
 	finish := make(chan struct{})
@@ -58,4 +50,22 @@ func TestExecShellWithNotify(t *testing.T) {
 		t.Fatal(err)
 	}
 	finish <- struct{}{}
+}
+
+func TestExecCommandWithOutput(t *testing.T) {
+	output, err := ExecCommandWithOutput("go", "version")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(output)
+}
+
+func TestExecCommandWithStream(t *testing.T) {
+	handler := func(line string, isStderr bool) {
+		t.Log("line => ", line, " isStderr => ", isStderr)
+	}
+
+	if err := ExecCommandWithStream(handler, "go", "version"); err != nil {
+		t.Fatal(err)
+	}
 }
