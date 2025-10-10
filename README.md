@@ -175,9 +175,12 @@ func main() {
 
 ### 图片（imageutil）
 
-+ **ImageCompression**  图片压缩
-+ **ImageSize**  图片尺寸
-+ **GenerateCaptcha**  验证码图片生成
++ **Open** 打开图片
++ **Save** 保存图片
++ **Compression** 图片压缩
++ **Size** 图片尺寸
++ **GenerateCaptcha** 验证码图片生成
++ **Crop** 图片裁剪
 
 ### 条件判断（conditionutil）
 

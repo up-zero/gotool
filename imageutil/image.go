@@ -16,62 +16,98 @@ import (
 	"github.com/up-zero/gotool"
 )
 
-// ImageCompression 图片压缩
+// Open 打开图片
+//
+// # Params:
+//
+//	imagePath: 图片路径
+func Open(imagePath string) (image.Image, error) {
+	file, err := os.Open(imagePath)
+	if err != nil {
+		return nil, fmt.Errorf("open file error: %v", err)
+	}
+	defer file.Close()
+	img, _, err := image.Decode(file)
+	if err != nil {
+		return nil, fmt.Errorf("decode image error: %v", err)
+	}
+	return img, nil
+}
+
+// Save 保存图片
+//
+// # Params:
+//
+//	imagePath: 图片路径
+//	img: 图片
+//	quality: 压缩质量，范围 1-100（值越低，压缩率越高，质量越低）
+func Save(imagePath string, img image.Image, quality int) error {
+	if quality < 1 {
+		quality = 1
+	}
+	if quality > 100 {
+		quality = 100
+	}
+
+	// 创建文件
+	if err := os.MkdirAll(filepath.Dir(imagePath), os.ModePerm); err != nil {
+		return err
+	}
+	imageFile, err := os.Create(imagePath)
+	if err != nil {
+		return err
+	}
+	defer imageFile.Close()
+
+	// 保存文件
+	imgType := filepath.Ext(imagePath)
+	switch imgType {
+	case ".jpeg", ".jpg":
+		return jpeg.Encode(imageFile, img, &jpeg.Options{Quality: quality})
+	case ".png":
+		// 将 1-100 的 quality 映射到 png.CompressionLevel
+		// quality 100 -> DefaultCompression (0)
+		// quality 1   -> BestCompression (-3)
+		var level png.CompressionLevel
+		switch {
+		case quality == 100:
+			level = png.DefaultCompression
+		case quality >= 90:
+			level = png.BestSpeed
+		case quality >= 50:
+			level = png.DefaultCompression
+		default:
+			level = png.BestCompression
+		}
+		encoder := png.Encoder{CompressionLevel: level}
+		return encoder.Encode(imageFile, img)
+	default:
+		return fmt.Errorf("unsupported image format: %s", imgType)
+	}
+}
+
+// Compression 图片压缩
 //
 // # Params:
 //
 //	srcFile: 源图片路径
 //	dstFile: 目标图片路径
-//	quality: 压缩质量，范围 1-100（值越低，压缩率越高，质量越低），对于 PNG 图片，映射到 0-9 的压缩级别（0：无压缩，9：最大压缩）
-func ImageCompression(srcFile, dstFile string, quality int) error {
-	file, err := os.Open(srcFile)
+//	quality: 压缩质量，范围 1-100（值越低，压缩率越高，质量越低）
+func Compression(srcFile, dstFile string, quality int) error {
+	img, err := Open(srcFile)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
-	img, _, err := image.Decode(file)
-	if err != nil {
-		return err
-	}
-	if err = os.MkdirAll(filepath.Dir(dstFile), os.ModePerm); err != nil {
-		return err
-	}
-
-	outFile, err := os.Create(dstFile)
-	if err != nil {
-		return err
-	}
-	defer outFile.Close()
-
-	compressionLevel := int((100 - quality) / 10) // 从质量 100 映射到 0（无压缩），质量 0 映射到 9（最大压缩）
-
-	imgType := filepath.Ext(dstFile)
-	switch imgType {
-	case ".jpeg", ".jpg":
-		err = jpeg.Encode(outFile, img, &jpeg.Options{Quality: quality})
-		if err != nil {
-			return err
-		}
-	case ".png":
-		encoder := png.Encoder{CompressionLevel: png.CompressionLevel(compressionLevel)}
-		err = encoder.Encode(outFile, img)
-		if err != nil {
-			return err
-		}
-	default:
-		return fmt.Errorf("unsupported image format: %s", imgType)
-	}
-
-	return nil
+	return Save(dstFile, img, quality)
 }
 
-// ImageSize 图片尺寸
+// Size 图片尺寸
 // 说明：当图片类型不是标准库提供的，需要导入扩展库中的image golang.org/x/image
 //
 // # Params:
 //
 //	imagePath: 图片路径
-func ImageSize(imagePath string) (*ImageSizeReply, error) {
+func Size(imagePath string) (*SizeReply, error) {
 	file, err := os.Open(imagePath)
 	if err != nil {
 		return nil, err
@@ -81,7 +117,7 @@ func ImageSize(imagePath string) (*ImageSizeReply, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &ImageSizeReply{
+	return &SizeReply{
 		Height: imgConfig.Height,
 		Width:  imgConfig.Width,
 	}, nil
@@ -188,4 +224,33 @@ func drawLine(img *image.RGBA, x1, y1, x2, y2 int, color color.RGBA) {
 			y1 += sy
 		}
 	}
+}
+
+// Crop 图片裁剪
+//
+// # Params:
+//
+//	srcFile: 源图片路径
+//	dstFile: 目标图片路径
+//	cropRect: 裁剪区域
+func Crop(srcFile, dstFile string, cropRect image.Rectangle) error {
+	// 打开文件
+	img, err := Open(srcFile)
+	outFile, err := os.Create(dstFile)
+	if err != nil {
+		return err
+	}
+	defer outFile.Close()
+
+	// 裁剪图片
+	subImager, ok := img.(interface {
+		SubImage(r image.Rectangle) image.Image
+	})
+	if !ok {
+		return fmt.Errorf("unsupported image format: %s", filepath.Ext(srcFile))
+	}
+	dstImage := subImager.SubImage(cropRect)
+
+	// 保存图片
+	return Save(dstFile, dstImage, 100)
 }
