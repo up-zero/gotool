@@ -181,6 +181,8 @@ func main() {
 + **Size** 图片尺寸
 + **GenerateCaptcha** 验证码图片生成
 + **Crop** 图片裁剪
++ **Resize** 图片缩放
++ **ResizeFile** 图片文件缩放
 
 ### 条件判断（conditionutil）
 

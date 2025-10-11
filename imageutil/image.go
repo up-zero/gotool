@@ -254,3 +254,121 @@ func Crop(srcFile, dstFile string, cropRect image.Rectangle) error {
 	// 保存图片
 	return Save(dstFile, dstImage, 100)
 }
+
+// getRGBA 将 color.Color 转换为 uint8 的 RGBA 值
+func getRGBA(c color.Color) (uint8, uint8, uint8, uint8) {
+	r, g, b, a := c.RGBA()
+	return uint8(r >> 8), uint8(g >> 8), uint8(b >> 8), uint8(a >> 8)
+}
+
+// bilinearInterpolate 执行双线性插值
+func bilinearInterpolate(c00, c10, c01, c11 color.Color, dx, dy float64) color.Color {
+	r00, g00, b00, a00 := getRGBA(c00)
+	r10, g10, b10, a10 := getRGBA(c10)
+	r01, g01, b01, a01 := getRGBA(c01)
+	r11, g11, b11, a11 := getRGBA(c11)
+
+	// 水平插值
+	r0 := (1-dx)*float64(r00) + dx*float64(r10)
+	g0 := (1-dx)*float64(g00) + dx*float64(g10)
+	b0 := (1-dx)*float64(b00) + dx*float64(b10)
+	a0 := (1-dx)*float64(a00) + dx*float64(a10)
+
+	r1 := (1-dx)*float64(r01) + dx*float64(r11)
+	g1 := (1-dx)*float64(g01) + dx*float64(g11)
+	b1 := (1-dx)*float64(b01) + dx*float64(b11)
+	a1 := (1-dx)*float64(a01) + dx*float64(a11)
+
+	// 垂直插值
+	r := uint8((1-dy)*r0 + dy*r1)
+	g := uint8((1-dy)*g0 + dy*g1)
+	b := uint8((1-dy)*b0 + dy*b1)
+	a := uint8((1-dy)*a0 + dy*a1)
+
+	return color.RGBA{R: r, G: g, B: b, A: a}
+}
+
+// Resize 图片缩放
+//
+//   - 如果 newWidth > 0 && newHeight == 0：按比例基于宽度缩放
+//   - 如果 newWidth == 0 && newHeight > 0：按比例基于高度缩放
+//   - 如果 newWidth > 0 && newHeight > 0：固定宽高缩放（可能扭曲）
+//   - 如果两者均为 0：返回原图
+//
+// # Params:
+//
+//	src: 源图片
+//	newWidth: 新宽度
+//	newHeight: 新高度
+func Resize(src image.Image, newWidth, newHeight int) image.Image {
+	bounds := src.Bounds()
+	srcWidth := bounds.Dx()
+	srcHeight := bounds.Dy()
+
+	// 返回原图
+	if newWidth == 0 && newHeight == 0 {
+		return src
+	}
+	// 基于高度按比例计算宽度
+	if newWidth == 0 {
+		newWidth = srcWidth * newHeight / srcHeight
+	}
+	// 基于宽度按比例计算高度
+	if newHeight == 0 {
+		newHeight = srcHeight * newWidth / srcWidth
+	}
+
+	// 创建目标图像
+	dst := image.NewRGBA(image.Rect(0, 0, newWidth, newHeight))
+
+	// 循环每个像素，进行双线性插值
+	for y := 0; y < newHeight; y++ {
+		for x := 0; x < newWidth; x++ {
+			// 计算源图像对应位置（浮点）
+			fx := float64(x) * float64(srcWidth) / float64(newWidth)
+			fy := float64(y) * float64(srcHeight) / float64(newHeight)
+
+			// 源图像整数坐标
+			ix := int(math.Floor(fx))
+			iy := int(math.Floor(fy))
+
+			// 小数部分
+			dx := fx - float64(ix)
+			dy := fy - float64(iy)
+
+			// 边界处理：使用最近像素
+			ix = max(0, min(ix, srcWidth-1))
+			iy = max(0, min(iy, srcHeight-1))
+			ix1 := max(0, min(ix+1, srcWidth-1))
+			iy1 := max(0, min(iy+1, srcHeight-1))
+
+			// 获取四个邻近像素
+			c00 := src.At(ix, iy)
+			c10 := src.At(ix1, iy)
+			c01 := src.At(ix, iy1)
+			c11 := src.At(ix1, iy1)
+
+			// 插值并设置像素
+			dst.Set(x, y, bilinearInterpolate(c00, c10, c01, c11, dx, dy))
+		}
+	}
+
+	return dst
+}
+
+// ResizeFile 图片文件缩放
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+//	newWidth: 新宽度
+//	newHeight: 新高度
+func ResizeFile(srcFile, dstFile string, newWidth, newHeight int) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	dstImg := Resize(img, newWidth, newHeight)
+	return Save(dstFile, dstImg, 100)
+}

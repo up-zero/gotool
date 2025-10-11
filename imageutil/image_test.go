@@ -47,3 +47,9 @@ func TestCrop(t *testing.T) {
 		t.Fatal("Error cropping image:", err)
 	}
 }
+
+func TestResizeFile(t *testing.T) {
+	if err := ResizeFile("test.png", "resized.png", 200, 0); err != nil {
+		t.Fatal("Error resizing image:", err)
+	}
+}
