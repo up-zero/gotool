@@ -372,3 +372,77 @@ func ResizeFile(srcFile, dstFile string, newWidth, newHeight int) error {
 	dstImg := Resize(img, newWidth, newHeight)
 	return Save(dstFile, dstImg, 100)
 }
+
+const (
+	// RotateAngle90 旋转角度90°
+	RotateAngle90 = 90
+	// RotateAngle180 旋转角度180°
+	RotateAngle180 = 180
+	// RotateAngle270 转角度270°
+	RotateAngle270 = 270
+)
+
+// Rotate 旋转图片（顺时针 90°、180°、270°）
+//
+// # Params:
+//
+//	src: 源图片
+//	angle: 旋转角度
+//
+// # Example:
+//
+//	Rotate(img, RotateAngle90) // 旋转90°
+func Rotate(src image.Image, angle int) (image.Image, error) {
+	bounds := src.Bounds()
+	width := bounds.Dx()
+	height := bounds.Dy()
+
+	var dst *image.RGBA
+
+	switch angle {
+	case RotateAngle90:
+		dst = image.NewRGBA(image.Rect(0, 0, height, width))
+		for y := 0; y < height; y++ {
+			for x := 0; x < width; x++ {
+				dst.Set(height-1-y, x, src.At(x, y))
+			}
+		}
+	case RotateAngle180:
+		dst = image.NewRGBA(image.Rect(0, 0, width, height))
+		for y := 0; y < height; y++ {
+			for x := 0; x < width; x++ {
+				dst.Set(width-1-x, height-1-y, src.At(x, y))
+			}
+		}
+	case RotateAngle270:
+		dst = image.NewRGBA(image.Rect(0, 0, height, width))
+		for y := 0; y < height; y++ {
+			for x := 0; x < width; x++ {
+				dst.Set(y, width-1-x, src.At(x, y))
+			}
+		}
+	default:
+		return nil, fmt.Errorf("unsupported rotation angle: %d", angle)
+	}
+
+	return dst, nil
+}
+
+// RotateFile 旋转图片文件（顺时针 90°、180°、270°）
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+//	angle: 旋转角度
+func RotateFile(srcFile, dstFile string, angle int) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	dstImg, err := Rotate(img, angle)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, dstImg, 100)
+}

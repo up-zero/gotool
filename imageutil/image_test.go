@@ -53,3 +53,9 @@ func TestResizeFile(t *testing.T) {
 		t.Fatal("Error resizing image:", err)
 	}
 }
+
+func TestRotateFile(t *testing.T) {
+	if err := RotateFile("test.png", "rotated.png", RotateAngle270); err != nil {
+		t.Fatal("Error rotating image:", err)
+	}
+}

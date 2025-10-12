@@ -183,6 +183,8 @@ func main() {
 + **Crop** 图片裁剪
 + **Resize** 图片缩放
 + **ResizeFile** 图片文件缩放
++ **Rotate** 旋转图片
++ **RotateFile** 旋转图片文件
 
 ### 条件判断（conditionutil）
 
