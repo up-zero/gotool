@@ -446,3 +446,66 @@ func RotateFile(srcFile, dstFile string, angle int) error {
 	}
 	return Save(dstFile, dstImg, 100)
 }
+
+const (
+	// FlipModeHorizontal 水平翻转（左右镜像）
+	FlipModeHorizontal = "horizontal"
+	// FlipModeVertical 垂直翻转（上下镜像）
+	FlipModeVertical = "vertical"
+)
+
+// Flip 翻转图片（水平或垂直）
+//
+// # Params:
+//
+//	src: 源图片
+//	mode: 翻转模式
+//
+// # Example:
+//
+//	Flip(img, FlipModeHorizontal) // 水平翻转
+func Flip(src image.Image, mode string) (image.Image, error) {
+	bounds := src.Bounds()
+	width := bounds.Dx()
+	height := bounds.Dy()
+
+	dst := image.NewRGBA(image.Rect(0, 0, width, height))
+
+	switch mode {
+	case FlipModeHorizontal: // 水平翻转（左右镜像）
+		for y := 0; y < height; y++ {
+			for x := 0; x < width; x++ {
+				dst.Set(width-1-x, y, src.At(x, y))
+			}
+		}
+	case FlipModeVertical: // 垂直翻转（上下镜像）
+		for y := 0; y < height; y++ {
+			for x := 0; x < width; x++ {
+				dst.Set(x, height-1-y, src.At(x, y))
+			}
+		}
+	default:
+		return nil, fmt.Errorf("unsupported flip mode: %s", mode)
+	}
+
+	return dst, nil
+}
+
+// FlipFile 翻转图片文件（水平或垂直）
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+//	mode: 翻转模式
+func FlipFile(srcFile, dstFile string, mode string) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	dstImg, err := Flip(img, mode)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, dstImg, 100)
+}

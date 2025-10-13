@@ -185,6 +185,8 @@ func main() {
 + **ResizeFile** 图片文件缩放
 + **Rotate** 旋转图片
 + **RotateFile** 旋转图片文件
++ **Flip** 翻转图片
++ **FlipFile** 翻转图片文件
 
 ### 条件判断（conditionutil）
 

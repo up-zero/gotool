@@ -59,3 +59,9 @@ func TestRotateFile(t *testing.T) {
 		t.Fatal("Error rotating image:", err)
 	}
 }
+
+func TestFlipFile(t *testing.T) {
+	if err := FlipFile("test.png", "flipped.png", FlipModeHorizontal); err != nil {
+		t.Fatal("Error flipping image:", err)
+	}
+}
