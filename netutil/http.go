@@ -119,6 +119,20 @@ func ParseResponse[T any](respBytes []byte, err error) (T, error) {
 	return reply, nil
 }
 
+var httpClient = &http.Client{
+	Transport: &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   3 * time.Second,  // 连接超时
+			KeepAlive: 30 * time.Second, // 保持长连接
+		}).DialContext,
+		MaxIdleConns:        100,              // 最大空闲连接数
+		MaxIdleConnsPerHost: 100,              // 每个主机的最大空闲连接数
+		IdleConnTimeout:     90 * time.Second, // 空闲连接超时时间
+		TLSHandshakeTimeout: 5 * time.Second,  // TLS 握手超时
+	},
+}
+
 // httpRequest .
 func httpRequest(url, method string, data any, header []byte, timeout time.Duration) ([]byte, error) {
 	var dataBytes []byte
@@ -135,10 +149,15 @@ func httpRequest(url, method string, data any, header []byte, timeout time.Durat
 	}
 
 	reader := bytes.NewBuffer(dataBytes)
-	request, err := http.NewRequest(method, url, reader)
+
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	request, err := http.NewRequestWithContext(ctx, method, url, reader)
 	if err != nil {
 		return nil, err
 	}
+
 	request.Header.Set("Content-Type", "application/json;charset=UTF-8")
 	// 处理 header
 	if len(header) > 0 {
@@ -155,24 +174,7 @@ func httpRequest(url, method string, data any, header []byte, timeout time.Durat
 		}
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
-	defer cancel()
-
-	transport := &http.Transport{
-		DialContext: (&net.Dialer{
-			Timeout:   3 * time.Second, // 连接超时为3秒
-			KeepAlive: 30 * time.Second,
-		}).DialContext,
-		TLSHandshakeTimeout:   5 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-	}
-
-	client := http.Client{
-		Transport: transport,
-		Timeout:   timeout,
-	}
-	request = request.WithContext(ctx)
-	resp, err := client.Do(request)
+	resp, err := httpClient.Do(request)
 	if err != nil {
 		return nil, err
 	}
