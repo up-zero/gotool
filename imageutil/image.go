@@ -509,3 +509,49 @@ func FlipFile(srcFile, dstFile string, mode string) error {
 	}
 	return Save(dstFile, dstImg, 100)
 }
+
+// Overlay 图片叠加，将 overlay 图片叠加到 base 图片的指定位置 (x, y)，支持透明通道 (alpha blending)
+//
+// # Params:
+//
+//	base: 基础图片
+//	overlay: 叠加图片
+//	x: 基础图片的 X 坐标
+//	y: 基础图片的 Y 坐标
+//
+// # Example:
+//
+//	Overlay(base, overlay, 100, 100) // 将 overlay 图片叠加到 base 图片的 (100, 100) 位置
+func Overlay(base, overlay image.Image, x, y int) image.Image {
+	// 基础图片
+	dst := image.NewRGBA(base.Bounds())
+	draw.Draw(dst, dst.Bounds(), base, image.Point{X: 0, Y: 0}, draw.Src)
+
+	// 叠加图片
+	overlayRect := image.Rect(x, y, x+overlay.Bounds().Dx(), y+overlay.Bounds().Dy())
+	draw.Draw(dst, overlayRect, overlay, image.Point{X: 0, Y: 0}, draw.Over)
+
+	return dst
+}
+
+// OverlayFile 图片文件叠加，将 overlay 图片文件叠加到 base 图片文件指定位置 (x, y)，支持透明通道 (alpha blending)
+//
+// # Params:
+//
+//	baseFile: 基础图片文件
+//	overlayFile: 叠加图片文件
+//	dstFile: 目标图片文件
+//	x: 基础图片的 X 坐标
+//	y: 基础图片的 Y 坐标
+func OverlayFile(baseFile, overlayFile, dstFile string, x, y int) error {
+	baseImg, err := Open(baseFile)
+	if err != nil {
+		return err
+	}
+	overlayImg, err := Open(overlayFile)
+	if err != nil {
+		return err
+	}
+	dstImg := Overlay(baseImg, overlayImg, x, y)
+	return Save(dstFile, dstImg, 100)
+}

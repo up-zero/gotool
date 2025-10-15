@@ -65,3 +65,9 @@ func TestFlipFile(t *testing.T) {
 		t.Fatal("Error flipping image:", err)
 	}
 }
+
+func TestOverlayFile(t *testing.T) {
+	if err := OverlayFile("test.png", "overlay.png", "overlayed.png", 200, 300); err != nil {
+		t.Fatal("Error overlaying image:", err)
+	}
+}

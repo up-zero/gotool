@@ -187,6 +187,8 @@ func main() {
 + **RotateFile** 旋转图片文件
 + **Flip** 翻转图片
 + **FlipFile** 翻转图片文件
++ **Overlay** 图片叠加
++ **OverlayFile** 图片文件叠加
 
 ### 条件判断（conditionutil）
 
