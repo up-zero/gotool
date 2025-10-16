@@ -555,3 +555,38 @@ func OverlayFile(baseFile, overlayFile, dstFile string, x, y int) error {
 	dstImg := Overlay(baseImg, overlayImg, x, y)
 	return Save(dstFile, dstImg, 100)
 }
+
+// Grayscale 图片灰度化
+//
+// # Params:
+//
+//	src: 源图片
+func Grayscale(src image.Image) image.Image {
+	bounds := src.Bounds()
+	dst := image.NewRGBA(bounds)
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			c := src.At(x, y)
+			r, g, b, a := c.RGBA()
+			// 亮度公式：Y = 0.299R + 0.587G + 0.114B
+			gray := uint8(0.299*float64(r>>8) + 0.587*float64(g>>8) + 0.114*float64(b>>8))
+			dst.Set(x, y, color.RGBA{R: gray, G: gray, B: gray, A: uint8(a >> 8)})
+		}
+	}
+	return dst
+}
+
+// GrayscaleFile 图片文件灰度化
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+func GrayscaleFile(srcFile, dstFile string) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, Grayscale(img), 100)
+}

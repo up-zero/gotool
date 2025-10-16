@@ -189,6 +189,8 @@ func main() {
 + **FlipFile** 翻转图片文件
 + **Overlay** 图片叠加
 + **OverlayFile** 图片文件叠加
++ **Grayscale** 图片灰度化
++ **GrayscaleFile** 图片文件灰度化
 
 ### 条件判断（conditionutil）
 

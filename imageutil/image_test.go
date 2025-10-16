@@ -71,3 +71,9 @@ func TestOverlayFile(t *testing.T) {
 		t.Fatal("Error overlaying image:", err)
 	}
 }
+
+func TestGrayscaleFile(t *testing.T) {
+	if err := GrayscaleFile("test.png", "test_gray.png"); err != nil {
+		t.Error(err)
+	}
+}
