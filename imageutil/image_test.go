@@ -77,3 +77,9 @@ func TestGrayscaleFile(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestGaussianBlurFile(t *testing.T) {
+	if err := GaussianBlurFile("test.png", "test_gaussian.png", 3, 1); err != nil {
+		t.Error(err)
+	}
+}

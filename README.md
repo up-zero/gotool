@@ -191,6 +191,8 @@ func main() {
 + **OverlayFile** 图片文件叠加
 + **Grayscale** 图片灰度化
 + **GrayscaleFile** 图片文件灰度化
++ **GaussianBlur** 图片高斯模糊
++ **GaussianBlurFile** 图片文件高斯模糊
 
 ### 条件判断（conditionutil）
 

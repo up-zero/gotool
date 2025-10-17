@@ -590,3 +590,111 @@ func GrayscaleFile(srcFile, dstFile string) error {
 	}
 	return Save(dstFile, Grayscale(img), 100)
 }
+
+// gaussianKernel 生成高斯核
+func gaussianKernel(radius int, sigma float64) [][]float64 {
+	size := 2*radius + 1
+	kernel := make([][]float64, size)
+	sum := 0.0
+
+	for i := 0; i < size; i++ {
+		kernel[i] = make([]float64, size)
+		for j := 0; j < size; j++ {
+			x := float64(i - radius)
+			y := float64(j - radius)
+			// 高斯公式：G(x,y) = (1/(2πσ²)) * exp(-(x²+y²)/(2σ²))
+			value := math.Exp(-(x*x+y*y)/(2*sigma*sigma)) / (2 * math.Pi * sigma * sigma)
+			kernel[i][j] = value
+			sum += value
+		}
+	}
+
+	// 归一化
+	for i := 0; i < size; i++ {
+		for j := 0; j < size; j++ {
+			kernel[i][j] /= sum
+		}
+	}
+	return kernel
+}
+
+// GaussianBlur 图片高斯模糊
+//
+//   - 高斯核半径和标准差越大，越模糊
+//   - 建议 radius > 3*sigma
+//   - 小值（radius=1-3, sigma=0.5-1.0）：轻微模糊，适合细微效果
+//   - 中等值（radius=3-5, sigma=1.0-2.0）：明显模糊，适合背景虚化
+//   - 大值（radius>5, sigma>2.0）：强烈模糊，适合艺术效果，但计算慢
+//
+// # Params:
+//
+//	src: 源图片
+//	radius: 高斯核半径
+//	sigma: 高斯核标准差
+//
+// # Example:
+//
+//	GaussianBlur(img, 3, 1.0)
+func GaussianBlur(src image.Image, radius int, sigma float64) image.Image {
+	bounds := src.Bounds()
+	width, height := bounds.Dx(), bounds.Dy()
+	dst := image.NewRGBA(bounds)
+
+	kernel := gaussianKernel(radius, sigma)
+	kernelSize := 2*radius + 1
+
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			var r, g, b, a float64
+			for ky := 0; ky < kernelSize; ky++ {
+				for kx := 0; kx < kernelSize; kx++ {
+					// 计算源图像坐标，边界处理：镜像反射
+					px := x + kx - radius
+					py := y + ky - radius
+					if px < 0 {
+						px = -px
+					}
+					if py < 0 {
+						py = -py
+					}
+					if px >= width {
+						px = 2*width - px - 1
+					}
+					if py >= height {
+						py = 2*height - py - 1
+					}
+
+					// 获取像素颜色
+					cr, cg, cb, ca := src.At(px, py).RGBA()
+					weight := kernel[ky][kx]
+					r += float64(cr>>8) * weight
+					g += float64(cg>>8) * weight
+					b += float64(cb>>8) * weight
+					a += float64(ca>>8) * weight
+				}
+			}
+			dst.Set(x, y, color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a)})
+		}
+	}
+	return dst
+}
+
+// GaussianBlurFile 图片文件高斯模糊
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+//	radius: 高斯核半径
+//	sigma: 高斯核标准差
+//
+// # Example:
+//
+//	GaussianBlurFile("test.png", "test_gaussian.png", 3, 1.0)
+func GaussianBlurFile(srcFile, dstFile string, radius int, sigma float64) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, GaussianBlur(img, radius, sigma), 100)
+}
