@@ -698,3 +698,51 @@ func GaussianBlurFile(srcFile, dstFile string, radius int, sigma float64) error 
 	}
 	return Save(dstFile, GaussianBlur(img, radius, sigma), 100)
 }
+
+// AdjustBrightness 图片亮度调整
+//
+// # Params:
+//
+//	src: 源图片
+//	brightness: 亮度调整值
+//
+// # Example:
+//
+//	AdjustBrightness(img, 50)
+func AdjustBrightness(src image.Image, brightness float64) image.Image {
+	bounds := src.Bounds()
+	dst := image.NewRGBA(bounds)
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			r, g, b, a := src.At(x, y).RGBA()
+			// 转换为 0-255 范围
+			r8, g8, b8 := float64(r>>8), float64(g>>8), float64(b>>8)
+			// 调整亮度
+			r8 = r8 + brightness
+			g8 = g8 + brightness
+			b8 = b8 + brightness
+			// 限制在 [0, 255]
+			r8 = max(0, min(255, r8))
+			g8 = max(0, min(255, g8))
+			b8 = max(0, min(255, b8))
+			dst.Set(x, y, color.RGBA{R: uint8(r8), G: uint8(g8), B: uint8(b8), A: uint8(a >> 8)})
+		}
+	}
+	return dst
+}
+
+// AdjustBrightnessFile 图片文件亮度调整
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+//	brightness: 亮度调整值
+func AdjustBrightnessFile(srcFile, dstFile string, brightness float64) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, AdjustBrightness(img, brightness), 100)
+}

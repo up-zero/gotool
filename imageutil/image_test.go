@@ -83,3 +83,9 @@ func TestGaussianBlurFile(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestAdjustBrightnessFile(t *testing.T) {
+	if err := AdjustBrightnessFile("test.png", "test_brightness.png", 30); err != nil {
+		t.Error(err)
+	}
+}

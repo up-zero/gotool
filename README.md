@@ -193,6 +193,8 @@ func main() {
 + **GrayscaleFile** 图片文件灰度化
 + **GaussianBlur** 图片高斯模糊
 + **GaussianBlurFile** 图片文件高斯模糊
++ **AdjustBrightness** 图片亮度调整
++ **AdjustBrightnessFile** 图片文件亮度调整
 
 ### 条件判断（conditionutil）
 
