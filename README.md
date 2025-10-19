@@ -181,6 +181,7 @@ func main() {
 + **Size** 图片尺寸
 + **GenerateCaptcha** 验证码图片生成
 + **Crop** 图片裁剪
++ **CropFile** 图片文件裁剪
 + **Resize** 图片缩放
 + **ResizeFile** 图片文件缩放
 + **Rotate** 旋转图片

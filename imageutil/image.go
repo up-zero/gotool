@@ -230,27 +230,36 @@ func drawLine(img *image.RGBA, x1, y1, x2, y2 int, color color.RGBA) {
 //
 // # Params:
 //
-//	srcFile: 源图片路径
-//	dstFile: 目标图片路径
+//	src: 源图片
 //	cropRect: 裁剪区域
-func Crop(srcFile, dstFile string, cropRect image.Rectangle) error {
-	// 打开文件
-	img, err := Open(srcFile)
-	outFile, err := os.Create(dstFile)
-	if err != nil {
-		return err
-	}
-	defer outFile.Close()
-
-	// 裁剪图片
-	subImager, ok := img.(interface {
+func Crop(src image.Image, cropRect image.Rectangle) (image.Image, error) {
+	subImager, ok := src.(interface {
 		SubImage(r image.Rectangle) image.Image
 	})
 	if !ok {
-		return fmt.Errorf("unsupported image format: %s", filepath.Ext(srcFile))
+		return nil, fmt.Errorf("unsupported image format")
 	}
 	dstImage := subImager.SubImage(cropRect)
+	return dstImage, nil
+}
 
+// CropFile 图片文件裁剪
+//
+// # Params:
+//
+//	srcFile: 源图片路径
+//	dstFile: 目标图片路径
+//	cropRect: 裁剪区域
+func CropFile(srcFile, dstFile string, cropRect image.Rectangle) error {
+	// 打开文件
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	dstImage, err := Crop(img, cropRect)
+	if err != nil {
+		return err
+	}
 	// 保存图片
 	return Save(dstFile, dstImage, 100)
 }
