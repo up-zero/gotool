@@ -1,6 +1,7 @@
 package netutil
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -44,4 +45,35 @@ func TestParseResponse(t *testing.T) {
 		Data any    `json:"data"`
 	}
 	t.Log(ParseResponse[resp](HttpGet("http://192.168.110.253:9000/api/v1/loom/list")))
+}
+
+func TestFileDownload(t *testing.T) {
+	t.Log(FileDownload("https://www.baidu.com/img/bd_logo1.png", "baidu.png"))
+}
+
+func (dp *DownloadProgress) printProgress() {
+	progress := float64(dp.Finish) / float64(dp.Total) * 100
+	fmt.Printf("\rDownloading... %.2f%% complete (%d/%d)", progress, dp.Finish, dp.Total)
+}
+
+func TestFileDownloadWithNotify(t *testing.T) {
+	dp := make(chan DownloadProgress)
+	go func() {
+		for data := range dp {
+			data.printProgress()
+		}
+	}()
+	data, err := FileDownloadWithNotify(dp, "https://www.baidu.com/img/bd_logo1.png", "baidu.png")
+	if err != nil {
+		t.Fatal(err)
+	}
+	data.printProgress()
+}
+
+func TestFileDownloadWithProgress(t *testing.T) {
+	if err := FileDownloadWithProgress("https://www.baidu.com/img/bd_logo1.png", "baidu.png", func(finishBytes, totalBytes int64) {
+		fmt.Printf("\rDownloading... %.2f%% complete (%d/%d)", float64(finishBytes)/float64(totalBytes)*100, finishBytes, totalBytes)
+	}); err != nil {
+		t.Fatal(err)
+	}
 }

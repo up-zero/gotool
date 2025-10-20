@@ -1,7 +1,6 @@
 package fileutil
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -11,29 +10,6 @@ func TestFileCopy(t *testing.T) {
 
 func TestFileMove(t *testing.T) {
 	t.Log(FileMove("/opt/gotool/test.txt", "/opt/gotool/test/rename.txt"))
-}
-
-func TestFileDownload(t *testing.T) {
-	t.Log(FileDownload("https://www.baidu.com/img/bd_logo1.png", "baidu.png"))
-}
-
-func (dp *DownloadProgress) printProgress() {
-	progress := float64(dp.Total) / float64(dp.FileSize) * 100
-	fmt.Printf("\rDownloading... %.2f%% complete (%d/%d)", progress, dp.Total, dp.FileSize)
-}
-
-func TestFileDownloadWithNotify(t *testing.T) {
-	dp := make(chan DownloadProgress)
-	go func() {
-		for data := range dp {
-			data.printProgress()
-		}
-	}()
-	data, err := FileDownloadWithNotify(dp, "https://www.baidu.com/img/bd_logo1.png", "baidu.png")
-	if err != nil {
-		t.Fatal(err)
-	}
-	data.printProgress()
 }
 
 func TestFileCount(t *testing.T) {

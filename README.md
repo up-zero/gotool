@@ -50,8 +50,6 @@ func main() {
 
 + **FileCopy** 文件拷贝
 + **FileMove** 文件移动
-+ **FileDownload** 文件下载
-+ **FileDownloadWithNotify** 带通知的文件下载
 + **DirCopy** 绝对目录文件拷贝
 + **CurrentDirCount** 当前文件夹下(不迭代子文件夹)文件或文件夹的个数
 + **MkParentDir** 创建父级文件夹
@@ -141,6 +139,9 @@ func main() {
 + **HttpPutWithTimeout** 带超时时间的 http put 请求
 + **HttpDeleteWithTimeout** 带超时时间的 http delete 请求
 + **ParseResponse** 解析响应结果
++ **FileDownload** 文件下载
++ **FileDownloadWithNotify** 带通知的文件下载
++ **FileDownloadWithProgress** 带进度的文件下载
 
 ### 系统（sysutil）
 

@@ -4,9 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
+	"os"
+	"path/filepath"
 	"reflect"
 	"time"
 )
@@ -186,4 +189,159 @@ func httpRequest(url, method string, data any, header []byte, timeout time.Durat
 	}
 
 	return respBytes, nil
+}
+
+// FileDownload 文件下载
+//
+// # Params:
+//
+//	url: 文件地址
+//	filePath: 文件路径
+func FileDownload(url, filePath string) error {
+	// 创建文件夹
+	if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
+		return err
+	}
+	// 创建目录源文件
+	writer, err := os.Create(filePath)
+	if err != nil {
+		return err
+	}
+	defer writer.Close()
+	// 下载文件
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	// 拷贝文件
+	if _, err = io.Copy(writer, resp.Body); err != nil {
+		return err
+	}
+	return nil
+}
+
+type DownloadProgressCallback func(finishBytes, totalBytes int64)
+
+// DownloadProgress 包装了一个 io.Writer，并加入了进度回调功能。
+type DownloadProgress struct {
+	Total    int64                    // 文件总大小
+	Finish   int64                    // 当前已写入大小
+	callback DownloadProgressCallback // 回调函数
+}
+
+// Write 实现了 io.Writer 接口。
+// 每次有数据块写入时，这个方法会被调用。
+func (pw *DownloadProgress) Write(p []byte) (int, error) {
+	n := len(p)
+	pw.Finish += int64(n)
+	// 有回调函数则调用
+	if pw.callback != nil {
+		pw.callback(pw.Finish, pw.Total)
+	}
+	return n, nil
+}
+
+// FileDownloadWithNotify 带通知的文件下载
+//
+// # Params:
+//
+//	ch: 通知进度
+//	url: 文件地址
+//	filePath: 文件路径
+func FileDownloadWithNotify(ch chan DownloadProgress, url, filePath string) (*DownloadProgress, error) {
+	defer close(ch)
+	// 创建文件夹
+	if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
+		return nil, err
+	}
+
+	w, err := os.Create(filePath + ".tmp")
+	if err != nil {
+		return nil, err
+	}
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	fileSize := resp.ContentLength
+	if fileSize <= 0 {
+		return nil, fmt.Errorf("invalid Content-Length")
+	}
+
+	// 通知进度
+	progress := &DownloadProgress{Total: fileSize}
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				select {
+				case ch <- *progress:
+				default:
+				}
+				time.Sleep(50 * time.Millisecond)
+			}
+		}
+	}()
+	defer cancel()
+
+	// 下载文件
+	_, err = io.Copy(w, io.TeeReader(resp.Body, progress))
+	if err != nil {
+		return progress, err
+	}
+	w.Close()
+
+	// 重命名文件
+	if err := os.Rename(filePath+".tmp", filePath); err != nil {
+		return progress, err
+	}
+
+	return progress, nil
+}
+
+// FileDownloadWithProgress 带进度的文件下载
+//
+// # Params:
+//
+//	url: 文件地址
+//	filePath: 文件路径
+//	callback: 用于通知下载进度
+func FileDownloadWithProgress(url string, filePath string, callback DownloadProgressCallback) error {
+	// 准备文件
+	if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
+		return err
+	}
+	w, err := os.Create(filePath + ".tmp")
+	if err != nil {
+		return err
+	}
+
+	// 开始下载
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	progress := &DownloadProgress{
+		Total:    resp.ContentLength,
+		Finish:   0,
+		callback: callback,
+	}
+	_, err = io.Copy(w, io.TeeReader(resp.Body, progress))
+	if err != nil {
+		return err
+	}
+	w.Close()
+
+	// 重命名文件
+	if err := os.Rename(filePath+".tmp", filePath); err != nil {
+		return err
+	}
+
+	return nil
 }
