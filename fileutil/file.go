@@ -185,3 +185,12 @@ func FileRead(filePath string, dst any) error {
 	}
 	return nil
 }
+
+// FileSize 获取文件大小
+func FileSize(filePath string) (int64, error) {
+	fileInfo, err := os.Stat(filePath)
+	if err != nil {
+		return 0, err
+	}
+	return fileInfo.Size(), nil
+}

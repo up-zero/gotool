@@ -54,3 +54,7 @@ func TestFileRead(t *testing.T) {
 		t.Log(s1)
 	}
 }
+
+func TestFileSize(t *testing.T) {
+	t.Log(FileSize("./file.go"))
+}

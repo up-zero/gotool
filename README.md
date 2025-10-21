@@ -62,6 +62,7 @@ func main() {
 + **ZipWithNotify** 带通知的文件夹压缩
 + **Unzip** 文件解压
 + **UnzipWithNotify** 带通知的文件解压
++ **FileSize** 获取文件大小
 
 ### 加解密（cryptoutil）
 
