@@ -166,6 +166,7 @@ func main() {
 + **UUID** uuid
 + **UUIDGenerate** 生成UUID
 + **SignalSnowflake** 单节点的雪花码
++ **NewObjectID** 生成一个新的 ObjectID
 
 ### 数组（arrayutil）
 
