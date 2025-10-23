@@ -89,3 +89,9 @@ func TestAdjustBrightnessFile(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestInvertFile(t *testing.T) {
+	if err := InvertFile("test.png", "test_invert.png"); err != nil {
+		t.Error(err)
+	}
+}

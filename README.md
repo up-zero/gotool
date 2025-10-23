@@ -199,6 +199,8 @@ func main() {
 + **GaussianBlurFile** 图片文件高斯模糊
 + **AdjustBrightness** 图片亮度调整
 + **AdjustBrightnessFile** 图片文件亮度调整
++ **Invert** 图片反转颜色
++ **InvertFile** 图片文件反转颜色
 
 ### 条件判断（conditionutil）
 
