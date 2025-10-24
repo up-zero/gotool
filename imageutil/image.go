@@ -794,3 +794,54 @@ func InvertFile(srcFile, dstFile string) error {
 	}
 	return Save(dstFile, Invert(img), 100)
 }
+
+// Binarize 图片二值化
+//
+// # Params:
+//
+//	src: 源图片
+//	threshold: 阈值，推荐为 128
+func Binarize(src image.Image, threshold uint8) image.Image {
+	bounds := src.Bounds()
+	dst := image.NewGray(bounds)
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			oldColor := src.At(x, y)
+			// 将原始图片转为 8-bit 灰阶值
+			var grayY uint8
+			switch c := oldColor.(type) {
+			case color.Gray:
+				grayY = c.Y
+			case color.Gray16:
+				grayY = uint8(c.Y >> 8)
+			default:
+				// 使用默认的灰阶模型转换
+				// 亮度公式：Y = 0.299R + 0.587G + 0.114B
+				grayY = color.GrayModel.Convert(oldColor).(color.Gray).Y
+			}
+			// 根据阈值进行二值化
+			if grayY >= threshold {
+				dst.Set(x, y, color.Gray{Y: 255}) // 白色
+			} else {
+				dst.Set(x, y, color.Gray{Y: 0}) // 黑色
+			}
+		}
+	}
+	return dst
+}
+
+// BinarizeFile 图片文件二值化
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+//	threshold: 阈值，推荐为 128
+func BinarizeFile(srcFile, dstFile string, threshold uint8) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, Binarize(img, threshold), 100)
+}

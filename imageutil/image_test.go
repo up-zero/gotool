@@ -95,3 +95,9 @@ func TestInvertFile(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestBinarizeFile(t *testing.T) {
+	if err := BinarizeFile("test.png", "test_binarize.png", 128); err != nil {
+		t.Fatal(err)
+	}
+}

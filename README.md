@@ -201,6 +201,8 @@ func main() {
 + **AdjustBrightnessFile** 图片文件亮度调整
 + **Invert** 图片反转颜色
 + **InvertFile** 图片文件反转颜色
++ **Binarize** 图片二值化
++ **BinarizeFile** 图片文件二值化
 
 ### 条件判断（conditionutil）
 
