@@ -11,6 +11,7 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"sort"
 	"time"
 
 	"github.com/up-zero/gotool"
@@ -570,7 +571,7 @@ func OverlayFile(baseFile, overlayFile, dstFile string, x, y int) error {
 // # Params:
 //
 //	src: 源图片
-func Grayscale(src image.Image) image.Image {
+func Grayscale(src image.Image) *image.Gray {
 	bounds := src.Bounds()
 	dst := image.NewGray(bounds)
 
@@ -844,4 +845,103 @@ func BinarizeFile(srcFile, dstFile string, threshold uint8) error {
 		return err
 	}
 	return Save(dstFile, Binarize(img, threshold), 100)
+}
+
+// MedianBlur 图片中值滤波
+//
+// # Params
+//
+//	src: 源图像
+//	radius: 滤波半径，radius=1 表示 3x3 窗口, radius=2 表示 5x5 窗口
+func MedianBlur(src image.Image, radius int) image.Image {
+	bounds := src.Bounds()
+	dst := image.NewRGBA(bounds)
+
+	// 窗口的边长 (e.g., radius=1 -> size=3)
+	size := radius*2 + 1
+	// 窗口内的像素总数 (e.g., radius=1 -> 3x3=9)
+	windowSize := size * size
+	// 中位数在排序后切片中的索引
+	medianIndex := windowSize / 2
+
+	// 为 R, G, B, A 四个通道分别创建切片，用于存放窗口内的像素值
+	rNeighbors := make([]uint8, windowSize)
+	gNeighbors := make([]uint8, windowSize)
+	bNeighbors := make([]uint8, windowSize)
+	aNeighbors := make([]uint8, windowSize)
+
+	// 遍历图像的每一个像素 (x, y)
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+
+			// 遍历 (x, y) 像素周围的窗口
+			i := 0
+			for ky := -radius; ky <= radius; ky++ {
+				for kx := -radius; kx <= radius; kx++ {
+					// 计算邻居像素的坐标
+					nx := x + kx
+					ny := y + ky
+
+					// 边界处理：如果邻居在图像外，则复制最近的边缘像素 (Clamping)
+					if nx < bounds.Min.X {
+						nx = bounds.Min.X
+					} else if nx >= bounds.Max.X {
+						nx = bounds.Max.X - 1
+					}
+					if ny < bounds.Min.Y {
+						ny = bounds.Min.Y
+					} else if ny >= bounds.Max.Y {
+						ny = bounds.Max.Y - 1
+					}
+
+					// 获取邻居像素的颜色
+					r, g, b, a := src.At(nx, ny).RGBA()
+
+					// 存入切片
+					rNeighbors[i] = uint8(r >> 8)
+					gNeighbors[i] = uint8(g >> 8)
+					bNeighbors[i] = uint8(b >> 8)
+					aNeighbors[i] = uint8(a >> 8)
+					i++
+				}
+			}
+
+			// 排序四个通道的切片
+			sort.Slice(rNeighbors, func(i, j int) bool { return rNeighbors[i] < rNeighbors[j] })
+			sort.Slice(gNeighbors, func(i, j int) bool { return gNeighbors[i] < gNeighbors[j] })
+			sort.Slice(bNeighbors, func(i, j int) bool { return bNeighbors[i] < bNeighbors[j] })
+			sort.Slice(aNeighbors, func(i, j int) bool { return aNeighbors[i] < aNeighbors[j] })
+
+			// 找出中位数
+			medianR := rNeighbors[medianIndex]
+			medianG := gNeighbors[medianIndex]
+			medianB := bNeighbors[medianIndex]
+			medianA := aNeighbors[medianIndex]
+
+			// 将中位数作为新颜色设置到目标图像
+			dst.Set(x, y, color.RGBA{
+				R: medianR,
+				G: medianG,
+				B: medianB,
+				A: medianA,
+			})
+		}
+	}
+
+	return dst
+}
+
+// MedianBlurFile 图片文件中值滤波
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+//	radius: 滤波半径，radius=1 表示 3x3 窗口, radius=2 表示 5x5 窗口
+func MedianBlurFile(srcFile, dstFile string, radius int) error {
+	src, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, MedianBlur(src, radius), 100)
 }

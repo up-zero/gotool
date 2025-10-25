@@ -101,3 +101,9 @@ func TestBinarizeFile(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestMedianBlurFile(t *testing.T) {
+	if err := MedianBlurFile("test.png", "test_median.png", 1); err != nil {
+		t.Fatal(err)
+	}
+}
