@@ -205,6 +205,8 @@ func main() {
 + **BinarizeFile** 图片文件二值化
 + **MedianBlur** 图片中值滤波
 + **MedianBlurFile** 图片文件中值滤波
++ **Sobel** 索贝尔边缘检测
++ **SobelFile** 图片文件索贝尔边缘检测
 
 ### 条件判断（conditionutil）
 

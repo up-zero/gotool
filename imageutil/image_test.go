@@ -107,3 +107,9 @@ func TestMedianBlurFile(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestSobelFile(t *testing.T) {
+	if err := SobelFile("test.png", "test_sobel.png", 400); err != nil {
+		t.Fatal(err)
+	}
+}

@@ -945,3 +945,80 @@ func MedianBlurFile(srcFile, dstFile string, radius int) error {
 	}
 	return Save(dstFile, MedianBlur(src, radius), 100)
 }
+
+// Sobel 索贝尔边缘检测
+//
+// # Sobel 算子说明：
+//   - 使用 3x3 Gx/Gy 卷积核分别计算水平与垂直方向梯度
+//   - 边缘强度 edge = sqrt(gx^2 + gy^2)
+//
+// # Params:
+//
+//	src: 源图片
+//	threshold: 阈值 [0, 1442] 推荐值：400
+func Sobel(src image.Image, threshold float64) *image.Gray {
+	// 图片灰阶
+	gray := Grayscale(src)
+	bounds := src.Bounds()
+
+	// 定义 Sobel 核
+	kernelX := [3][3]int{
+		{-1, 0, 1},
+		{-2, 0, 2},
+		{-1, 0, 1},
+	}
+	kernelY := [3][3]int{
+		{-1, -2, -1},
+		{0, 0, 0},
+		{1, 2, 1},
+	}
+
+	dst := image.NewGray(bounds)
+
+	for y := bounds.Min.Y + 1; y < bounds.Max.Y-1; y++ {
+		for x := bounds.Min.X + 1; x < bounds.Max.X-1; x++ {
+			var gx, gy int // 水平和垂直梯度
+
+			// 应用 3x3 卷积核
+			for ky := -1; ky <= 1; ky++ {
+				for kx := -1; kx <= 1; kx++ {
+					// 获取 3x3 邻域内的像素灰阶值
+					// .GrayAt(x, y) 返回 color.Gray, .Y 即为 8 位灰阶值
+					pixelVal := int(gray.GrayAt(x+kx, y+ky).Y)
+
+					// 累加 Gx 和 Gy
+					gx += pixelVal * kernelX[ky+1][kx+1]
+					gy += pixelVal * kernelY[ky+1][kx+1]
+				}
+			}
+
+			// 计算梯度幅值
+			// G = Sqrt(Gx^2 + Gy^2)
+			gradient := math.Sqrt(float64(gx*gx) + float64(gy*gy))
+
+			if gradient > threshold {
+				dst.SetGray(x, y, color.Gray{Y: 255}) // 白色
+			} else {
+				dst.SetGray(x, y, color.Gray{Y: 0}) // 黑色
+			}
+
+		}
+	}
+
+	return dst
+}
+
+// SobelFile 图片文件索贝尔边缘检测
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+//	threshold: 阈值 [0, 1442] 推荐值：400
+func SobelFile(srcFile, dstFile string, threshold float64) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, Sobel(img, threshold), 100)
+}
