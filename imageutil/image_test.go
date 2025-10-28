@@ -113,3 +113,9 @@ func TestSobelFile(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestErodeFile(t *testing.T) {
+	if err := ErodeFile("test.png", "test_erode.png", NewErodeRectKernel(3, 3)); err != nil {
+		t.Fatal(err)
+	}
+}

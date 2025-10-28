@@ -847,7 +847,7 @@ func BinarizeFile(srcFile, dstFile string, threshold uint8) error {
 	return Save(dstFile, Binarize(img, threshold), 100)
 }
 
-// MedianBlur 图片中值滤波
+// MedianBlur 图片中值滤波，常用于处理椒盐噪声
 //
 // # Params
 //
@@ -1110,4 +1110,136 @@ func DrawThickRectOutline(dst draw.Image, r image.Rectangle, c color.Color, thic
 	// (Max.X - thickness, Min.Y + thickness) -> (Max.X, Max.Y - thickness)
 	rightRect := image.Rect(r.Max.X-thickness, r.Min.Y+thickness, r.Max.X, r.Max.Y-thickness)
 	DrawFilledRect(dst, rightRect, c)
+}
+
+// NewErodeRectKernel 创建一个用于腐蚀的矩形核
+//
+// # Params:
+//
+//	width, height: 核的宽高，为保证中心对称，最好使用奇数
+func NewErodeRectKernel(width, height int) ErodeStructuringElement {
+	if width <= 0 {
+		width = 1
+	}
+	if height <= 0 {
+		height = 1
+	}
+
+	kernel := make([][]bool, height)
+	for y := 0; y < height; y++ {
+		kernel[y] = make([]bool, width)
+		for x := 0; x < width; x++ {
+			kernel[y][x] = true // 矩形核，所有点都参与
+		}
+	}
+
+	return ErodeStructuringElement{
+		Kernel: kernel,
+		Anchor: image.Point{X: width / 2, Y: height / 2},
+	}
+}
+
+// NewErodeCrossKernel 创建一个用于腐蚀的十字形核
+//
+// Params:
+//
+//	size: 核的尺寸，为保证中心对称，最好使用奇数
+func NewErodeCrossKernel(size int) ErodeStructuringElement {
+	if size <= 0 {
+		size = 3
+	}
+	if size%2 == 0 {
+		size++ // 确保为奇数
+	}
+
+	kernel := make([][]bool, size)
+	anchorPt := size / 2
+
+	for y := 0; y < size; y++ {
+		kernel[y] = make([]bool, size)
+		for x := 0; x < size; x++ {
+			// 只有中心行或中心列为 true
+			if x == anchorPt || y == anchorPt {
+				kernel[y][x] = true
+			} else {
+				kernel[y][x] = false
+			}
+		}
+	}
+
+	return ErodeStructuringElement{
+		Kernel: kernel,
+		Anchor: image.Point{X: anchorPt, Y: anchorPt},
+	}
+}
+
+// Erode 图片腐蚀
+//
+// # Params:
+//
+//	src: 源图片
+//	se: 腐蚀结构元素
+//
+// # Example:
+//
+//	Erode(img, NewErodeRectKernel(3, 3))
+func Erode(src image.Image, se ErodeStructuringElement) image.Image {
+	bounds := src.Bounds()
+	gray := Grayscale(src)
+
+	dst := image.NewGray(bounds)
+
+	// 核判空
+	kernelHeight := len(se.Kernel)
+	if kernelHeight == 0 {
+		return src
+	}
+	kernelWidth := len(se.Kernel[0])
+	if kernelWidth == 0 {
+		return src
+	}
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			// 查找锚点 (x, y) 邻域的最小值
+			var minVal uint8 = 255
+
+			for ky := 0; ky < kernelHeight; ky++ {
+				for kx := 0; kx < kernelWidth; kx++ {
+					if !se.Kernel[ky][kx] {
+						continue
+					}
+
+					srcX := x + (kx - se.Anchor.X)
+					srcY := y + (ky - se.Anchor.Y)
+					safeX := max(bounds.Min.X, min(srcX, bounds.Max.X-1))
+					safeY := max(bounds.Min.Y, min(srcY, bounds.Max.Y-1))
+
+					val := gray.GrayAt(safeX, safeY).Y
+					if val < minVal {
+						minVal = val
+					}
+				}
+			}
+
+			dst.SetGray(x, y, color.Gray{Y: minVal})
+		}
+	}
+
+	return dst
+}
+
+// ErodeFile 图片文件腐蚀
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+//	se: 腐蚀结构元素
+func ErodeFile(srcFile, dstFile string, se ErodeStructuringElement) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, Erode(img, se), 100)
 }

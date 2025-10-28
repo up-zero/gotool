@@ -210,6 +210,10 @@ func main() {
 + **DrawRectOutline** 绘制矩形边框
 + **DrawFilledRect** 矩形填充
 + **DrawThickRectOutline** 绘制粗矩形边框
++ **NewErodeRectKernel** 创建一个用于腐蚀的矩形核
++ **NewErodeCrossKernel** 创建一个用于腐蚀的十字形核
++ **Erode** 图片腐蚀
++ **ErodeFile** 图片文件腐蚀
 
 ### 条件判断（conditionutil）
 
