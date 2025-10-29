@@ -172,11 +172,9 @@ func GenerateCaptcha(text string) (image.Image, error) {
 
 	// 添加一些干扰线
 	for i := 0; i < 5; i++ {
-		x1 := r.Intn(width)
-		y1 := r.Intn(height)
-		x2 := r.Intn(width)
-		y2 := r.Intn(height)
-		drawLine(img, x1, y1, x2, y2, color.RGBA{R: uint8(r.Intn(255)), G: uint8(r.Intn(255)), B: uint8(r.Intn(255)), A: 255})
+		p1 := image.Point{X: r.Intn(width), Y: r.Intn(height)}
+		p2 := image.Point{X: r.Intn(width), Y: r.Intn(height)}
+		DrawLine(img, p1, p2, color.RGBA{R: uint8(r.Intn(255)), G: uint8(r.Intn(255)), B: uint8(r.Intn(255)), A: 255})
 	}
 
 	return img, nil
@@ -190,39 +188,6 @@ func drawChar(img *image.RGBA, x, y int, char rune, color color.RGBA) {
 					img.Set(x+px, y+py, color)
 				}
 			}
-		}
-	}
-}
-
-// drawLine 在图像上绘制一条线
-func drawLine(img *image.RGBA, x1, y1, x2, y2 int, color color.RGBA) {
-	dx := int(math.Abs(float64(x2 - x1)))
-	dy := int(math.Abs(float64(y2 - y1)))
-	sx := 1
-	sy := 1
-
-	if x1 > x2 {
-		sx = -1
-	}
-	if y1 > y2 {
-		sy = -1
-	}
-
-	err := dx - dy
-
-	for {
-		img.Set(x1, y1, color)
-		if x1 == x2 && y1 == y2 {
-			break
-		}
-		e2 := 2 * err
-		if e2 > -dy {
-			err -= dy
-			x1 += sx
-		}
-		if e2 < dx {
-			err += dx
-			y1 += sy
 		}
 	}
 }
@@ -1021,95 +986,6 @@ func SobelFile(srcFile, dstFile string, threshold float64) error {
 		return err
 	}
 	return Save(dstFile, Sobel(img, threshold), 100)
-}
-
-// DrawRectOutline 绘制矩形边框
-//
-// # Params:
-//
-//	dst: 目标图片，必须是可变的（例如 *image.RGBA）
-//	r: 要绘制的矩形区域
-//	c: 颜色
-func DrawRectOutline(dst draw.Image, r image.Rectangle, c color.Color) {
-	bounds := dst.Bounds()
-	r = r.Intersect(bounds)
-	if r.Empty() {
-		return
-	}
-
-	// 绘制水平线 (Top & Bottom)
-	for x := r.Min.X; x < r.Max.X; x++ {
-		dst.Set(x, r.Min.Y, c)   // Top
-		dst.Set(x, r.Max.Y-1, c) // Bottom
-	}
-
-	// 绘制垂直线 (Left & Right)
-	for y := r.Min.Y; y < r.Max.Y; y++ {
-		dst.Set(r.Min.X, y, c)   // Left
-		dst.Set(r.Max.X-1, y, c) // Right
-	}
-}
-
-// DrawFilledRect 矩形填充
-//
-// # Params:
-//
-//	dst: 目标图片
-//	r: 要绘制的矩形区域
-//	c: 颜色
-func DrawFilledRect(dst draw.Image, r image.Rectangle, c color.Color) {
-	src := image.NewUniform(c)
-	r = r.Intersect(dst.Bounds())
-
-	draw.Draw(dst, r, src, image.Point{}, draw.Src)
-}
-
-// DrawThickRectOutline 绘制粗矩形边框
-//
-// # Params:
-//
-//	dst: 目标图片
-//	r: 要绘制的矩形区域
-//	c: 颜色
-//	thickness: 边框的粗细，像素
-func DrawThickRectOutline(dst draw.Image, r image.Rectangle, c color.Color, thickness int) {
-	bounds := dst.Bounds()
-	if thickness <= 0 {
-		return
-	} else if thickness == 1 {
-		DrawRectOutline(dst, r, c)
-		return
-	}
-	r = r.Intersect(bounds)
-	if r.Empty() {
-		return
-	}
-
-	// 处理粗细过大的情况
-	if thickness*2 >= r.Dx() || thickness*2 >= r.Dy() {
-		DrawFilledRect(dst, r, c)
-		return
-	}
-
-	// Top Bar
-	// (Min.X, Min.Y) -> (Max.X, Min.Y + thickness)
-	topRect := image.Rect(r.Min.X, r.Min.Y, r.Max.X, r.Min.Y+thickness)
-	DrawFilledRect(dst, topRect, c)
-
-	// Bottom Bar
-	// (Min.X, Max.Y - thickness) -> (Max.X, Max.Y)
-	bottomRect := image.Rect(r.Min.X, r.Max.Y-thickness, r.Max.X, r.Max.Y)
-	DrawFilledRect(dst, bottomRect, c)
-
-	// Left Bar
-	// (Min.X, Min.Y + thickness) -> (Min.X + thickness, Max.Y - thickness)
-	leftRect := image.Rect(r.Min.X, r.Min.Y+thickness, r.Min.X+thickness, r.Max.Y-thickness)
-	DrawFilledRect(dst, leftRect, c)
-
-	// Right Bar
-	// (Max.X - thickness, Min.Y + thickness) -> (Max.X, Max.Y - thickness)
-	rightRect := image.Rect(r.Max.X-thickness, r.Min.Y+thickness, r.Max.X, r.Max.Y-thickness)
-	DrawFilledRect(dst, rightRect, c)
 }
 
 // NewErodeRectKernel 创建一个用于腐蚀的矩形核

@@ -207,6 +207,9 @@ func main() {
 + **MedianBlurFile** 图片文件中值滤波
 + **Sobel** 索贝尔边缘检测
 + **SobelFile** 图片文件索贝尔边缘检测
++ **DrawFilledCircle** 绘制填充的圆形
++ **DrawThickLine** 绘制粗线
++ **DrawLine** 绘制直线
 + **DrawRectOutline** 绘制矩形边框
 + **DrawFilledRect** 矩形填充
 + **DrawThickRectOutline** 绘制粗矩形边框
