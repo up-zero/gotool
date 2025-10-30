@@ -35,3 +35,36 @@ func TestDrawLine(t *testing.T) {
 	}
 	Save("test_draw_line.png", img, 100)
 }
+
+func TestDrawPolygonOutline(t *testing.T) {
+	img := image.NewRGBA(image.Rect(0, 0, 1920, 1080))
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	points := make([]image.Point, 0)
+	for i := 0; i < 5; i++ {
+		points = append(points, image.Point{X: r.Intn(img.Bounds().Dx()), Y: r.Intn(img.Bounds().Dy())})
+	}
+	DrawPolygonOutline(img, points, color.RGBA{R: uint8(r.Intn(255)), G: uint8(r.Intn(255)), B: uint8(r.Intn(255)), A: 255})
+	Save("test_draw_polygon_outline.png", img, 100)
+}
+
+func TestDrawThickPolygonOutline(t *testing.T) {
+	img := image.NewRGBA(image.Rect(0, 0, 1920, 1080))
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	points := make([]image.Point, 0)
+	for i := 0; i < 5; i++ {
+		points = append(points, image.Point{X: r.Intn(img.Bounds().Dx()), Y: r.Intn(img.Bounds().Dy())})
+	}
+	DrawThickPolygonOutline(img, points, 10, color.RGBA{R: uint8(r.Intn(255)), G: uint8(r.Intn(255)), B: uint8(r.Intn(255)), A: 255})
+	Save("test_draw_thick_polygon_outline.png", img, 100)
+}
+
+func TestDrawFilledPolygon(t *testing.T) {
+	img := image.NewRGBA(image.Rect(0, 0, 1920, 1080))
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	points := make([]image.Point, 0)
+	for i := 0; i < 5; i++ {
+		points = append(points, image.Point{X: r.Intn(img.Bounds().Dx()), Y: r.Intn(img.Bounds().Dy())})
+	}
+	DrawFilledPolygon(img, points, color.RGBA{R: uint8(r.Intn(255)), G: uint8(r.Intn(255)), B: uint8(r.Intn(255)), A: 255})
+	Save("test_draw_filled_polygon.png", img, 100)
+}
