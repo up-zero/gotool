@@ -220,6 +220,7 @@ func main() {
 + **NewErodeCrossKernel** 创建一个用于腐蚀的十字形核
 + **Erode** 图片腐蚀
 + **ErodeFile** 图片文件腐蚀
++ **ConvexHull** 计算凸包
 
 ### 条件判断（conditionutil）
 
