@@ -221,6 +221,7 @@ func main() {
 + **Erode** 图片腐蚀
 + **ErodeFile** 图片文件腐蚀
 + **ConvexHull** 计算凸包
++ **SimplifyPath** 简化路径
 
 ### 条件判断（conditionutil）
 
