@@ -118,11 +118,14 @@ func main() {
 
 ### 数学（mathutil）
 
-+ **Abs**  绝对值
-+ **Min**  最小值
-+ **Max**  最大值
-+ **Sum**  求和
-+ **Average**  平均值
++ **Abs** 绝对值
++ **Min** 最小值
++ **Max** 最大值
++ **Sum** 求和
++ **Average** 平均值
++ **ConvexHull** 计算凸包
++ **SimplifyPath** 简化路径
++ **OffsetPolygon** 多边形偏移 (内缩/外扩)
 
 ### 网络（netutil）
 
@@ -222,6 +225,7 @@ func main() {
 + **ErodeFile** 图片文件腐蚀
 + **ConvexHull** 计算凸包
 + **SimplifyPath** 简化路径
++ **OffsetPolygon** 多边形偏移 (内缩/外扩)
 
 ### 条件判断（conditionutil）
 
