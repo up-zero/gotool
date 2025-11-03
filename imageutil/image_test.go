@@ -119,3 +119,9 @@ func TestErodeFile(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestEqualizeHistFile(t *testing.T) {
+	if err := EqualizeHistFile("test.png", "test_equalize_hist.png"); err != nil {
+		t.Fatal(err)
+	}
+}

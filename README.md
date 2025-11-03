@@ -210,6 +210,12 @@ func main() {
 + **MedianBlurFile** 图片文件中值滤波
 + **Sobel** 索贝尔边缘检测
 + **SobelFile** 图片文件索贝尔边缘检测
++ **NewErodeRectKernel** 创建一个用于腐蚀的矩形核
++ **NewErodeCrossKernel** 创建一个用于腐蚀的十字形核
++ **Erode** 图片腐蚀
++ **ErodeFile** 图片文件腐蚀
++ **EqualizeHist** 直方图均衡化
++ **EqualizeHistFile** 图片文件直方图均衡化
 + **DrawFilledCircle** 绘制填充的圆形
 + **DrawThickLine** 绘制粗线
 + **DrawLine** 绘制直线
@@ -219,10 +225,6 @@ func main() {
 + **DrawPolygonOutline** 绘制多边形边框
 + **DrawThickPolygonOutline** 绘制粗多边形边框
 + **DrawFilledPolygon** 多边形填充
-+ **NewErodeRectKernel** 创建一个用于腐蚀的矩形核
-+ **NewErodeCrossKernel** 创建一个用于腐蚀的十字形核
-+ **Erode** 图片腐蚀
-+ **ErodeFile** 图片文件腐蚀
 + **ConvexHull** 计算凸包
 + **SimplifyPath** 简化路径
 + **OffsetPolygon** 多边形偏移 (内缩/外扩)

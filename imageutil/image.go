@@ -1119,3 +1119,94 @@ func ErodeFile(srcFile, dstFile string, se ErodeStructuringElement) error {
 	}
 	return Save(dstFile, Erode(img, se), 100)
 }
+
+// EqualizeHist 直方图均衡化
+//
+// 公式 s_k = round( (cdf(i) - cdf_min) / (Dx × Dy - cdf_min) × 255 )
+//
+// # Params:
+//
+//	src: 源图片
+func EqualizeHist(src image.Image) image.Image {
+	bounds := src.Bounds()
+	width, height := bounds.Dx(), bounds.Dy()
+	totalPixels := float64(width * height)
+
+	dst := image.NewGray(bounds)
+
+	// hist 数组用于统计 0-255 每个灰阶级别的像素数
+	var hist [256]int
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			oldColor := src.At(x, y)
+			gray := color.GrayModel.Convert(oldColor).(color.Gray)
+			hist[gray.Y]++
+		}
+	}
+
+	// 计算累积分布函数 (CDF)
+	var cdf [256]int
+	runningSum := 0
+	for i, count := range hist {
+		runningSum += count
+		cdf[i] = runningSum
+	}
+
+	// 查找表，将旧灰阶值映射到新灰阶值
+	var mapping [256]uint8
+
+	// 找到 cdf_min (第一个非零的 cdf 值)
+	var cdfMin float64
+	for i := 0; i < 256; i++ {
+		if cdf[i] > 0 {
+			cdfMin = float64(cdf[i])
+			break
+		}
+	}
+
+	// 计算分母 (TotalPixels - cdf_min)
+	denominator := totalPixels - cdfMin
+
+	// 计算映射表
+	for i := 0; i < 256; i++ {
+		// 避免除以零 (针对纯色图像)
+		if denominator == 0 {
+			// 如果是纯色图，所有像素都映射到 0
+			mapping[i] = 0
+			continue
+		}
+
+		// 归一化并缩放
+		// (cdf[i] - cdf_min)
+		numerator := float64(cdf[i]) - cdfMin
+		// (num / den) * 255
+		val := (numerator / denominator) * 255.0
+
+		// 四舍五入并转换为 uint8
+		mapping[i] = uint8(math.Round(val))
+	}
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			oldGrayY := color.GrayModel.Convert(src.At(x, y)).(color.Gray).Y
+			newGrayY := mapping[oldGrayY]
+			dst.SetGray(x, y, color.Gray{Y: newGrayY})
+		}
+	}
+
+	return dst
+}
+
+// EqualizeHistFile 图片文件直方图均衡化
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+func EqualizeHistFile(srcFile, dstFile string) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, EqualizeHist(img), 100)
+}
