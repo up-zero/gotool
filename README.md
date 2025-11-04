@@ -252,3 +252,12 @@ func main() {
 
 + **Reverse** 字符串反转
 + **Truncate** 字符串截断
+
+### 验证器（validator）
+
++ **IsDigit** 判断字符串是否为数字
++ **IsAlpha** 验证字符串是否为 Unicode 字符
++ **IsAlphaStrict** 验证字符串是否为英文字符 a-z A-Z
++ **IsAlphaNumeric** 验证字符串是否为 Unicode 字符或数字
++ **IsIpv4** 验证字符串是否为 IPv4 地址
++ **IsIpv6** 验证字符串是否为 IPv6 地址
