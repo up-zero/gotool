@@ -261,3 +261,8 @@ func main() {
 + **IsAlphaNumeric** 验证字符串是否为 Unicode 字符或数字
 + **IsIpv4** 验证字符串是否为 IPv4 地址
 + **IsIpv6** 验证字符串是否为 IPv6 地址
+
+### 测试（testutil）
+
++ **Equal** 断言两个值相等
++ **NotEqual** 断言两个值不相等
