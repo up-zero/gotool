@@ -1,15 +1,23 @@
 package stringutil
 
-import "testing"
+import (
+	"github.com/up-zero/gotool/testutil"
+	"testing"
+)
 
 func TestReverse(t *testing.T) {
-	t.Log(Reverse("hello world")) // dlrow olleh
-	t.Log(Reverse("你好 世界!"))      // !界世 好你
+	testutil.Equal(t, Reverse("hello world"), "dlrow olleh")
+	testutil.Equal(t, Reverse("你好 世界!"), "!界世 好你")
 }
 
-func TestTruncate(t *testing.T) {
-	t.Log(Truncate("hello world", 5)) // hello
-	t.Log(Truncate("hello", 5))       // hello
-	t.Log(Truncate("hel", 5))         // hel
-	t.Log(Truncate("你好 世界!", 6))      // 你好
+func TestTakeFirst(t *testing.T) {
+	testutil.Equal(t, TakeFirst("hello world", 5), "hello")
+	testutil.Equal(t, TakeFirst("hello", 5), "hello")
+	testutil.Equal(t, TakeFirst("hel", 5), "hel")
+	testutil.Equal(t, TakeFirst("你好 世界!", 2), "你好")
+}
+
+func TestContainsAny(t *testing.T) {
+	testutil.Equal(t, ContainsAny("hello world", "hello", "123"), true)
+	testutil.Equal(t, ContainsAny("hello world", "123"), false)
 }

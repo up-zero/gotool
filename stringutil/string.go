@@ -1,5 +1,9 @@
 package stringutil
 
+import (
+	"strings"
+)
+
 // Reverse 字符串反转
 func Reverse(s string) string {
 	runes := []rune(s)
@@ -9,10 +13,39 @@ func Reverse(s string) string {
 	return string(runes)
 }
 
-// Truncate 字符串截断，截取字符串前maxLength个字符
-func Truncate(s string, maxLength int) string {
-	if len(s) > maxLength {
-		return s[:maxLength]
+// TakeFirst 截取字符串前 n 个 Unicode 字符（rune）
+//
+// # Params:
+//
+//	s: 字符串
+//	maxLength: 字符长度
+//
+// # Examples:
+//
+//	Truncate("hello world", 5) // hello
+//	Truncate("你好 世界!", 2) // 你好
+func TakeFirst(s string, n int) string {
+	if n <= 0 {
+		return ""
+	}
+	runes := []rune(s)
+	if len(runes) > n {
+		return string(runes[:n])
 	}
 	return s
+}
+
+// ContainsAny 判断字符串 s 是否包含 substrs 中的任意一个子串
+//
+// # Examples:
+//
+//	ContainsAny("hello world", "world", "123") // true
+//	ContainsAny("hello world", "123") // false
+func ContainsAny(s string, substrs ...string) bool {
+	for _, sub := range substrs {
+		if strings.Contains(s, sub) {
+			return true
+		}
+	}
+	return false
 }
