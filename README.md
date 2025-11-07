@@ -253,6 +253,7 @@ func main() {
 + **Reverse** 字符串反转
 + **TakeFirst** 截取字符串前 n 个 Unicode 字符（rune）
 + **ContainsAny** 判断字符串 s 是否包含 substrs 中的任意一个子串
++ **ContainsAll** 判断字符串 s 是否包含 substrs 中的所有子串
 
 ### 验证器（validator）
 

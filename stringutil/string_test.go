@@ -21,3 +21,8 @@ func TestContainsAny(t *testing.T) {
 	testutil.Equal(t, ContainsAny("hello world", "hello", "123"), true)
 	testutil.Equal(t, ContainsAny("hello world", "123"), false)
 }
+
+func TestContainsAll(t *testing.T) {
+	testutil.Equal(t, ContainsAll("hello world", "hello", "world"), true)
+	testutil.Equal(t, ContainsAll("hello world", "hello", "world", "123"), false)
+}

@@ -49,3 +49,18 @@ func ContainsAny(s string, substrs ...string) bool {
 	}
 	return false
 }
+
+// ContainsAll 判断字符串 s 是否包含 substrs 中的所有子串
+//
+// # Examples:
+//
+//	ContainsAll("hello world", "hello", "world") // true
+//	ContainsAll("hello world", "hello", "world", "123") // false
+func ContainsAll(s string, substrs ...string) bool {
+	for _, sub := range substrs {
+		if !strings.Contains(s, sub) {
+			return false
+		}
+	}
+	return true
+}
