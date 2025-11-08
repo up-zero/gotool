@@ -67,7 +67,7 @@ func main() {
 ### 加解密（cryptoutil）
 
 + **Md5** 获取md5值
-+ **Md5Iterations** 迭代多次求md5
++ **Md5Iterations** 迭代多次求MD5
 + **Md5File** 获取文件的MD5
 + **HmacSHA256** 计算 SHA256
 + **HmacSHA384** 计算 HmacSHA384
@@ -236,12 +236,13 @@ func main() {
 ### 流（streamutil）
 
 + **NewStream** 初始化 Stream
-+ **Filter** Stream方法，数据过滤
-+ **Map** Stream方法，数据处理
++ **Stream_Filter** 数据过滤
++ **Stream_Map** 数据处理
++ **Stream_Extreme** 返回流中的极值
++ **Stream_Max** 数据最大值
++ **Stream_Min** 数据最小值
++ **Stream_ToSlice** 转换为切片
 + **StreamMap** 数据处理与转换
-+ **Extreme** Stream方法，返回流中的极值
-+ **Max** Stream方法，数据最大值
-+ **Min** Stream方法，数据最小值
 
 ### 结构体（structutil）
 
@@ -268,3 +269,15 @@ func main() {
 
 + **Equal** 断言两个值相等
 + **NotEqual** 断言两个值不相等
+
+### MAP工具（maputil）
+
++ **NewConcurrentMap** 初始化并发 Map
++ **ConcurrentMap_Set** 设置键值对（写操作）
++ **ConcurrentMap_Get** 获取值（读操作）
++ **ConcurrentMap_GetOrSet** 获取一个键的值（读操作），如果键不存在，则设置并返回新值（写操作）
++ **ConcurrentMap_Delete** 删除键（写操作）
++ **ConcurrentMap_GetAndDelete** 获取键的值并删除（写操作）
++ **ConcurrentMap_Len** 获取 Map 中元素的数量（读操作）
++ **ConcurrentMap_Clear** 清空 Map 中的所有元素（写操作）
++ **ConcurrentMap_Range** 遍历 Map（读操作）
