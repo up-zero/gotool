@@ -114,12 +114,6 @@ func TestSobelFile(t *testing.T) {
 	}
 }
 
-func TestErodeFile(t *testing.T) {
-	if err := ErodeFile("test.png", "test_erode.png", NewErodeRectKernel(3, 3)); err != nil {
-		t.Fatal(err)
-	}
-}
-
 func TestEqualizeHistFile(t *testing.T) {
 	if err := EqualizeHistFile("test.png", "test_equalize_hist.png"); err != nil {
 		t.Fatal(err)

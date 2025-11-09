@@ -214,6 +214,8 @@ func main() {
 + **NewErodeCrossKernel** 创建一个用于腐蚀的十字形核
 + **Erode** 图片腐蚀
 + **ErodeFile** 图片文件腐蚀
++ **Dilate** 图片膨胀
++ **DilateFile** 图片文件膨胀
 + **EqualizeHist** 直方图均衡化
 + **EqualizeHistFile** 图片文件直方图均衡化
 + **DrawFilledCircle** 绘制填充的圆形
