@@ -206,6 +206,7 @@ func main() {
 + **InvertFile** 图片文件反转颜色
 + **Binarize** 图片二值化
 + **BinarizeFile** 图片文件二值化
++ **OtsuThreshold** 基于大津法计算推荐阈值
 + **MedianBlur** 图片中值滤波
 + **MedianBlurFile** 图片文件中值滤波
 + **Sobel** 索贝尔边缘检测

@@ -1139,3 +1139,61 @@ func EqualizeHistFile(srcFile, dstFile string) error {
 	}
 	return Save(dstFile, EqualizeHist(img), 100)
 }
+
+// OtsuThreshold 基于大津法计算推荐阈值
+//
+//	通过类间方差：wB × wF × (mB - mF)² 计算出区分度最大的阈值
+//
+// # Params:
+//
+//	gray: 灰度图片
+func OtsuThreshold(gray *image.Gray) uint8 {
+	// 计算图像的直方图
+	var histogram [256]int
+	bounds := gray.Bounds()
+	totalPixels := (bounds.Max.X - bounds.Min.X) * (bounds.Max.Y - bounds.Min.Y)
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			histogram[gray.GrayAt(x, y).Y]++
+		}
+	}
+
+	var sum float64
+	for i := 0; i < 256; i++ {
+		sum += float64(i * histogram[i])
+	}
+
+	var wB, wF int      // 背景像素数, 前景像素数
+	var sumB float64    // 背景总灰度
+	var maxVar float64  // 最大类间方差
+	var threshold uint8 // 最佳阈值
+
+	// 遍历所有可能的阈值 (0-255)
+	for t := 0; t < 256; t++ {
+		wB += histogram[t] // 背景像素数增加
+		if wB == 0 {
+			continue
+		}
+
+		wF = totalPixels - wB // 前景像素数
+		if wF == 0 {
+			break
+		}
+
+		sumB += float64(t * histogram[t]) // 背景总灰度增加
+
+		mB := sumB / float64(wB)         // 背景平均灰度
+		mF := (sum - sumB) / float64(wF) // 前景平均灰度
+
+		// 计算类间方差
+		variance := float64(wB) * float64(wF) * (mB - mF) * (mB - mF)
+
+		// 寻找最大方差对应的阈值
+		if variance > maxVar {
+			maxVar = variance
+			threshold = uint8(t)
+		}
+	}
+
+	return threshold
+}

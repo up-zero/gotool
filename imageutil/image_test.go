@@ -97,7 +97,7 @@ func TestInvertFile(t *testing.T) {
 }
 
 func TestBinarizeFile(t *testing.T) {
-	if err := BinarizeFile("test.png", "test_binarize.png", 128); err != nil {
+	if err := BinarizeFile("test.png", "test_binarize.png", 139); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -118,4 +118,13 @@ func TestEqualizeHistFile(t *testing.T) {
 	if err := EqualizeHistFile("test.png", "test_equalize_hist.png"); err != nil {
 		t.Fatal(err)
 	}
+}
+
+func TestOtsuThreshold(t *testing.T) {
+	img, err := Open("test.png")
+	if err != nil {
+		t.Fatal(err)
+	}
+	threshold := OtsuThreshold(Grayscale(img))
+	t.Log("Otsu threshold:", threshold)
 }
