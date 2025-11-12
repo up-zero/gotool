@@ -325,3 +325,22 @@ func OffsetPolygon(points []Point, margin float64) []Point {
 
 	return newPoints
 }
+
+// TranslatePolygon 多边形平移，按指定向量移动多边形
+//
+// # Params:
+//
+//	points: 多边形顶点切片
+//	offset: 平移向量
+func TranslatePolygon(points []Point, offset Point) []Point {
+	if len(points) == 0 {
+		return []Point{}
+	}
+
+	newPoints := make([]Point, len(points))
+	for i, p := range points {
+		newPoints[i] = p.add(offset)
+	}
+
+	return newPoints
+}
