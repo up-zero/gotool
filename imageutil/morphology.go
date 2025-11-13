@@ -117,3 +117,35 @@ func DilateFile(srcFile, dstFile string, se StructuringElement) error {
 	}
 	return Save(dstFile, Dilate(img, se), 100)
 }
+
+// MorphologyOpen 开运算，先腐蚀，再膨胀
+//
+// # Params:
+//
+//	src: 源图片
+//	se: 结构元素
+//
+// # Example:
+//
+//	MorphologyOpen(img, NewRectKernel(3, 3))
+func MorphologyOpen(src image.Image, se StructuringElement) image.Image {
+	erodedImage := Erode(src, se)
+	openedImage := Dilate(erodedImage, se)
+
+	return openedImage
+}
+
+// MorphologyOpenFile 对图片文件进行开运算
+//
+// # Params:
+//
+//	srcFile: 源图片文件
+//	dstFile: 目标图片文件
+//	se: 结构元素
+func MorphologyOpenFile(srcFile, dstFile string, se StructuringElement) error {
+	img, err := Open(srcFile)
+	if err != nil {
+		return err
+	}
+	return Save(dstFile, MorphologyOpen(img, se), 100)
+}

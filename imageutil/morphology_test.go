@@ -13,3 +13,9 @@ func TestDilateFile(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestMorphologyOpenFile(t *testing.T) {
+	if err := MorphologyOpenFile("test.png", "test_open.png", NewRectKernel(3, 3)); err != nil {
+		t.Fatal(err)
+	}
+}

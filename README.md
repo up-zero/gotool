@@ -218,6 +218,8 @@ func main() {
 + **ErodeFile** 图片文件腐蚀
 + **Dilate** 图片膨胀
 + **DilateFile** 图片文件膨胀
++ **MorphologyOpen** 开运算
++ **MorphologyOpenFile** 对图片文件进行开运算
 + **EqualizeHist** 直方图均衡化
 + **EqualizeHistFile** 图片文件直方图均衡化
 + **DrawFilledCircle** 绘制填充的圆形
