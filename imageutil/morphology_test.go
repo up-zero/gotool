@@ -19,3 +19,9 @@ func TestMorphologyOpenFile(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestMorphologyCloseFile(t *testing.T) {
+	if err := MorphologyCloseFile("test.png", "test_close.png", NewRectKernel(3, 3)); err != nil {
+		t.Fatal(err)
+	}
+}

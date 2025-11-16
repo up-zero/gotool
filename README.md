@@ -4,13 +4,13 @@
 
 <p align="center">
    <a href="https://github.com/up-zero/gotool/fork" target="blank">
-      <img src="https://img.shields.io/github/forks/up-zero/gotool?style=for-the-badge" alt="LocalAI forks"/>
+      <img src="https://img.shields.io/github/forks/up-zero/gotool?style=for-the-badge" alt="Gotool forks"/>
    </a>
    <a href="https://github.com/up-zero/gotool/stargazers" target="blank">
-      <img src="https://img.shields.io/github/stars/up-zero/gotool?style=for-the-badge" alt="LocalAI stars"/>
+      <img src="https://img.shields.io/github/stars/up-zero/gotool?style=for-the-badge" alt="Gotool stars"/>
    </a>
    <a href="https://github.com/up-zero/gotool/pulls" target="blank">
-      <img src="https://img.shields.io/github/issues-pr/up-zero/gotool?style=for-the-badge" alt="LocalAI pull-requests"/>
+      <img src="https://img.shields.io/github/issues-pr/up-zero/gotool?style=for-the-badge" alt="Gotool pull-requests"/>
    </a>
    <a href='https://github.com/up-zero/gotool/releases'>
       <img src='https://img.shields.io/github/release/up-zero/gotool?&label=Latest&style=for-the-badge'>
@@ -220,6 +220,8 @@ func main() {
 + **DilateFile** 图片文件膨胀
 + **MorphologyOpen** 开运算
 + **MorphologyOpenFile** 对图片文件进行开运算
++ **MorphologyClose** 闭运算
++ **MorphologyCloseFile** 对图片文件进行闭运算
 + **EqualizeHist** 直方图均衡化
 + **EqualizeHistFile** 图片文件直方图均衡化
 + **DrawFilledCircle** 绘制填充的圆形
