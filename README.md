@@ -212,8 +212,8 @@ func main() {
 + **MedianBlurFile** 图片文件中值滤波
 + **Sobel** 索贝尔边缘检测
 + **SobelFile** 图片文件索贝尔边缘检测
-+ **NewErodeRectKernel** 创建一个用于腐蚀的矩形核
-+ **NewErodeCrossKernel** 创建一个用于腐蚀的十字形核
++ **NewRectKernel** 创建矩形核
++ **NewCrossKernel** 创建十字形核
 + **Erode** 图片腐蚀
 + **ErodeFile** 图片文件腐蚀
 + **Dilate** 图片膨胀

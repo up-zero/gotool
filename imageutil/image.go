@@ -988,7 +988,7 @@ func SobelFile(srcFile, dstFile string, threshold float64) error {
 	return Save(dstFile, Sobel(img, threshold), 100)
 }
 
-// NewRectKernel 创建一个用于腐蚀的矩形核
+// NewRectKernel 创建矩形核
 //
 // # Params:
 //
@@ -1015,7 +1015,7 @@ func NewRectKernel(width, height int) StructuringElement {
 	}
 }
 
-// NewCrossKernel 创建一个用于腐蚀的十字形核
+// NewCrossKernel 创建十字形核
 //
 // Params:
 //
