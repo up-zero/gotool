@@ -16,3 +16,7 @@ func TestTranslatePolygon(t *testing.T) {
 	result := TranslatePolygon(points, offset)
 	testutil.Equal(t, result, []Point{{2, 3}, {3, 3}, {3, 4}, {2, 4}})
 }
+
+func TestPolygonArea(t *testing.T) {
+	testutil.Equal(t, PolygonArea([]Point{{0, 0}, {1, 0}, {1, 1}, {0, 1}}), 1.0)
+}

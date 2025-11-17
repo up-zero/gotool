@@ -344,3 +344,24 @@ func TranslatePolygon(points []Point, offset Point) []Point {
 
 	return newPoints
 }
+
+// PolygonArea 计算多边形的面积，基于鞋带公式
+//
+//	Sum = (x1*y2 - y1*x2) + (x2*y3 - y2*x3) + ... + (xn*y1 - yn*x1)
+//	Area = 0.5 * |Sum|
+func PolygonArea(points []Point) float64 {
+	n := len(points)
+	if n < 3 {
+		return 0.0
+	}
+
+	var area = 0.0
+
+	for i := 0; i < n; i++ {
+		v1 := points[i]
+		v2 := points[(i+1)%n]
+		area += (v1.X * v2.Y) - (v2.X * v1.Y)
+	}
+
+	return math.Abs(area / 2.0)
+}
