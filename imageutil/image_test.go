@@ -43,7 +43,7 @@ func TestGenerateCaptcha(t *testing.T) {
 }
 
 func TestCrop(t *testing.T) {
-	if err := CropFile("test.png", "cropped.png", image.Rect(100, 100, 200, 200)); err != nil {
+	if err := CropFile("test.png", "cropped.png", image.Rect(100, 100, 200, 600)); err != nil {
 		t.Fatal("Error cropping image:", err)
 	}
 }

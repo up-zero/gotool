@@ -199,6 +199,10 @@ func drawChar(img *image.RGBA, x, y int, char rune, color color.RGBA) {
 //	src: 源图片
 //	cropRect: 裁剪区域
 func Crop(src image.Image, cropRect image.Rectangle) (image.Image, error) {
+	cropRect = src.Bounds().Intersect(cropRect)
+	if cropRect.Empty() {
+		return nil, fmt.Errorf("crop rectangle is empty")
+	}
 	subImager, ok := src.(interface {
 		SubImage(r image.Rectangle) image.Image
 	})
