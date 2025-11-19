@@ -1,6 +1,8 @@
 package mathutil
 
 import (
+	"fmt"
+	"github.com/up-zero/gotool"
 	"math"
 )
 
@@ -364,4 +366,30 @@ func PolygonArea(points []Point) float64 {
 	}
 
 	return math.Abs(area / 2.0)
+}
+
+// GetAABB 计算点集的轴对齐最小外接矩 (Get Axis-Aligned Bounding Box)
+func GetAABB(points []Point) (Rectangle, error) {
+	if len(points) == 0 {
+		return Rectangle{}, fmt.Errorf("points %w", gotool.ErrCannotBeEmpty)
+	}
+
+	minX := points[0].X
+	minY := points[0].Y
+	maxX := points[0].X
+	maxY := points[0].Y
+
+	for _, p := range points[1:] {
+		minX = math.Min(minX, p.X)
+		minY = math.Min(minY, p.Y)
+		maxX = math.Max(maxX, p.X)
+		maxY = math.Max(maxY, p.Y)
+	}
+
+	aabb := Rectangle{
+		Min: Point{X: minX, Y: minY},
+		Max: Point{X: maxX, Y: maxY},
+	}
+
+	return aabb, nil
 }

@@ -128,6 +128,7 @@ func main() {
 + **OffsetPolygon** 多边形偏移 (内缩/外扩)
 + **TranslatePolygon** 多边形平移，按指定向量移动多边形
 + **PolygonArea** 计算多边形的面积
++ **GetAABB** 计算点集的轴对齐最小外接矩
 
 ### 网络（netutil）
 

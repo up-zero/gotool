@@ -20,3 +20,8 @@ func TestTranslatePolygon(t *testing.T) {
 func TestPolygonArea(t *testing.T) {
 	testutil.Equal(t, PolygonArea([]Point{{0, 0}, {1, 0}, {1, 1}, {0, 1}}), 1.0)
 }
+
+func TestGetAABB(t *testing.T) {
+	aabb, _ := GetAABB([]Point{{0, 0}, {1, 0}, {1, 1}, {0.5, 1.5}, {0, 1}})
+	testutil.Equal(t, aabb, Rectangle{Min: Point{0, 0}, Max: Point{1, 1.5}})
+}

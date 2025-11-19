@@ -37,3 +37,6 @@ var ErrNotSupportFormat = errors.New("not support format")
 
 // ErrInvalidUptimeFile uptime 文件无效
 var ErrInvalidUptimeFile = errors.New("invalid uptime file")
+
+// ErrCannotBeEmpty 不能为空
+var ErrCannotBeEmpty = errors.New("cannot be empty")
