@@ -2,6 +2,7 @@ package stringutil
 
 import (
 	"strings"
+	"unicode"
 )
 
 // Reverse 字符串反转
@@ -63,4 +64,39 @@ func ContainsAll(s string, substrs ...string) bool {
 		}
 	}
 	return true
+}
+
+// CamelToSnake 将驼峰式字符串转换为下划线连接
+//
+//   - PascalCase -> pascal_case
+//   - lowerCamelCase -> lower_camel_case
+//   - HTTPRequest -> http_request
+//   - MyID -> my_id
+//   - ID -> id
+func CamelToSnake(s string) string {
+	var builder strings.Builder
+	runes := []rune(s)
+	if len(runes) == 0 {
+		return ""
+	}
+
+	for i, r := range runes {
+		if unicode.IsUpper(r) {
+			// 如果不是第一个字符，需要判断是否添加下划线
+			if i > 0 {
+				prev := runes[i-1]
+				// 1. 前一个字符是小写或数字 (e.g., "myN", "v1G")
+				// 2. 前一个是大写，但后一个(如果存在)是小写 (e.g., "HTTPRequest" 中的 'R')
+				nextExists := i+1 < len(runes)
+				if unicode.IsLower(prev) || unicode.IsDigit(prev) ||
+					(unicode.IsUpper(prev) && nextExists && unicode.IsLower(runes[i+1])) {
+					builder.WriteRune('_')
+				}
+			}
+			builder.WriteRune(unicode.ToLower(r))
+		} else {
+			builder.WriteRune(r)
+		}
+	}
+	return builder.String()
 }

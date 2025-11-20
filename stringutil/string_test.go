@@ -26,3 +26,9 @@ func TestContainsAll(t *testing.T) {
 	testutil.Equal(t, ContainsAll("hello world", "hello", "world"), true)
 	testutil.Equal(t, ContainsAll("hello world", "hello", "world", "123"), false)
 }
+
+func TestCamelToSnake(t *testing.T) {
+	testutil.Equal(t, CamelToSnake("helloWorld"), "hello_world")
+	testutil.Equal(t, CamelToSnake("HTTPRequest"), "http_request")
+	testutil.Equal(t, CamelToSnake("v1G"), "v1_g")
+}

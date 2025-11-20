@@ -265,6 +265,7 @@ func main() {
 + **TakeFirst** 截取字符串前 n 个 Unicode 字符（rune）
 + **ContainsAny** 判断字符串 s 是否包含 substrs 中的任意一个子串
 + **ContainsAll** 判断字符串 s 是否包含 substrs 中的所有子串
++ **CamelToSnake** 将驼峰式字符串转换为下划线连接
 
 ### 验证器（validator）
 
