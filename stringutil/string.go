@@ -100,3 +100,30 @@ func CamelToSnake(s string) string {
 	}
 	return builder.String()
 }
+
+// SnakeToCamel 将下划线连接的字符串转换为小驼峰式
+//
+//   - my_var -> myVar
+//   - http_request -> httpRequest
+//   - _my_var -> myVar
+func SnakeToCamel(s string) string {
+	var builder strings.Builder
+	parts := strings.Split(s, "_")
+
+	for _, part := range parts {
+		if len(part) == 0 {
+			continue
+		}
+
+		if builder.Len() == 0 {
+			// 首字母小写
+			builder.WriteString(part)
+		} else {
+			// 后序首字母大写
+			runes := []rune(part)
+			runes[0] = unicode.ToUpper(runes[0])
+			builder.WriteString(string(runes))
+		}
+	}
+	return builder.String()
+}

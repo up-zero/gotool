@@ -32,3 +32,8 @@ func TestCamelToSnake(t *testing.T) {
 	testutil.Equal(t, CamelToSnake("HTTPRequest"), "http_request")
 	testutil.Equal(t, CamelToSnake("v1G"), "v1_g")
 }
+
+func TestSnakeToCamel(t *testing.T) {
+	testutil.Equal(t, SnakeToCamel("hello_world"), "helloWorld")
+	testutil.Equal(t, SnakeToCamel("___hello__world"), "helloWorld")
+}
