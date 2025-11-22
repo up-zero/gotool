@@ -127,3 +127,24 @@ func SnakeToCamel(s string) string {
 	}
 	return builder.String()
 }
+
+// SnakeToPascal 将下划线连接的字符串转换为大驼峰式（PascalCase）
+//
+//   - my_var -> MyVar
+//   - http_request -> HttpRequest
+//   - _my_var -> MyVar
+func SnakeToPascal(s string) string {
+	var builder strings.Builder
+	parts := strings.Split(s, "_")
+
+	for _, part := range parts {
+		if len(part) == 0 {
+			continue
+		}
+
+		runes := []rune(part)
+		runes[0] = unicode.ToUpper(runes[0])
+		builder.WriteString(string(runes))
+	}
+	return builder.String()
+}

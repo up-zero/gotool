@@ -267,6 +267,7 @@ func main() {
 + **ContainsAll** 判断字符串 s 是否包含 substrs 中的所有子串
 + **CamelToSnake** 将驼峰式字符串转换为下划线连接
 + **SnakeToCamel** 将下划线连接的字符串转换为小驼峰式
++ **SnakeToPascal** 将下划线连接的字符串转换为大驼峰式（PascalCase）
 
 ### 验证器（validator）
 

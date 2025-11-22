@@ -37,3 +37,8 @@ func TestSnakeToCamel(t *testing.T) {
 	testutil.Equal(t, SnakeToCamel("hello_world"), "helloWorld")
 	testutil.Equal(t, SnakeToCamel("___hello__world"), "helloWorld")
 }
+
+func TestSnakeToPascal(t *testing.T) {
+	testutil.Equal(t, SnakeToPascal("hello_world"), "HelloWorld")
+	testutil.Equal(t, SnakeToPascal("__hello_world"), "HelloWorld")
+}
