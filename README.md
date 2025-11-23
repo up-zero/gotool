@@ -130,6 +130,12 @@ func main() {
 + **PolygonArea** 计算多边形的面积
 + **GetAABB** 计算点集的轴对齐最小外接矩
 
+### 媒体（mediautil）
+
++ **ReadWavHeader** 从文件中读取 WAV 头部
++ **ParseWavHeader** 从字节切片中解析 WAV 头部
++ **WavHeader_GetDuration** 根据头部信息计算音频时长
+
 ### 网络（netutil）
 
 + **SendMail** 发送邮件
