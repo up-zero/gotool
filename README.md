@@ -135,6 +135,8 @@ func main() {
 + **ReadWavHeader** 从文件中读取 WAV 头部
 + **ParseWavHeader** 从字节切片中解析 WAV 头部
 + **WavHeader_GetDuration** 根据头部信息计算音频时长
++ **WriteWav** 将 PCM 数据封装为 WAV 格式写入 io.Writer
++ **SaveWav** 将 PCM 数据保存为本地 WAV 文件
 
 ### 网络（netutil）
 
