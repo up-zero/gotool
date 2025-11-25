@@ -7,14 +7,17 @@ import (
 	"fmt"
 	"github.com/up-zero/gotool"
 	"io"
+	"math"
 	"os"
 	"time"
 )
 
 // 常见错误定义
 var (
-	ErrInvalidWavData = errors.New("invalid wav data: too short or incorrect format")
-	ErrNotWavFile     = errors.New("not a valid RIFF/WAVE file")
+	// ErrNotWavFile 不是有效的 WAV 文件
+	ErrNotWavFile = errors.New("not a valid RIFF/WAVE file")
+	// ErrUnsupportedBitDepth 不支持的位深
+	ErrUnsupportedBitDepth = errors.New("unsupported bit depth: only 16, 24, 32 are supported")
 )
 
 // WavHeader 定义了标准的 WAV 文件头 (44 bytes)
@@ -65,7 +68,7 @@ func (h *WavHeader) String() string {
 //	data: 包含 WAV 头部信息的字节切片
 func ParseWavHeader(data []byte) (*WavHeader, error) {
 	if len(data) < 44 {
-		return nil, ErrInvalidWavData
+		return nil, fmt.Errorf("%w, data length must be at least 44 bytes", gotool.ErrInvalidParam)
 	}
 
 	// 使用 LittleEndian 解析
@@ -178,6 +181,79 @@ func SaveWav(filePath string, pcmData []byte, sampleRate, channels, bitsPerSampl
 	}
 	defer f.Close()
 
-	// 调用通用的写入逻辑
 	return WriteWav(f, pcmData, sampleRate, channels, bitsPerSample)
+}
+
+// Float32ToPcmBytes 将标准浮点音频数据转换为指定位深的 PCM 字节流
+//
+// # Params:
+//
+//	data:
+//	 - 音频采样点数组 (Amplitudes)
+//	 - 值域理论上应在 -1.0 到 +1.0 之间 (0.0 表示静音)
+//	 - 超出范围的值会被削波 (Clipping) 处理
+//	bitsPerSample: 位深,例如: 16(CD音质), 24(专业录音), 32
+func Float32ToPcmBytes(data []float32, bitsPerSample int) ([]byte, error) {
+	if len(data) == 0 {
+		return []byte{}, nil
+	}
+
+	// 计算每个采样点的字节数
+	bytesPerSample := bitsPerSample / 8
+	output := make([]byte, len(data)*bytesPerSample)
+
+	// 定义量化所需的缩放因子 (Scale Factor)
+	// 16-bit: 32767
+	// 24-bit: 8388607
+	// 32-bit: 2147483647
+	var scale float64
+	switch bitsPerSample {
+	case 16:
+		scale = 32767.0
+	case 24:
+		scale = 8388607.0 // 2^23 - 1
+	case 32:
+		scale = 2147483647.0 // 2^31 - 1
+	default:
+		return nil, ErrUnsupportedBitDepth
+	}
+
+	offset := 0
+	for _, sample := range data {
+		// 处理特殊值和削波 (Clipping)
+		if math.IsNaN(float64(sample)) {
+			sample = 0
+		}
+		if sample > 1.0 {
+			sample = 1.0
+		} else if sample < -1.0 {
+			sample = -1.0
+		}
+
+		// 量化并根据位深写入字节
+		switch bitsPerSample {
+		case 16:
+			// 转换逻辑：int16
+			val := int16(float64(sample) * scale)
+			binary.LittleEndian.PutUint16(output[offset:], uint16(val))
+			offset += 2
+
+		case 24:
+			// 转换逻辑：将值放大到 int32 范围，然后只取低 3 个字节
+			// 24-bit Little Endian: [Low, Mid, High]
+			val := int32(float64(sample) * scale)
+			output[offset] = byte(val)         // 低位
+			output[offset+1] = byte(val >> 8)  // 中位
+			output[offset+2] = byte(val >> 16) // 高位
+			offset += 3
+
+		case 32:
+			// 转换逻辑：int32
+			val := int32(float64(sample) * scale)
+			binary.LittleEndian.PutUint32(output[offset:], uint32(val))
+			offset += 4
+		}
+	}
+
+	return output, nil
 }
