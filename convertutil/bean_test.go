@@ -1,6 +1,7 @@
 package convertutil
 
 import (
+	"github.com/up-zero/gotool/testutil"
 	"testing"
 )
 
@@ -21,7 +22,7 @@ func TestCopyProperties(t *testing.T) {
 		t.Fatal(err)
 	}
 	// &{test map[a:1] 0}
-	t.Log(s2)
+	testutil.Equal(t, s2, &dst{Name: "test", Map: map[string]int{"a": 1}, Age: 0})
 
 	// 2. ptr struct
 	s3 := &src{Name: "test", Map: map[string]int{"a": 3}}
@@ -30,5 +31,5 @@ func TestCopyProperties(t *testing.T) {
 		t.Fatal(err)
 	}
 	// &{test map[a:3] 0}
-	t.Log(s4)
+	testutil.Equal(t, s4, &dst{Name: "test", Map: map[string]int{"a": 3}, Age: 0})
 }
