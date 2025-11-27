@@ -3,7 +3,6 @@ package convertutil
 import (
 	"fmt"
 	"strconv"
-	"strings"
 )
 
 // StrToInt 字符串转换为int
@@ -124,27 +123,4 @@ func Int64ToHex(num int64, args ...string) string {
 func HexToInt64(str string) int64 {
 	num, _ := strconv.ParseInt(str, 16, 64)
 	return num
-}
-
-// 数字汉字映射表
-var digitToChineseMap = map[rune]string{
-	'0': "零", '1': "一", '2': "二", '3': "三", '4': "四",
-	'5': "五", '6': "六", '7': "七", '8': "八", '9': "九",
-}
-
-// DigitToChinese 数字逐位转汉字
-//
-// # Params
-//
-//	s: 待转换的数字，例如：138000
-//
-// # Examples:
-//
-//	DigitToChinese("138000") // 返回 一三八零零零
-func DigitToChinese(s string) string {
-	var sb strings.Builder
-	for _, r := range s {
-		sb.WriteString(digitToChineseMap[r])
-	}
-	return sb.String()
 }

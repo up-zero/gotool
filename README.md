@@ -108,6 +108,7 @@ func main() {
 + **HexToInt64** 十六进制字符串转换为int64
 + **CopyProperties** 复制结构体的属性
 + **DigitToChinese** 数字逐位转汉字
++ **IntegerToChinese** 整数转中文读法
 
 ### 随机数（randomutil）
 

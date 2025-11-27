@@ -80,8 +80,3 @@ func TestInt64ToHex(t *testing.T) {
 func TestHexToInt64(t *testing.T) {
 	testutil.Equal(t, HexToInt64("000001BF"), int64(447))
 }
-
-func TestDigitToChinese(t *testing.T) {
-	testutil.Equal(t, DigitToChinese("1"), "一")
-	testutil.Equal(t, DigitToChinese("138000"), "一三八零零零")
-}
