@@ -140,6 +140,7 @@ func main() {
 + **WriteWav** 将 PCM 数据封装为 WAV 格式写入 io.Writer
 + **SaveWav** 将 PCM 数据保存为本地 WAV 文件
 + **Float32ToPcmBytes** 将标准浮点音频数据转换为指定位深的 PCM 字节流
++ **Float32ToWavBytes** 将标准浮点音频数据转换为完整的 WAV 文件字节流
 
 ### 网络（netutil）
 

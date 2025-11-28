@@ -118,7 +118,7 @@ func ReadWavHeader(filePath string) (*WavHeader, error) {
 //	bitsPerSample: 位深
 func WriteWav(w io.Writer, pcmData []byte, sampleRate, channels, bitsPerSample int) error {
 	if sampleRate <= 0 || channels <= 0 || bitsPerSample <= 0 {
-		return fmt.Errorf("%w, sampleRate channels bitsPerSample can not is zero", gotool.ErrInvalidParam)
+		return fmt.Errorf("%w, rate=%d, chan=%d, bit=%d", gotool.ErrInvalidParam, sampleRate, channels, bitsPerSample)
 	}
 
 	dataSize := uint32(len(pcmData))
@@ -256,4 +256,36 @@ func Float32ToPcmBytes(data []float32, bitsPerSample int) ([]byte, error) {
 	}
 
 	return output, nil
+}
+
+// Float32ToWavBytes 将标准浮点音频数据转换为完整的 WAV 文件字节流
+// 包含 WAV 头部 (Header) 和 PCM 数据体
+//
+// # Params:
+//
+//	data: 原始音频数据
+//	 - 单声道 (Mono): [样本1, 样本2, 样本3, ...]
+//	 - 双声道 (Stereo): [左1, 右1, 左2, 右2, 左3, 右3, ...]
+//	sampleRate: 采样率
+//	channels: 声道数
+//	bitsPerSample: 位深
+func Float32ToWavBytes(data []float32, sampleRate, channels, bitsPerSample int) ([]byte, error) {
+	if sampleRate <= 0 || channels <= 0 || bitsPerSample <= 0 {
+		return nil, fmt.Errorf("%w, rate=%d, chan=%d, bit=%d", gotool.ErrInvalidParam, sampleRate, channels, bitsPerSample)
+	}
+
+	// 将 Float32 数据转换为裸 PCM 字节流
+	pcmBody, err := Float32ToPcmBytes(data, bitsPerSample)
+	if err != nil {
+		return nil, fmt.Errorf("pcm convert failed: %w", err)
+	}
+
+	// 写入缓冲区
+	buf := new(bytes.Buffer)
+	err = WriteWav(buf, pcmBody, sampleRate, channels, bitsPerSample)
+	if err != nil {
+		return nil, fmt.Errorf("write wav failed: %w", err)
+	}
+
+	return buf.Bytes(), nil
 }
