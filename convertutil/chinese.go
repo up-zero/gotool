@@ -1,6 +1,7 @@
 package convertutil
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -10,6 +11,31 @@ var digitToChineseMap = map[rune]string{
 	'0': "零", '1': "一", '2': "二", '3': "三", '4': "四",
 	'5': "五", '6': "六", '7': "七", '8': "八", '9': "九",
 }
+
+// 预编译正则 (Regex)
+var (
+	// [Time] 匹配时间：12:30, 09:05
+	reTime = regexp.MustCompile(`(\d{1,2}):(\d{2})`)
+
+	// [Date] 匹配年份：2025年
+	reDateYear = regexp.MustCompile(`(\d{4})年`)
+
+	// [Date] 匹配日期：5月20日
+	reDateDay = regexp.MustCompile(`(\d{1,2})月(\d{1,2})日`)
+
+	// [Percentage] 匹配百分比：50%, 3.5%, 100%
+	// 包含整数和浮点数的情况
+	rePercent = regexp.MustCompile(`(\d+(?:\.\d+)?)%`)
+
+	// [Decimal] 匹配浮点数：3.14, 10.5
+	reDecimal = regexp.MustCompile(`(\d+)\.(\d+)`)
+
+	// [Phone] 匹配手机号：11位数字
+	rePhone = regexp.MustCompile(`\d{11}`)
+
+	// [Number] 匹配纯数字
+	reNum = regexp.MustCompile(`\d+`)
+)
 
 // DigitToChinese 数字逐位转汉字
 //
@@ -153,4 +179,124 @@ func integerToChineseSub10k(num int, isTopLevel bool) string {
 	}
 
 	return result.String()
+}
+
+// punctuationReplacer 标点替换器
+var punctuationReplacer = strings.NewReplacer(
+	"，", ",",
+	"。", ".",
+	"！", "!",
+	"？", "?",
+	"；", ",",
+	"：", ",", // 中文冒号转逗号
+	"、", ",",
+)
+
+// TextToChinese 中文文本口语化转换
+//
+// # Params:
+//
+//	text: 待处理的文本
+//
+// # Examples:
+//
+//	TextToChinese("12:30") // 十二点三十分
+//	TextToChinese("50%") // 百分之五十
+//	TextToChinese("3.14") // 三点一四
+func TextToChinese(text string) string {
+	// processDecimal 处理浮点数读法: 3.14 -> 三点一四
+	processDecimal := func(s string) string {
+		parts := strings.Split(s, ".")
+		if len(parts) != 2 {
+			return s
+		}
+		// 整数部分：按数值读 (12.5 -> 十二点...)
+		intPart, _ := strconv.Atoi(parts[0])
+		intText := IntegerToChinese(intPart)
+
+		// 小数部分：按位读
+		decText := DigitToChinese(parts[1])
+
+		return intText + "点" + decText
+	}
+
+	// processInteger 处理整数字符串
+	processInteger := func(s string) string {
+		// 太长的数字(>12位)按位读，否则按数值读
+		if len(s) > 12 {
+			return DigitToChinese(s)
+		}
+		n, err := strconv.Atoi(s)
+		if err != nil {
+			return DigitToChinese(s) // 溢出兜底
+		}
+		return IntegerToChinese(n)
+	}
+
+	// 去除空格
+	text = strings.ReplaceAll(text, " ", "")
+
+	// [Time] 时间处理: 12:30 -> 十二点三十分
+	text = reTime.ReplaceAllStringFunc(text, func(s string) string {
+		matches := reTime.FindStringSubmatch(s)
+		h, _ := strconv.Atoi(matches[1])
+		m, _ := strconv.Atoi(matches[2])
+		// 读法：十二点三十分 (分钟为0时，如 12:00 -> 十二点整)
+		if m == 0 {
+			return IntegerToChinese(h) + "点整"
+		}
+		// 分钟数处理：05 -> 零五
+		mStr := IntegerToChinese(m)
+		if m < 10 && len(matches[2]) == 2 {
+			mStr = "零" + mStr
+		}
+		return IntegerToChinese(h) + "点" + mStr + "分"
+	})
+
+	// [Percentage] 百分比处理: 50% -> 百分之五十
+	text = rePercent.ReplaceAllStringFunc(text, func(s string) string {
+		matches := rePercent.FindStringSubmatch(s)
+		numberPart := matches[1] // 获取数字部分，可能是 "50" 或 "3.5"
+
+		// 小数
+		if strings.Contains(numberPart, ".") {
+			return "百分之" + processDecimal(numberPart)
+		}
+		return "百分之" + processInteger(numberPart)
+	})
+
+	// [Date] 年份: 2025年 -> 二零二五年
+	text = reDateYear.ReplaceAllStringFunc(text, func(s string) string {
+		return DigitToChinese(s[:4]) + "年"
+	})
+
+	// [Date] 日期: 5月20日 -> 五月二十日
+	text = reDateDay.ReplaceAllStringFunc(text, func(s string) string {
+		matches := reDateDay.FindStringSubmatch(s)
+		m, _ := strconv.Atoi(matches[1])
+		d, _ := strconv.Atoi(matches[2])
+		return IntegerToChinese(m) + "月" + IntegerToChinese(d) + "日"
+	})
+
+	// [Decimal] 浮点数: 3.14 -> 三点一四
+	text = reDecimal.ReplaceAllStringFunc(text, func(s string) string {
+		return processDecimal(s)
+	})
+
+	// [Phone] 手机号: 11位 -> 按位读
+	text = rePhone.ReplaceAllStringFunc(text, func(s string) string {
+		return DigitToChinese(s)
+	})
+
+	// [Integer] 常规整数
+	text = reNum.ReplaceAllStringFunc(text, func(s string) string {
+		return processInteger(s)
+	})
+
+	// 将中文标点转为英文
+	text = punctuationReplacer.Replace(text)
+
+	text = strings.ReplaceAll(text, ":", ",")
+
+	return text
 }
