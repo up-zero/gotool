@@ -2,6 +2,7 @@ package mediautil
 
 import (
 	"math/rand"
+	"os"
 	"testing"
 )
 
@@ -35,4 +36,13 @@ func TestSaveWav(t *testing.T) {
 		t.Fatalf("保存失败: %v", err)
 	}
 	t.Logf("保存成功: %s", fileName)
+}
+
+func TestReformatWavBytes(t *testing.T) {
+	originalBytes, _ := os.ReadFile("test.wav")
+	newWavBytes, err := ReformatWavBytes(originalBytes, SampleRate16K, 2, BitsPerSample32)
+	if err != nil {
+		t.Fatal(err)
+	}
+	os.WriteFile("reformat.wav", newWavBytes, 0644)
 }

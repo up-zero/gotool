@@ -20,6 +20,26 @@ var (
 	ErrUnsupportedBitDepth = errors.New("unsupported bit depth: only 16, 24, 32 are supported")
 )
 
+const (
+	// SampleRate8K 采样率 8KHz
+	SampleRate8K = 8000
+	// SampleRate16K 采样率 16KHz
+	SampleRate16K = 16000
+	// SampleRate44K 采样率 44.1KHz
+	SampleRate44K = 44100
+	// SampleRate48K 采样率 48KHz
+	SampleRate48K = 48000
+	// SampleRate96K 采样率 96KHz
+	SampleRate96K = 96000
+
+	// BitsPerSample16 位深 16
+	BitsPerSample16 = 16
+	// BitsPerSample24 位深 24
+	BitsPerSample24 = 24
+	// BitsPerSample32 位深 32
+	BitsPerSample32 = 32
+)
+
 // WavHeader 定义了标准的 WAV 文件头 (44 bytes)
 // 对应 RIFF WAVE 格式标准
 type WavHeader struct {
@@ -288,4 +308,227 @@ func Float32ToWavBytes(data []float32, sampleRate, channels, bitsPerSample int) 
 	}
 
 	return buf.Bytes(), nil
+}
+
+// PcmBytesToFloat32 PCM 字节流转 float32 数组
+//
+// # Params:
+//
+//	data: 原始 PCM 数据
+//	bitPerSample: 位深,支持 16, 24, 32 bit
+func PcmBytesToFloat32(data []byte, bitPerSample int) ([]float32, error) {
+	if bitPerSample != 16 &&
+		bitPerSample != 24 &&
+		bitPerSample != 32 {
+		return nil, fmt.Errorf("%w, unsupported source bit per sample", gotool.ErrInvalidParam)
+	}
+
+	bytesPerSample := bitPerSample / 8
+	if len(data)%bytesPerSample != 0 {
+		return nil, fmt.Errorf("%w, pcm data length is not aligned with bit per sample", gotool.ErrInvalidParam)
+	}
+
+	numSamples := len(data) / bytesPerSample
+	output := make([]float32, numSamples)
+
+	for i := 0; i < numSamples; i++ {
+		offset := i * bytesPerSample
+		var valFloat float64
+
+		switch bitPerSample {
+		case 16:
+			valInt := int16(binary.LittleEndian.Uint16(data[offset:]))
+			valFloat = float64(valInt) / 32767.0
+		case 24:
+			b0 := int32(data[offset])
+			b1 := int32(data[offset+1])
+			b2 := int32(data[offset+2])
+			valInt := (b2 << 16) | (b1 << 8) | b0
+			// 处理符号位
+			if valInt&0x800000 != 0 {
+				valInt |= ^0xFFFFFF // 扩展符号位到 32位
+			}
+			valFloat = float64(valInt) / 8388607.0
+		case 32:
+			valInt := int32(binary.LittleEndian.Uint32(data[offset:]))
+			valFloat = float64(valInt) / 2147483647.0
+		}
+		output[i] = float32(valFloat)
+	}
+	return output, nil
+}
+
+// ReformatWavBytes WAV 字节流格式转换
+//
+// 支持：位深转换、采样率转换、声道转换
+//
+// # Params:
+//
+//	wavData: 原始 WAV 文件数据
+//	targetRate: 目标采样率
+//	targetChannels: 目标声道数
+//	targetBitPerSample: 目标位深
+func ReformatWavBytes(wavData []byte, targetRate, targetChannels, targetBitPerSample int) ([]byte, error) {
+	// 解析原始头部
+	header, err := ParseWavHeader(wavData)
+	if err != nil {
+		return nil, err
+	}
+
+	// 提取 PCM 数据并转为 float32
+	const headerSize = 44
+	pcmRaw := wavData[headerSize:]
+	samples, err := PcmBytesToFloat32(pcmRaw, int(header.BitsPerSample))
+	if err != nil {
+		return nil, fmt.Errorf("decode pcm failed: %w", err)
+	}
+
+	// 当前的参数状态
+	currentChannels := int(header.NumChannels)
+	currentRate := int(header.SampleRate)
+
+	// 声道转换
+	// 优先处理声道，如果转为单声道，可以减少后续重采样 50% 的计算量
+	if targetChannels > 0 && targetChannels != currentChannels {
+		samples, err = changeChannels(samples, currentChannels, targetChannels)
+		if err != nil {
+			return nil, err
+		}
+		currentChannels = targetChannels
+	}
+
+	// 重采样
+	if targetRate > 0 && targetRate != currentRate {
+		samples = resampleSafe(samples, currentRate, targetRate, currentChannels)
+		currentRate = targetRate
+	}
+
+	// 目标位深
+	if targetBitPerSample <= 0 {
+		targetBitPerSample = int(header.BitsPerSample)
+	}
+
+	// 编码回 WAV
+	return Float32ToWavBytes(samples, currentRate, currentChannels, targetBitPerSample)
+}
+
+// changeChannels 音频数据声道数转换
+//
+// 支持: Stereo(2) -> Mono(1), Mono(1) -> Stereo(2)
+//
+// # Params:
+//
+//	data: 原始音频数据
+//	srcChannel: 源声道数
+//	dstChannel: 目标声道数
+func changeChannels(data []float32, srcChannel, dstChannel int) ([]float32, error) {
+	if srcChannel == dstChannel {
+		return data, nil
+	}
+
+	// 双声道转单声道 (Stereo -> Mono)
+	// 算法: (L + R) / 2
+	if srcChannel == 2 && dstChannel == 1 {
+		output := make([]float32, len(data)/2)
+		for i := 0; i < len(output); i++ {
+			// data[2*i] 是 L, data[2*i+1] 是 R
+			l := data[2*i]
+			r := data[2*i+1]
+			output[i] = (l + r) / 2
+		}
+		return output, nil
+	}
+
+	// 单声道转双声道 (Mono -> Stereo)
+	// 算法: L = M, R = M (复制)
+	if srcChannel == 1 && dstChannel == 2 {
+		output := make([]float32, len(data)*2)
+		for i := 0; i < len(data); i++ {
+			output[2*i] = data[i]   // L
+			output[2*i+1] = data[i] // R
+		}
+		return output, nil
+	}
+
+	return nil, fmt.Errorf("%w, unsupported channel conversion: %d -> %d",
+		gotool.ErrInvalidParam, srcChannel, dstChannel)
+}
+
+// resampleSafe 安全的重采样函数，支持单/双声道
+//
+// # Params:
+//
+//	data: 原始数据
+//	oldRate: 源采样率
+//	newRate: 目标采样率
+//	channels: 声道数
+func resampleSafe(data []float32, oldRate, newRate, channels int) []float32 {
+	if oldRate == newRate {
+		return data
+	}
+
+	// 单声道：直接线性插值
+	if channels == 1 {
+		return resampleLinear(data, oldRate, newRate)
+	}
+
+	// 双声道：拆分 -> 重采样 -> 合并
+	if channels == 2 {
+		// Split
+		length := len(data) / 2
+		left := make([]float32, length)
+		right := make([]float32, length)
+		for i := 0; i < length; i++ {
+			left[i] = data[i*2]
+			right[i] = data[i*2+1]
+		}
+
+		// Resample
+		leftResampled := resampleLinear(left, oldRate, newRate)
+		rightResampled := resampleLinear(right, oldRate, newRate)
+
+		// Merge
+		newLen := len(leftResampled)
+		output := make([]float32, newLen*2)
+		for i := 0; i < newLen; i++ {
+			output[i*2] = leftResampled[i]
+			output[i*2+1] = rightResampled[i]
+		}
+		return output
+	}
+
+	return data
+}
+
+// resampleLinear 线性插值重采样，适用于单轨道连续数据
+//
+// # Params:
+//
+//	data: 原始数据
+//	oldRate: 源采样率
+//	newRate: 目标采样率
+func resampleLinear(data []float32, oldRate, newRate int) []float32 {
+	if oldRate == newRate {
+		return data
+	}
+	ratio := float64(oldRate) / float64(newRate)
+	newLen := int(float64(len(data)) / ratio)
+	output := make([]float32, newLen)
+
+	for i := 0; i < newLen; i++ {
+		srcIdxFloat := float64(i) * ratio
+		srcIdxInt := int(srcIdxFloat)
+
+		if srcIdxInt >= len(data)-1 {
+			output[i] = data[len(data)-1]
+			continue
+		}
+
+		fraction := srcIdxFloat - float64(srcIdxInt)
+		sample1 := data[srcIdxInt]
+		sample2 := data[srcIdxInt+1]
+
+		output[i] = sample1 + float32(fraction)*(sample2-sample1)
+	}
+	return output
 }

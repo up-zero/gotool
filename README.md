@@ -142,6 +142,8 @@ func main() {
 + **Float32ToPcmBytes** 将标准浮点音频数据转换为指定位深的 PCM 字节流
 + **Float32ToWavBytes** 将标准浮点音频数据转换为完整的 WAV 文件字节流
 + **TextToChinese** 中文文本口语化转换
++ **PcmBytesToFloat32** PCM 字节流转 float32 数组
++ **ReformatWavBytes** WAV 字节流格式转换
 
 ### 网络（netutil）
 
