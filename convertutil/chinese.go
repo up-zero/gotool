@@ -233,9 +233,6 @@ func TextToChinese(text string) string {
 		return IntegerToChinese(n)
 	}
 
-	// 去除空格
-	text = strings.ReplaceAll(text, " ", "")
-
 	// [Time] 时间处理: 12:30 -> 十二点三十分
 	text = reTime.ReplaceAllStringFunc(text, func(s string) string {
 		matches := reTime.FindStringSubmatch(s)
