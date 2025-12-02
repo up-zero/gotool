@@ -375,6 +375,18 @@ func ReformatWavBytes(wavData []byte, targetRate, targetChannels, targetBitPerSa
 		return nil, err
 	}
 
+	// 当前的参数状态
+	currentRate := int(header.SampleRate)
+	currentChannels := int(header.NumChannels)
+	currentBitPerSample := int(header.BitsPerSample)
+
+	// 不存在转换,直接返回
+	if targetRate == currentRate &&
+		targetChannels == currentChannels &&
+		targetBitPerSample == currentBitPerSample {
+		return wavData, nil
+	}
+
 	// 提取 PCM 数据并转为 float32
 	const headerSize = 44
 	pcmRaw := wavData[headerSize:]
@@ -382,10 +394,6 @@ func ReformatWavBytes(wavData []byte, targetRate, targetChannels, targetBitPerSa
 	if err != nil {
 		return nil, fmt.Errorf("decode pcm failed: %w", err)
 	}
-
-	// 当前的参数状态
-	currentChannels := int(header.NumChannels)
-	currentRate := int(header.SampleRate)
 
 	// 声道转换
 	// 优先处理声道，如果转为单声道，可以减少后续重采样 50% 的计算量
