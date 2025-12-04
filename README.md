@@ -144,6 +144,7 @@ func main() {
 + **TextToChinese** 中文文本口语化转换
 + **PcmBytesToFloat32** PCM 字节流转 float32 数组
 + **ReformatWavBytes** WAV 字节流格式转换
++ **PreEmphasis** 预加重滤波器
 
 ### 网络（netutil）
 
