@@ -145,6 +145,7 @@ func main() {
 + **PcmBytesToFloat32** PCM 字节流转 float32 数组
 + **ReformatWavBytes** WAV 字节流格式转换
 + **PreEmphasis** 预加重滤波器
++ **HammingWindow** 生成汉明窗
 
 ### 网络（netutil）
 
