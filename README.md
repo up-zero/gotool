@@ -148,6 +148,7 @@ func main() {
 + **HammingWindow** 汉明窗
 + **FFT** 快速傅里叶变换
 + **MelFilters** 生成 Mel 滤波器组权重矩阵
++ **ApplyCMVN** 倒谱均值方差归一化
 
 ### 网络（netutil）
 

@@ -127,3 +127,30 @@ func MelFilters(sampleRate, fftSize, melBinCount int) [][]float32 {
 	}
 	return filters
 }
+
+// ApplyCMVN 倒谱均值方差归一化 (Cepstral Mean and Variance Normalization)
+//
+// 公式: result = (x + negMean) * invStd
+//
+// # Params:
+//
+// features: 特征矩阵
+// negMean: 负均值向量
+// invStd: 逆标准差向量
+func ApplyCMVN(features [][]float32, negMean []float32, invStd []float32) {
+	for i := 0; i < len(features); i++ {
+		dim := len(features[i])
+		// 安全检查，防止维度不匹配越界
+		checkLen := len(negMean)
+		if checkLen > dim {
+			checkLen = dim
+		}
+		if len(invStd) < checkLen {
+			checkLen = len(invStd)
+		}
+
+		for j := 0; j < checkLen; j++ {
+			features[i][j] = (features[i][j] + negMean[j]) * invStd[j]
+		}
+	}
+}
