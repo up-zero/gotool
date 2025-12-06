@@ -72,3 +72,58 @@ func FFT(x []complex128) []complex128 {
 	}
 	return t
 }
+
+// MelFilters 生成 Mel 滤波器组权重矩阵，将线性频率映射到Mel刻度
+//
+// # Params:
+//
+//	sampleRate: 采样率
+//	fftSize: FFT 窗口大小
+//	melBinCount: Mel 频带数量
+func MelFilters(sampleRate, fftSize, melBinCount int) [][]float32 {
+	fMin := 20.0
+	fMax := float64(sampleRate) / 2.0 // Nyquist 频率
+
+	// 内部闭包：Hz 转 Mel
+	hzToMel := func(hz float64) float64 {
+		return 1127.0 * math.Log(1.0+hz/700.0)
+	}
+	// 内部闭包：Mel 转 Hz
+	melToHz := func(mel float64) float64 {
+		return 700.0 * (math.Exp(mel/1127.0) - 1.0)
+	}
+
+	melMin := hzToMel(fMin)
+	melMax := hzToMel(fMax)
+
+	// 计算所有滤波器的中心频率
+	melPoints := make([]float64, melBinCount+2)
+	binPoints := make([]int, melBinCount+2)
+
+	step := (melMax - melMin) / float64(melBinCount+1)
+
+	for i := 0; i < melBinCount+2; i++ {
+		melPoints[i] = melMin + float64(i)*step
+		hz := melToHz(melPoints[i])
+		// 将 Hz 映射到 FFT bin 索引
+		// bin = floor((N+1) * hz / sampleRate)
+		binPoints[i] = int(math.Floor((float64(fftSize) + 1) * hz / float64(sampleRate)))
+	}
+
+	filters := make([][]float32, melBinCount)
+	for i := 0; i < melBinCount; i++ {
+		filters[i] = make([]float32, fftSize/2+1)
+		start := binPoints[i]
+		center := binPoints[i+1]
+		end := binPoints[i+2]
+
+		// 构建三角形滤波器
+		for j := start; j < center; j++ {
+			filters[i][j] = float32(j-start) / float32(center-start)
+		}
+		for j := center; j < end; j++ {
+			filters[i][j] = 1.0 - float32(j-center)/float32(end-center)
+		}
+	}
+	return filters
+}

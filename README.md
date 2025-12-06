@@ -147,6 +147,7 @@ func main() {
 + **PreEmphasis** 预加重滤波器
 + **HammingWindow** 汉明窗
 + **FFT** 快速傅里叶变换
++ **MelFilters** 生成 Mel 滤波器组权重矩阵
 
 ### 网络（netutil）
 
@@ -299,6 +300,7 @@ func main() {
 ### 测试（testutil）
 
 + **Equal** 断言两个值相等
++ **EqualFloat** 断言两个值（浮点数或浮点数切片）在误差范围内相等
 + **NotEqual** 断言两个值不相等
 
 ### MAP工具（maputil）
