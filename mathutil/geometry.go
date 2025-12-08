@@ -393,3 +393,13 @@ func GetAABB(points []Point) (Rectangle, error) {
 
 	return aabb, nil
 }
+
+// Dx 矩形宽
+func (r Rectangle) Dx() float64 {
+	return r.Max.X - r.Min.X
+}
+
+// Dy 矩形高
+func (r Rectangle) Dy() float64 {
+	return r.Max.Y - r.Min.Y
+}
