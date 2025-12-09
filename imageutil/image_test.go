@@ -2,6 +2,7 @@ package imageutil
 
 import (
 	"image"
+	"image/color"
 	"image/png"
 	"os"
 	"testing"
@@ -127,4 +128,9 @@ func TestOtsuThreshold(t *testing.T) {
 	}
 	threshold := OtsuThreshold(Grayscale(img))
 	t.Log("Otsu threshold:", threshold)
+}
+
+func TestGenerateSolid(t *testing.T) {
+	img := GenerateSolid(100, 100, color.RGBA{R: 255, G: 255, B: 0, A: 255})
+	Save("solid.png", img, 100)
 }

@@ -258,6 +258,7 @@ func main() {
 + **ConvexHull** 计算凸包
 + **SimplifyPath** 简化路径
 + **OffsetPolygon** 多边形偏移 (内缩/外扩)
++ **GenerateSolid** 生成指定宽高的纯色背景图片
 
 ### 条件判断（conditionutil）
 

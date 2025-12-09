@@ -1201,3 +1201,22 @@ func OtsuThreshold(gray *image.Gray) uint8 {
 
 	return threshold
 }
+
+// GenerateSolid 生成指定宽高的纯色背景图片
+//
+// # Params:
+//
+//	width: 图片宽度
+//	height: 图片高度
+//	c: 填充的颜色
+//
+// # Example:
+//
+//	GenerateSolid(800, 600, color.RGBA{255, 255, 255, 255})
+func GenerateSolid(width, height int, c color.Color) image.Image {
+	rect := image.Rect(0, 0, width, height)
+	img := image.NewRGBA(rect)
+	draw.Draw(img, img.Bounds(), &image.Uniform{C: c}, image.Point{}, draw.Src)
+
+	return img
+}
