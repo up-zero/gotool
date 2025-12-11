@@ -18,7 +18,7 @@ type StructuringElement struct {
 // Blob 存储单个连通区域的特征
 type Blob struct {
 	ID       int
-	Pixels   []image.Point   // 原始像素点集合
+	Points   []image.Point   // 原始像素点集合
 	Area     int             // 面积
 	Bounds   image.Rectangle // 正外接矩形 (AABB)
 	Centroid image.Point     // 质心

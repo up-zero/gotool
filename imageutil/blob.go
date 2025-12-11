@@ -85,7 +85,7 @@ func FindBlobs(img image.Image, threshold ...uint8) *BlobResult {
 				queue = queue[1:]
 
 				// 记录点信息
-				currentBlob.Pixels = append(currentBlob.Pixels, p)
+				currentBlob.Points = append(currentBlob.Points, p)
 
 				count++
 				sumX += p.X
