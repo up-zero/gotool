@@ -148,3 +148,17 @@ func SnakeToPascal(s string) string {
 	}
 	return builder.String()
 }
+
+// TrimFirstPrefix 移除字符串中首个匹配的前缀
+//
+// # Examples:
+//
+//	TrimFirstPrefix("hello_world", "hello", "_world") // _world
+func TrimFirstPrefix(s string, prefixes ...string) string {
+	for _, prefix := range prefixes {
+		if strings.HasPrefix(s, prefix) {
+			return strings.TrimPrefix(s, prefix)
+		}
+	}
+	return s
+}
