@@ -291,6 +291,7 @@ func main() {
 + **SnakeToCamel** 将下划线连接的字符串转换为小驼峰式
 + **SnakeToPascal** 将下划线连接的字符串转换为大驼峰式（PascalCase）
 + **TrimFirstPrefix** 移除字符串中首个匹配的前缀
++ **TrimFirstSuffix** 移除字符串中首个匹配的后缀
 
 ### 验证器（validator）
 

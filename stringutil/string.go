@@ -162,3 +162,17 @@ func TrimFirstPrefix(s string, prefixes ...string) string {
 	}
 	return s
 }
+
+// TrimFirstSuffix 移除字符串中首个匹配的后缀
+//
+// # Examples:
+//
+//	TrimFirstSuffix("hello_world", "world", "hello_") // hello_
+func TrimFirstSuffix(s string, suffixes ...string) string {
+	for _, suffix := range suffixes {
+		if strings.HasSuffix(s, suffix) {
+			return strings.TrimSuffix(s, suffix)
+		}
+	}
+	return s
+}

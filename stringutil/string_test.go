@@ -46,3 +46,7 @@ func TestSnakeToPascal(t *testing.T) {
 func TestTrimFirstPrefix(t *testing.T) {
 	testutil.Equal(t, TrimFirstPrefix("hello_world", "hello", "_world"), "_world")
 }
+
+func TestTrimFirstSuffix(t *testing.T) {
+	testutil.Equal(t, TrimFirstSuffix("hello_world", "world", "hello_"), "hello_")
+}
