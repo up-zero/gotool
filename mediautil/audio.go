@@ -80,51 +80,82 @@ func FFT(x []complex128) []complex128 {
 //	sampleRate: 采样率
 //	fftSize: FFT 窗口大小
 //	melBinCount: Mel 频带数量
-func MelFilters(sampleRate, fftSize, melBinCount int) [][]float32 {
-	fMin := 20.0
-	fMax := float64(sampleRate) / 2.0 // Nyquist 频率
-
-	// 内部闭包：Hz 转 Mel
-	hzToMel := func(hz float64) float64 {
-		return 1127.0 * math.Log(1.0+hz/700.0)
+//	fMin: 最小频率
+//	fMax: 最大频率
+func MelFilters(sampleRate, fftSize, melBinCount int, fMin, fMax float64) [][]float32 {
+	// 参数默认值
+	if fMax == 0 {
+		fMax = float64(sampleRate) / 2.0
 	}
-	// 内部闭包：Mel 转 Hz
+	if fMin < 0 {
+		fMin = 0
+	}
+
+	// 转换函数 (使用标准的 HTK 公式: 2595 * log10)
+	hzToMel := func(hz float64) float64 {
+		return 2595.0 * math.Log10(1.0+hz/700.0)
+	}
 	melToHz := func(mel float64) float64 {
-		return 700.0 * (math.Exp(mel/1127.0) - 1.0)
+		return 700.0 * (math.Pow(10, mel/2595.0) - 1.0)
 	}
 
 	melMin := hzToMel(fMin)
 	melMax := hzToMel(fMax)
 
-	// 计算所有滤波器的中心频率
+	// 计算中心频率点 (Hz)
+	// 使用 count + 2 个点来定义 count 个三角形 (左边, 中心, 右边)
 	melPoints := make([]float64, melBinCount+2)
+	hzPoints := make([]float64, melBinCount+2)
 	binPoints := make([]int, melBinCount+2)
 
 	step := (melMax - melMin) / float64(melBinCount+1)
 
 	for i := 0; i < melBinCount+2; i++ {
-		melPoints[i] = melMin + float64(i)*step
-		hz := melToHz(melPoints[i])
-		// 将 Hz 映射到 FFT bin 索引
-		// bin = floor((N+1) * hz / sampleRate)
-		binPoints[i] = int(math.Floor((float64(fftSize) + 1) * hz / float64(sampleRate)))
+		mel := melMin + float64(i)*step
+		melPoints[i] = mel
+		hz := melToHz(mel)
+		hzPoints[i] = hz
+
+		// 计算对应的 FFT Bin 索引
+		// Bin = (Hz / SampleRate) * FFTSize
+		bin := int(math.Floor((float64(fftSize) + 1) * hz / float64(sampleRate)))
+
+		if bin > fftSize/2 {
+			bin = fftSize / 2
+		}
+		binPoints[i] = bin
 	}
 
+	// 构建滤波器矩阵
 	filters := make([][]float32, melBinCount)
+
 	for i := 0; i < melBinCount; i++ {
 		filters[i] = make([]float32, fftSize/2+1)
-		start := binPoints[i]
-		center := binPoints[i+1]
-		end := binPoints[i+2]
 
-		// 构建三角形滤波器
-		for j := start; j < center; j++ {
-			filters[i][j] = float32(j-start) / float32(center-start)
+		startBin := binPoints[i]
+		centerBin := binPoints[i+1]
+		endBin := binPoints[i+2]
+
+		// Slaney 归一化 (Area Normalization)
+		// 确保不同宽度的滤波器拥有相同的能量
+		// 宽度 = 右频率 - 左频率
+		enorm := 2.0 / (hzPoints[i+2] - hzPoints[i])
+
+		// 左半坡 (升序)
+		for j := startBin; j < centerBin; j++ {
+			filters[i][j] = float32((float64(j-startBin) / float64(centerBin-startBin)) * enorm)
 		}
-		for j := center; j < end; j++ {
-			filters[i][j] = 1.0 - float32(j-center)/float32(end-center)
+
+		// 右半坡 (降序)
+		for j := centerBin; j < endBin; j++ {
+			filters[i][j] = float32((float64(endBin-j) / float64(endBin-centerBin)) * enorm)
+		}
+
+		if centerBin < len(filters[i]) {
+			filters[i][centerBin] = float32(enorm)
 		}
 	}
+
 	return filters
 }
 
