@@ -40,6 +40,29 @@ func HammingWindow(size int) []float32 {
 	return window
 }
 
+// HannWindow 生成汉宁窗
+//
+// Hann 公式: 0.5 * (1 - cos(2πn / N))
+//
+// # Params:
+//
+//	size: 窗口大小
+func HannWindow(size int) []float32 {
+	if size <= 0 {
+		return nil
+	}
+	if size == 1 {
+		return []float32{1.0}
+	}
+
+	window := make([]float32, size)
+	factor := 2.0 * math.Pi / float64(size)
+	for i := 0; i < size; i++ {
+		window[i] = float32(0.5 * (1.0 - math.Cos(factor*float64(i))))
+	}
+	return window
+}
+
 // FFT 快速傅里叶变换，时域转频域
 //
 // # Params:
