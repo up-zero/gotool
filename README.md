@@ -262,6 +262,7 @@ func main() {
 + **OffsetPolygon** 多边形偏移 (内缩/外扩)
 + **GenerateSolid** 生成指定宽高的纯色背景图片
 + **FindBlobs** 查找 Mask 图片的连通区域
++ **AHash** 平均哈希
 
 ### 条件判断（conditionutil）
 
