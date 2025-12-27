@@ -29,3 +29,26 @@ func AHash(img image.Image) uint64 {
 	}
 	return hash
 }
+
+// DHash 差异哈希
+func DHash(img image.Image) uint64 {
+	grayImg := Grayscale(Resize(img, 9, 8))
+
+	var hash uint64
+	bitPos := 0
+
+	for y := 0; y < 8; y++ {
+		for x := 0; x < 8; x++ {
+			left := grayImg.GrayAt(x, y).Y
+			right := grayImg.GrayAt(x+1, y).Y
+
+			// 如果左边亮度 >= 右边，则将对应位置的 bit 设为 1
+			if left >= right {
+				hash |= 1 << uint(bitPos)
+			}
+			bitPos++
+		}
+	}
+
+	return hash
+}

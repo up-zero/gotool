@@ -263,6 +263,7 @@ func main() {
 + **GenerateSolid** 生成指定宽高的纯色背景图片
 + **FindBlobs** 查找 Mask 图片的连通区域
 + **AHash** 平均哈希
++ **DHash** 差异哈希
 
 ### 条件判断（conditionutil）
 
