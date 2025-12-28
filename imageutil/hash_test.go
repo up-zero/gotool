@@ -13,3 +13,8 @@ func TestDHash(t *testing.T) {
 	img, _ := Open("test.png")
 	t.Log(DHash(img)) // 7430675043070621677
 }
+
+func TestPHash(t *testing.T) {
+	img, _ := Open("test.png")
+	t.Log(PHash(img)) // 36028865742700577
+}

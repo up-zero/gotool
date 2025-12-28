@@ -264,6 +264,7 @@ func main() {
 + **FindBlobs** 查找 Mask 图片的连通区域
 + **AHash** 平均哈希
 + **DHash** 差异哈希
++ **PHash** 感知哈希
 
 ### 条件判断（conditionutil）
 
