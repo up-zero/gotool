@@ -5,10 +5,21 @@ import (
 )
 
 const (
-	DateTime          = "2006-01-02 15:04:05"
-	DateTimeWithMilli = "2006-01-02 15:04:05.000"
-	DateOnly          = "2006-01-02"
-	TimeOnly          = "15:04:05"
+	DateTime      = "2006-01-02 15:04:05"
+	DateTimeMilli = "2006-01-02 15:04:05.000"
+	DateOnly      = "2006-01-02"
+	TimeOnly      = "15:04:05"
+
+	DateTimeCompact      = "20060102150405"
+	DateTimeMilliCompact = "20060102150405000"
+	DateCompact          = "20060102"
+	TimeCompact          = "150405"
+
+	DateTimeSlash = "2006/01/02 15:04:05"
+	DateSlash     = "2006/01/02"
+
+	MonthDay   = "01-02" // 月-日
+	HourMinute = "15:04" // 时:分
 )
 
 // timeFormat 时间格式化
