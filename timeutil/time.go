@@ -1,6 +1,7 @@
 package timeutil
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -22,29 +23,56 @@ const (
 	HourMinute = "15:04" // 时:分
 )
 
-// timeFormat 时间格式化
+// TransformLayout 时间字符串格式转换
 //
-// dateTime 时间字符串
-// oldLayout 旧的时间格式
-// newLayout 新的时间格式
-func timeFormat(dateTime, oldLayout, newLayout string) (string, error) {
-	t, err := time.ParseInLocation(oldLayout, dateTime, time.Local)
-	if err != nil {
-		return "", err
+// # Params:
+//
+//	dateTimeStr: 时间字符串
+//	srcLayout: 原始时间字符串的格式
+//	dstLayout: 目标格式
+func TransformLayout(dateTimeStr, srcLayout, dstLayout string) (string, error) {
+	if dateTimeStr == "" {
+		return "", nil
 	}
-	return t.Format(newLayout), nil
+	t, err := time.ParseInLocation(srcLayout, dateTimeStr, time.Local)
+	if err != nil {
+		return "", fmt.Errorf("转化日期时间 [%s] 原始字符串格式 [%s] 错误: %w", dateTimeStr, srcLayout, err)
+	}
+	return t.Format(dstLayout), nil
 }
 
-// RFC3339ToNormalTime RFC3339 日期格式标准化
+// FormatRFC3339 将 RFC3339 格式转换为指定格式
 //
-// rfc3339 RFC3339日期格式，如 2006-01-02T15:04:05Z07:00
-func RFC3339ToNormalTime(rfc3339 string) (string, error) {
-	return timeFormat(rfc3339, time.RFC3339, DateTime)
+// # Params:
+//
+//	rfcStr: RFC3339格式的时间字符串
+//	targetLayout: 目标格式，默认为 DateTime
+func FormatRFC3339(rfcStr string, targetLayout ...string) (string, error) {
+	layout := DateTime
+	if len(targetLayout) > 0 {
+		layout = targetLayout[0]
+	}
+	t, err := time.Parse(time.RFC3339, rfcStr)
+	if err != nil {
+		return "", fmt.Errorf("无效的 RFC3339 格式: %w", err)
+	}
+	return t.Format(layout), nil
 }
 
-// RFC1123ToNormalTime RFC1123 日期格式标准化
+// FormatRFC1123 将 RFC1123 格式转换为指定格式
 //
-// rfc1123 RFC1123日期格式，如 Mon, 02 Jan 2006 15:04:05 MST
-func RFC1123ToNormalTime(rfc1123 string) (string, error) {
-	return timeFormat(rfc1123, time.RFC1123, DateTime)
+// # Params:
+//
+//	rfcStr: RFC1123格式的时间字符串
+//	targetLayout: 目标格式，默认为 DateTime
+func FormatRFC1123(rfcStr string, targetLayout ...string) (string, error) {
+	layout := DateTime
+	if len(targetLayout) > 0 {
+		layout = targetLayout[0]
+	}
+	t, err := time.Parse(time.RFC1123, rfcStr)
+	if err != nil {
+		return "", fmt.Errorf("无效的 RFC1123 格式: %w", err)
+	}
+	return t.Format(layout), nil
 }

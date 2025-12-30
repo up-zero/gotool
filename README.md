@@ -186,8 +186,9 @@ func main() {
 
 ### 日期&时间（timeutil）
 
-+ **RFC3339ToNormalTime** RFC3339 日期格式标准化
-+ **RFC1123ToNormalTime** RFC1123 日期格式标准化
++ **TransformLayout** 时间字符串格式转换
++ **FormatRFC3339** 将 RFC3339 格式转换为指定格式
++ **FormatRFC1123** 将 RFC1123 格式转换为指定格式
 
 ### 唯一ID（idutil）
 

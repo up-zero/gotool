@@ -1,15 +1,24 @@
 package timeutil
 
 import (
+	"github.com/up-zero/gotool/testutil"
 	"testing"
+	"time"
 )
 
-func TestRFC3339ToNormalTime(t *testing.T) {
-	rfc3339Time := "2023-08-17T14:30:00+08:00"
-	t.Log(RFC3339ToNormalTime(rfc3339Time))
+func TestTransformLayout(t *testing.T) {
+	res, _ := TransformLayout("2023-08-17T14:30:00+08:00", time.RFC3339, time.DateTime)
+	testutil.Equal(t, res, "2023-08-17 14:30:00")
 }
 
-func TestRFC1123ToNormalTime(t *testing.T) {
+func TestFormatRFC3339(t *testing.T) {
+	rfc3339Time := "2023-08-17T14:30:00+08:00"
+	res, _ := FormatRFC3339(rfc3339Time)
+	testutil.Equal(t, res, "2023-08-17 14:30:00")
+}
+
+func TestFormatRFC1123(t *testing.T) {
 	rfc1123Time := "Mon, 02 Jan 2006 15:04:05 MST"
-	t.Log(RFC1123ToNormalTime(rfc1123Time))
+	res, _ := FormatRFC1123(rfc1123Time)
+	testutil.Equal(t, res, "2006-01-02 15:04:05")
 }
