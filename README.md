@@ -270,6 +270,7 @@ func main() {
 ### 条件判断（conditionutil）
 
 + **If** 三元运算符
++ **IfLazy** 延迟执行的三元运算
 
 ### 流（streamutil）
 
