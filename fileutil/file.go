@@ -156,14 +156,12 @@ func FileSave(p string, data any) error {
 //
 //	filePath: 文件路径
 func FileSync(filePath string) error {
-	f, err := os.Open(filePath)
+	f, err := os.OpenFile(filePath, os.O_RDWR, 0)
 	if err != nil {
 		return err
 	}
-	if err := f.Sync(); err != nil {
-		return err
-	}
-	return nil
+	defer f.Close()
+	return f.Sync()
 }
 
 // FileRead 读文件（结构体）
