@@ -6,39 +6,49 @@ import (
 	"io"
 	"io/fs"
 	"os"
-	"path"
 	"path/filepath"
 	"reflect"
 	"strings"
+)
+
+const (
+	DefaultDirPerm  = 0755 // rwxr-xr-x
+	DefaultFilePerm = 0644 // rw-r--r--
 )
 
 // FileCopy 文件拷贝
 //
 // # Params:
 //
-//	src: 源文件
-//	dst: 目标文件
+//	src: 源文件路径
+//	dst: 目标文件路径
 func FileCopy(src, dst string) error {
 	// 打开源文件
-	reader, err := os.Open(src)
+	srcFile, err := os.Open(src)
 	if err != nil {
 		return err
 	}
-	defer reader.Close()
+	defer srcFile.Close()
 
-	// 创建目标文件夹
-	if err = os.MkdirAll(path.Dir(dst), os.ModePerm); err != nil {
-		return err
-	}
-	// 创建目标文件
-	writer, err := os.Create(dst)
+	// 获取源文件权限
+	info, err := srcFile.Stat()
 	if err != nil {
 		return err
 	}
-	defer writer.Close()
 
-	// 拷贝文件
-	if _, err = io.Copy(writer, reader); err != nil {
+	// 确保目标目录存在
+	if err := os.MkdirAll(filepath.Dir(dst), DefaultDirPerm); err != nil {
+		return err
+	}
+
+	// 创建目标文件，使用源文件的权限
+	dstFile, err := os.OpenFile(dst, os.O_RDWR|os.O_CREATE|os.O_TRUNC, info.Mode())
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+
+	if _, err = io.Copy(dstFile, srcFile); err != nil {
 		return err
 	}
 	return nil
@@ -48,24 +58,29 @@ func FileCopy(src, dst string) error {
 //
 // # Params:
 //
-//	srcFile: 源文件
-//	dstFile: 目标文件
+//	src: 源文件路径
+//	dst: 目标文件路径
 //
 // # Examples:
 //
 //	FileMove("/opt/gotool/test.txt", "/opt/gotool/test/rename.txt")
-func FileMove(srcFile, dstFile string) error {
-	_, err := os.Stat(srcFile)
-	if err != nil {
+func FileMove(src, dst string) error {
+	if src == dst {
+		return nil
+	}
+	if err := os.MkdirAll(filepath.Dir(dst), DefaultDirPerm); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(filepath.Dir(dstFile), os.ModePerm); err != nil {
+	err := os.Rename(src, dst)
+	if err == nil {
+		return nil
+	}
+
+	// 移动文件失败时，自动回退到 Copy+Delete
+	if err := FileCopy(src, dst); err != nil {
 		return err
 	}
-	if err := os.Rename(srcFile, dstFile); err != nil {
-		return err
-	}
-	return nil
+	return os.Remove(src)
 }
 
 // FileCount 获取指定目录下的文件个数
@@ -122,6 +137,11 @@ func FileMainName(filePath string) string {
 
 // FileSave 保存文件
 //
+// # Params:
+//
+//	p: 文件路径
+//	data: 文件内容
+//
 // # Examples:
 //
 //	FileSave("/opt/gotool/test.txt", []byte("hello world"))
@@ -130,10 +150,15 @@ func FileSave(p string, data any) error {
 	var content []byte
 	var err error
 
-	// 判断 data 类型
-	if reflect.TypeOf(data).Kind() == reflect.Slice && reflect.TypeOf(data).Elem().Kind() == reflect.Uint8 {
-		content = data.([]byte)
-	} else {
+	switch v := data.(type) {
+	case []byte:
+		content = v
+	case string:
+		content = []byte(v)
+	case error:
+		content = []byte(v.Error())
+	default:
+		// 其他类型尝试转 JSON
 		content, err = json.MarshalIndent(data, "", "  ")
 		if err != nil {
 			return err
@@ -141,13 +166,13 @@ func FileSave(p string, data any) error {
 	}
 
 	// 创建目录
-	err = os.MkdirAll(filepath.Dir(p), os.ModePerm)
+	err = os.MkdirAll(filepath.Dir(p), DefaultDirPerm)
 	if err != nil {
 		return err
 	}
 
 	// 写文件
-	return os.WriteFile(p, content, os.ModePerm)
+	return os.WriteFile(p, content, DefaultFilePerm)
 }
 
 // FileSync 文件同步（将内存中的文件刷新到硬盘中）

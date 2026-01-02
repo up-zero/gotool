@@ -5,7 +5,7 @@ import (
 )
 
 func TestFileCopy(t *testing.T) {
-	t.Log(FileCopy("LICENSE", "LICENSE_BAK"))
+	t.Log(FileCopy("../LICENSE", "../LICENSE_BAK"))
 }
 
 func TestFileMove(t *testing.T) {
@@ -22,7 +22,7 @@ func TestFileMainName(t *testing.T) {
 }
 
 func TestFileSave(t *testing.T) {
-	err := FileSave("/opt/gotool/test.txt", []byte("hello world"))
+	err := FileSave("/opt/gotool/test.txt", "hello world")
 	if err != nil {
 		t.Fatal(err)
 	}
