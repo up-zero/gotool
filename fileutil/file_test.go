@@ -1,6 +1,7 @@
 package fileutil
 
 import (
+	"github.com/up-zero/gotool/testutil"
 	"testing"
 )
 
@@ -57,4 +58,8 @@ func TestFileRead(t *testing.T) {
 
 func TestFileSize(t *testing.T) {
 	t.Log(FileSize("./file.go"))
+}
+
+func TestExist(t *testing.T) {
+	testutil.Equal(t, Exist("./file.go"), true)
 }

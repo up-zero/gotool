@@ -63,6 +63,7 @@ func main() {
 + **Unzip** 文件解压
 + **UnzipWithNotify** 带通知的文件解压
 + **FileSize** 获取文件大小
++ **Exist** 判断文件或目录是否存在
 
 ### 加解密（cryptoutil）
 

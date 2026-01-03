@@ -217,3 +217,15 @@ func FileSize(filePath string) (int64, error) {
 	}
 	return fileInfo.Size(), nil
 }
+
+// Exist 判断文件或目录是否存在
+func Exist(path string) bool {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
