@@ -63,3 +63,7 @@ func TestFileSize(t *testing.T) {
 func TestExist(t *testing.T) {
 	testutil.Equal(t, Exist("./file.go"), true)
 }
+
+func TestIsDir(t *testing.T) {
+	testutil.Equal(t, IsDir("."), true)
+}
