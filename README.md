@@ -65,6 +65,7 @@ func main() {
 + **FileSize** 获取文件大小
 + **Exist** 判断文件或目录是否存在
 + **IsDir** 判断是否是目录
++ **IsFile** 判断是否是文件
 
 ### 加解密（cryptoutil）
 
