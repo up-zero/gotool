@@ -26,6 +26,9 @@ var (
 	// ErrSrcDstCannotBeNil 源和目标不能为空
 	ErrSrcDstCannotBeNil = errors.New("src and dst cannot be nil")
 
+	// ErrMustBeStruct 必须为结构体
+	ErrMustBeStruct = errors.New("must be a struct")
+
 	// ErrDstMustBePointerStruct 目标必须是指针结构体
 	ErrDstMustBePointerStruct = errors.New("dst must be a pointer struct")
 

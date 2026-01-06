@@ -290,6 +290,7 @@ func main() {
 
 + **SetDefaults** 设置结构体默认值
 + **NewWithDefaults** 初始化带有默认值的结构体
++ **ToMap** 将结构体转换为 map[string]any
 
 ### 字符串（stringutil）
 
