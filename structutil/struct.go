@@ -69,7 +69,6 @@ func structToMap(v reflect.Value) map[string]any {
 		name, opts, _ := strings.Cut(tag, ",")
 
 		// omitempty
-		fieldVal.IsZero()
 		if strings.Contains(opts, "omitempty") && fieldVal.IsZero() {
 			continue
 		}
