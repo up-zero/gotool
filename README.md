@@ -274,6 +274,7 @@ func main() {
 
 + **If** 三元运算符
 + **IfLazy** 延迟执行的三元运算
++ **IsZero** 判断一个值是否为零值
 
 ### 流（streamutil）
 
