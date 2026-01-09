@@ -1,6 +1,18 @@
 package cryptoutil
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
+
+func TestRsaGenerateKey(t *testing.T) {
+	prvKey, pubKey, err := RsaGenerateKey(2048)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%+v \n", prvKey)
+	fmt.Printf(pubKey)
+}
 
 func TestRsaEncrypt(t *testing.T) {
 	key := `-----BEGIN PUBLIC KEY-----
