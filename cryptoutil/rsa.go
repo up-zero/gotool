@@ -7,6 +7,8 @@ import (
 	"encoding/pem"
 	"fmt"
 	"github.com/up-zero/gotool"
+	"io"
+	"os"
 )
 
 // RsaGenerateKey 生成RSA密钥对，返回PEM格式的私钥和公钥字符串
@@ -54,15 +56,11 @@ func RsaGenerateKey(bits int) (prvKey, pubKey string, err error) {
 //	data: 待加密的数据
 //	publicKey: PEM 格式的公钥字符串
 func RsaEncrypt(data []byte, publicKey string) ([]byte, error) {
-	block, _ := pem.Decode([]byte(publicKey))
-	if block == nil {
-		return nil, fmt.Errorf("%w, failed parse PEM block", gotool.ErrInvalidParam)
-	}
-	pub, err := x509.ParsePKIXPublicKey(block.Bytes)
+	pub, err := parsePublicKey(publicKey)
 	if err != nil {
 		return nil, err
 	}
-	return rsa.EncryptPKCS1v15(rand.Reader, pub.(*rsa.PublicKey), data)
+	return rsa.EncryptPKCS1v15(rand.Reader, pub, data)
 }
 
 // RsaDecrypt RSA 私钥解密
@@ -72,13 +70,155 @@ func RsaEncrypt(data []byte, publicKey string) ([]byte, error) {
 //	ciphertext: 待解密的数据
 //	privateKey: PEM 格式的私钥字符串
 func RsaDecrypt(ciphertext []byte, privateKey string) ([]byte, error) {
-	block, _ := pem.Decode([]byte(privateKey))
-	if block == nil {
-		return nil, fmt.Errorf("%w, failed parse PEM block", gotool.ErrInvalidParam)
-	}
-	priv, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	prv, err := parsePrivateKey(privateKey)
 	if err != nil {
 		return nil, err
 	}
-	return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
+	return rsa.DecryptPKCS1v15(rand.Reader, prv, ciphertext)
+}
+
+// RsaEncryptFile 使用 RSA 公钥加密文件
+//
+// # Params:
+//
+//	srcPath: 源文件路径
+//	dstPath: 加密后的文件输出路径
+//	pubKey: PEM 格式公钥字符串
+func RsaEncryptFile(srcPath, dstPath, pubKey string) error {
+	pub, err := parsePublicKey(pubKey)
+	if err != nil {
+		return err
+	}
+
+	srcFile, err := os.Open(srcPath)
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+	dstFile, err := os.Create(dstPath)
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+
+	// 计算每一块的大小
+	chunkSize := pub.Size() - 11
+	buffer := make([]byte, chunkSize)
+
+	for {
+		n, err := srcFile.Read(buffer)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+
+		cipherChunk, err := rsa.EncryptPKCS1v15(rand.Reader, pub, buffer[:n])
+		if err != nil {
+			return err
+		}
+		if _, err := dstFile.Write(cipherChunk); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// RsaDecryptFile 使用 RSA 私钥解密文件
+//
+// # Params:
+//
+//	srcPath: 密文文件路径
+//	dstPath: 解密后的文件输出路径
+//	prvKey: PEM 格式密钥字符串
+func RsaDecryptFile(srcPath, dstPath, prvKey string) error {
+	prv, err := parsePrivateKey(prvKey)
+	if err != nil {
+		return err
+	}
+
+	srcFile, err := os.Open(srcPath)
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+	dstFile, err := os.Create(dstPath)
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+
+	// 解密块的大小
+	buffer := make([]byte, prv.Size())
+
+	for {
+		n, err := srcFile.Read(buffer)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+
+		plainChunk, err := rsa.DecryptPKCS1v15(rand.Reader, prv, buffer[:n])
+		if err != nil {
+			return err
+		}
+		if _, err := dstFile.Write(plainChunk); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// parsePublicKey 解析公钥
+func parsePublicKey(pubKeyStr string) (*rsa.PublicKey, error) {
+	block, _ := pem.Decode([]byte(pubKeyStr))
+	if block == nil {
+		return nil, fmt.Errorf("pem decode error: %w", gotool.ErrInvalidParam)
+	}
+	// PKIX 解析
+	pubAny, err := x509.ParsePKIXPublicKey(block.Bytes)
+	if err == nil {
+		if pub, ok := pubAny.(*rsa.PublicKey); ok {
+			return pub, nil
+		}
+		return nil, fmt.Errorf("PKIX pub key assert error: %w", gotool.ErrInvalidParam)
+	}
+
+	// PKCS1 解析
+	pub, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	if err == nil {
+		return pub, nil
+	}
+
+	return nil, fmt.Errorf("parse PKIX or PKCS1 public key error: %w", gotool.ErrInvalidParam)
+}
+
+// parsePrivateKey 解析私钥
+func parsePrivateKey(prvKeyStr string) (*rsa.PrivateKey, error) {
+	block, _ := pem.Decode([]byte(prvKeyStr))
+	if block == nil {
+		return nil, fmt.Errorf("pem decode error: %w", gotool.ErrInvalidParam)
+	}
+
+	// PKCS1 解析
+	prv, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err == nil {
+		return prv, nil
+	}
+
+	// PKCS8 解析
+	prvAny, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+	if err != nil {
+		return nil, fmt.Errorf("parse PKCS8 private key error: %w", gotool.ErrInvalidParam)
+	}
+	if prv, ok := prvAny.(*rsa.PrivateKey); ok {
+		return prv, nil
+	}
+
+	return nil, fmt.Errorf("parse RSA private key error: %w", gotool.ErrInvalidParam)
 }

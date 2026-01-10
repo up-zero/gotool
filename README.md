@@ -92,6 +92,8 @@ func main() {
 + **RsaEncrypt** RSA 公钥加密
 + **RsaDecrypt** RSA 私钥解密
 + **RsaGenerateKey** 生成RSA密钥对，返回PEM格式的私钥和公钥字符串
++ **RsaEncryptFile** 使用 RSA 公钥加密文件
++ **RsaDecryptFile** 使用 RSA 私钥解密文件
 
 ### 类型转换（convertutil）
 

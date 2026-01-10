@@ -2,35 +2,18 @@ package cryptoutil
 
 import (
 	"fmt"
+	"github.com/up-zero/gotool/testutil"
 	"testing"
 )
 
-func TestRsaGenerateKey(t *testing.T) {
-	prvKey, pubKey, err := RsaGenerateKey(2048)
-	if err != nil {
-		t.Fatal(err)
-	}
-	fmt.Printf("%+v \n", prvKey)
-	fmt.Printf(pubKey)
-}
-
-func TestRsaEncrypt(t *testing.T) {
-	key := `-----BEGIN PUBLIC KEY-----
+const (
+	testPrvKey = `-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDmWcb/iq27I5xz2dXtdHZXHFoT
 bDex7f0c4HVOUzvUOpxMWgV+4yHo2BwtPHk1M9udd+S00iYZ0hErG9pOka3vp4+/
 XcJtbo28MrUUMArl02PajhQ00rCYL6lM8X6mYOneX8HLHP/UOsPbdqPmaqpZOvgE
 L8v87Pz0ZsvQTwIBwQIDAQAB
 -----END PUBLIC KEY-----`
-	res, err := RsaEncrypt([]byte("hello world"), key)
-	if err != nil {
-		t.Fatal(err)
-	}
-	base64 := Base64Encode(string(res))
-	t.Log(base64)
-}
-
-func TestRsaDecrypt(t *testing.T) {
-	key := `-----BEGIN RSA PRIVATE KEY-----
+	testPubKey = `-----BEGIN RSA PRIVATE KEY-----
 MIICXQIBAAKBgQDmWcb/iq27I5xz2dXtdHZXHFoTbDex7f0c4HVOUzvUOpxMWgV+
 4yHo2BwtPHk1M9udd+S00iYZ0hErG9pOka3vp4+/XcJtbo28MrUUMArl02PajhQ0
 0rCYL6lM8X6mYOneX8HLHP/UOsPbdqPmaqpZOvgEL8v87Pz0ZsvQTwIBwQIDAQAB
@@ -45,10 +28,39 @@ m/PNhgm2Eyjws/0S1Vav/7kRZK04Asdc+xgXwFE3a5pSe85FypACPwlp/6iTwKYi
 qR/Yyy3z5zFEtF/Z3aMCQQCxCxXAB82CUWn3K1d9ybnDCv1zl1rTRJpRKb6S3rbY
 phqBC6+MR83aZ/3MVO0rVAeBfYyNVghjd5Ktbt216CjW
 -----END RSA PRIVATE KEY-----`
+)
+
+func TestRsaGenerateKey(t *testing.T) {
+	prvKey, pubKey, err := RsaGenerateKey(2048)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%+v \n", prvKey)
+	fmt.Printf(pubKey)
+}
+
+func TestRsaEncrypt(t *testing.T) {
+	res, err := RsaEncrypt([]byte("hello world"), testPrvKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+	base64 := Base64Encode(string(res))
+	t.Log(base64)
+}
+
+func TestRsaDecrypt(t *testing.T) {
 	base64 := Base64Decode("HOcBHh5A6bN82kxFwBKg/0kGOOVe4DyBs2rX41rBC0M/6GiFTdtpwdraOPjUaFrfWRmn7+1wnjtcln7Fxh1EdLolKKS2ySaY8tCEEv4uGwaUA0qbe9gKwT6xtmCu5XhAdR3/OBT6YHFeCs38hq45wZS5zpx4mQF5vL9zakWpBbU=")
-	res, err := RsaDecrypt([]byte(base64), key)
+	res, err := RsaDecrypt([]byte(base64), testPubKey)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Log(string(res))
+}
+
+func TestRsaEncryptFile(t *testing.T) {
+	testutil.Equal(t, RsaEncryptFile("rsa.go", "rsa.enc.txt", testPrvKey), nil)
+}
+
+func TestRsaDecryptFile(t *testing.T) {
+	testutil.Equal(t, RsaDecryptFile("rsa.enc.txt", "rsa.dec.txt", testPubKey), nil)
 }
