@@ -41,23 +41,43 @@ func CopyProperties(src, dst any) error {
 	if dstValue.Kind() != reflect.Ptr || dstValue.Elem().Kind() != reflect.Struct {
 		return gotool.ErrDstMustBePointerStruct
 	}
-
-	// 使用 Elem 解引用指针（获取指针指向的实际结构体值）
 	dstValue = dstValue.Elem()
 
-	srcType := srcValue.Type()
-	for i := 0; i < srcType.NumField(); i++ {
-		srcField := srcType.Field(i)
-		srcFieldValue := srcValue.Field(i)
+	return copyPropertiesRecursive(srcValue, dstValue)
+}
 
-		// 跳过不可导出的字段（即首字母小写）
+func copyPropertiesRecursive(srcVal, dstVal reflect.Value) error {
+	srcType := srcVal.Type()
+
+	for i := 0; i < srcVal.NumField(); i++ {
+		srcFieldType := srcType.Field(i)
+		srcFieldValue := srcVal.Field(i)
+
+		// 检查字段是否可导出
 		if !srcFieldValue.CanInterface() {
 			continue
 		}
 
-		dstField := dstValue.FieldByName(srcField.Name)
+		dstField := dstVal.FieldByName(srcFieldType.Name)
 		if dstField.IsValid() && dstField.CanSet() && dstField.Type() == srcFieldValue.Type() {
 			dstField.Set(srcFieldValue)
+		}
+
+		// 嵌入结构体
+		if srcFieldType.Anonymous {
+			resolveValue := srcFieldValue
+			if resolveValue.Kind() == reflect.Ptr {
+				if resolveValue.IsNil() {
+					continue
+				}
+				resolveValue = resolveValue.Elem()
+			}
+
+			if resolveValue.Kind() == reflect.Struct {
+				if err := copyPropertiesRecursive(resolveValue, dstVal); err != nil {
+					return err
+				}
+			}
 		}
 	}
 
