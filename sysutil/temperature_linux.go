@@ -9,77 +9,59 @@ import (
 	"strings"
 )
 
-func getCPUThermalZones() ([]string, error) {
-	var cpuZones []string
-
-	// 遍历 /sys/class/thermal/thermal_zone* 目录
+// CPUTemperatures 获取当前 CPU 温度
+func CPUTemperatures() []*TemperatureStat {
+	var list []*TemperatureStat
 	thermalPath := "/sys/class/thermal"
+
 	entries, err := os.ReadDir(thermalPath)
 	if err != nil {
-		return nil, err
+		return nil
 	}
+
 	for _, v := range entries {
-		path := filepath.Join(thermalPath, v.Name())
-		if strings.Contains(v.Name(), "thermal_zone") {
-			typePath := filepath.Join(path, "type")
-			typeData, err := os.ReadFile(typePath)
+		// 仅处理 thermal_zone*
+		if !strings.HasPrefix(v.Name(), "thermal_zone") {
+			continue
+		}
+
+		basePath := filepath.Join(thermalPath, v.Name())
+
+		typeData, err := os.ReadFile(filepath.Join(basePath, "type"))
+		if err != nil {
+			continue
+		}
+
+		sensorType := strings.TrimSpace(string(typeData))
+		sensorTypeLower := strings.ToLower(sensorType)
+
+		if isCPUSensor(sensorTypeLower) {
+			tempPath := filepath.Join(basePath, "temp")
+
+			tempData, err := os.ReadFile(tempPath)
 			if err != nil {
 				continue
 			}
 
-			// 判断传感器类型是否与 CPU 相关
-			sensorType := strings.TrimSpace(string(typeData))
-			if strings.Contains(strings.ToLower(sensorType), "cpu") ||
-				strings.Contains(strings.ToLower(sensorType), "x86_pkg_temp") ||
-				strings.Contains(strings.ToLower(sensorType), "coretemp") {
-				cpuZones = append(cpuZones, path)
+			tempRaw, err := strconv.Atoi(strings.TrimSpace(string(tempData)))
+			if err != nil {
+				continue
 			}
+
+			list = append(list, &TemperatureStat{
+				SensorType:  sensorType,
+				Temperature: float64(tempRaw) / 1000.0,
+			})
 		}
 	}
 
-	return cpuZones, nil
-}
-
-func readTemperature(tempPath string) (float64, error) {
-	data, err := os.ReadFile(tempPath)
-	if err != nil {
-		return 0, err
-	}
-
-	temp, err := strconv.Atoi(strings.TrimSpace(string(data)))
-	if err != nil {
-		return 0, err
-	}
-
-	return float64(temp) / 1000.0, nil
-}
-
-// CPUTemperatures 获取CPU温度
-func CPUTemperatures() []*TemperatureStat {
-	cpuZones, err := getCPUThermalZones()
-	if err != nil || len(cpuZones) == 0 {
-		return nil
-	}
-	list := make([]*TemperatureStat, 0, len(cpuZones))
-
-	for _, zone := range cpuZones {
-		typePath := filepath.Join(zone, "type")
-		tempPath := filepath.Join(zone, "temp")
-
-		sensorType, err := os.ReadFile(typePath)
-		if err != nil {
-			continue
-		}
-
-		temp, err := readTemperature(tempPath)
-		if err != nil {
-			continue
-		}
-
-		list = append(list, &TemperatureStat{
-			SensorType:  strings.TrimSpace(string(sensorType)),
-			Temperature: temp,
-		})
-	}
 	return list
+}
+
+func isCPUSensor(name string) bool {
+	return strings.Contains(name, "cpu") ||
+		strings.Contains(name, "x86_pkg_temp") ||
+		strings.Contains(name, "coretemp") ||
+		strings.Contains(name, "k10temp") ||
+		strings.Contains(name, "acpitz")
 }
