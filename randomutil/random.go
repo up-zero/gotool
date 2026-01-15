@@ -2,10 +2,8 @@ package randomutil
 
 import (
 	"math/rand"
-	"time"
+	"strings"
 )
-
-var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // RandomStr 随机字符串
 //
@@ -17,11 +15,15 @@ func RandomStr(str string, length int) string {
 	if length <= 0 {
 		return ""
 	}
-	var ans string
+
+	runes := []rune(str)
+	var builder strings.Builder
+	builder.Grow(length)
+
 	for i := 0; i < length; i++ {
-		ans += string(str[r.Intn(len(str))])
+		builder.WriteRune(runes[rand.Intn(len(runes))])
 	}
-	return ans
+	return builder.String()
 }
 
 // RandomNumber 随机数字
@@ -61,5 +63,5 @@ func RandomRangeInt(minValue, maxValue int) int {
 	if minValue >= maxValue {
 		return 0
 	}
-	return r.Intn(maxValue-minValue) + minValue
+	return rand.Intn(maxValue-minValue) + minValue
 }
