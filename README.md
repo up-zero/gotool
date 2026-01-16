@@ -12,9 +12,6 @@
    <a href="https://github.com/up-zero/gotool/pulls" target="blank">
       <img src="https://img.shields.io/github/issues-pr/up-zero/gotool?style=for-the-badge" alt="Gotool pull-requests"/>
    </a>
-   <a href='https://github.com/up-zero/gotool/releases'>
-      <img src='https://img.shields.io/github/release/up-zero/gotool?&label=Latest&style=for-the-badge'>
-   </a>
 </p>
 
 一个轻量级的Go语言工具库，提倡的核心理念为：基于Golang标准库、无第三方依赖。
@@ -125,6 +122,7 @@ func main() {
 + **RandomAlpha** 随机字母
 + **RandomAlphaNumber** 随机字母数字
 + **RandomRangeInt** 指定范围内的随机数 [最小值, 最大值)
++ **RandomBool** 随机布尔值
 
 ### 数学（mathutil）
 

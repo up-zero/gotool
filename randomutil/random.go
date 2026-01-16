@@ -65,3 +65,8 @@ func RandomRangeInt(minValue, maxValue int) int {
 	}
 	return rand.Intn(maxValue-minValue) + minValue
 }
+
+// RandomBool 随机布尔值
+func RandomBool() bool {
+	return rand.Float32() < 0.5
+}

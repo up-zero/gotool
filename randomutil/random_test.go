@@ -31,3 +31,9 @@ func TestRandomRangeInt(t *testing.T) {
 		t.Log(RandomRangeInt(5, 100))
 	}
 }
+
+func TestRandomBool(t *testing.T) {
+	for i := 0; i < 5; i++ {
+		t.Log(RandomBool())
+	}
+}
