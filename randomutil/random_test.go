@@ -2,38 +2,44 @@ package randomutil
 
 import "testing"
 
-func TestRandomStr(t *testing.T) {
+func TestString(t *testing.T) {
 	for i := 0; i < 5; i++ {
-		t.Log(RandomStr("12345677890", 6))
+		t.Log(String("12345677890", 6))
 	}
 }
 
-func TestRandomAlpha(t *testing.T) {
+func TestDigits(t *testing.T) {
 	for i := 0; i < 5; i++ {
-		t.Log(RandomAlpha(6))
+		t.Log(Digits(6))
 	}
 }
 
-func TestRandomNumber(t *testing.T) {
+func TestLetters(t *testing.T) {
 	for i := 0; i < 5; i++ {
-		t.Log(RandomNumber(6))
+		t.Log(Letters(6))
 	}
 }
 
-func TestRandomAlphaNumber(t *testing.T) {
+func TestAlphanumeric(t *testing.T) {
 	for i := 0; i < 5; i++ {
-		t.Log(RandomAlphaNumber(6))
+		t.Log(Alphanumeric(6))
 	}
 }
 
-func TestRandomRangeInt(t *testing.T) {
+func TestIntRange(t *testing.T) {
 	for i := 0; i < 5; i++ {
-		t.Log(RandomRangeInt(5, 100))
+		t.Log(IntRange(5, 100))
 	}
 }
 
-func TestRandomBool(t *testing.T) {
+func TestBool(t *testing.T) {
 	for i := 0; i < 5; i++ {
-		t.Log(RandomBool())
+		t.Log(Bool())
+	}
+}
+
+func TestChoice(t *testing.T) {
+	for i := 0; i < 5; i++ {
+		t.Logf("%v", Choice([]string{"1", "2", "3", "4", "5"}))
 	}
 }

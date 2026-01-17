@@ -117,12 +117,13 @@ func main() {
 
 ### 随机数（randomutil）
 
-+ **RandomStr** 随机字符串
-+ **RandomNumber** 随机数字
-+ **RandomAlpha** 随机字母
-+ **RandomAlphaNumber** 随机字母数字
-+ **RandomRangeInt** 指定范围内的随机数 [最小值, 最大值)
-+ **RandomBool** 随机布尔值
++ **String** 随机字符串
++ **Digits** 随机数字
++ **Letters** 随机字母
++ **Alphanumeric** 随机字母数字
++ **IntRange** 指定范围内的随机数 [最小值, 最大值)
++ **Bool** 随机布尔值
++ **Choice** 从切片随机选一个元素
 
 ### 数学（mathutil）
 
