@@ -1,11 +1,12 @@
 package arrayutil
 
 import (
+	"github.com/up-zero/gotool/testutil"
 	"testing"
 )
 
 func TestDuplicate(t *testing.T) {
-	t.Log(Union([]int{1, 2, 3}, []int{2, 3, 4})) // [1 2 3 4]
+	testutil.Equal(t, Unique([]int{1, 2, 3}, []int{2, 3, 4}), []int{1, 2, 3, 4})
 }
 
 func TestContain(t *testing.T) {

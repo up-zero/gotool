@@ -10,12 +10,12 @@ import (
 	"github.com/up-zero/gotool"
 )
 
-// Union 数组去重，求并集
+// Unique  数组去重，求并集
 //
 // # Params:
 //
 //	elems: 传入同种类型数组
-func Union[T gotool.Number | string](elems ...[]T) []T {
+func Unique[T comparable](elems ...[]T) []T {
 	var ans = make([]T, 0)
 	var m = make(map[T]struct{})
 	for _, elem := range elems {
@@ -46,6 +46,9 @@ func Contains[T gotool.Number | string | bool](arr []T, target T) bool {
 //	elems: 待拼接的数值
 //	sep: 拼接用的字符串
 func Join[T gotool.Number | string](elems []T, sep string) string {
+	if len(elems) == 0 {
+		return ""
+	}
 	var ans strings.Builder
 	for i, elem := range elems {
 		if i > 0 {
