@@ -1,4 +1,4 @@
-package arrayutil
+package sliceutil
 
 import (
 	"fmt"
@@ -10,11 +10,11 @@ import (
 	"github.com/up-zero/gotool"
 )
 
-// Unique  数组去重，求并集
+// Unique 切片去重，求并集
 //
 // # Params:
 //
-//	elems: 传入同种类型数组
+//	elems: 传入同种类型切片
 func Unique[T comparable](elems ...[]T) []T {
 	var ans = make([]T, 0)
 	var m = make(map[T]struct{})
@@ -29,17 +29,17 @@ func Unique[T comparable](elems ...[]T) []T {
 	return ans
 }
 
-// Contains 数组是否包含某个值
+// Contains 切片是否包含某个值
 //
 // # Params:
 //
-//	arr: 待遍历的数组
+//	arr: 待遍历的切片
 //	target: 目标值
 func Contains[T gotool.Number | string | bool](arr []T, target T) bool {
 	return slices.Contains(arr, target)
 }
 
-// Join 数组拼接成字符串
+// Join 切片拼接成字符串
 //
 // # Params:
 //
@@ -71,7 +71,7 @@ func Join[T gotool.Number | string](elems []T, sep string) string {
 	return ans.String()
 }
 
-// Concat 数组合并
+// Concat 切片拼接
 func Concat[T any](elems ...[]T) []T {
 	var l int
 	for _, elem := range elems {
@@ -84,9 +84,9 @@ func Concat[T any](elems ...[]T) []T {
 	return ans
 }
 
-// Intersect 求多个数组的交集，元素存在时会先去重
+// Intersect 求多个切片的交集，元素存在时会先去重
 //
-//	elems: 多个数组
+//	elems: 多个切片
 //
 // # Example:
 //
@@ -123,4 +123,20 @@ func Intersect[T comparable](elems ...[]T) []T {
 		}
 	}
 	return ans
+}
+
+// Filter 切片过滤
+//
+// # Params:
+//
+//	arr: 待过滤的切片
+//	f: 过滤函数
+func Filter[T any](arr []T, f func(T) bool) []T {
+	res := make([]T, 0)
+	for _, v := range arr {
+		if f(v) {
+			res = append(res, v)
+		}
+	}
+	return res
 }

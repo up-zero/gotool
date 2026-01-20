@@ -204,13 +204,14 @@ func main() {
 + **SignalSnowflake** 单节点的雪花码
 + **NewObjectID** 生成一个新的 ObjectID
 
-### 数组（arrayutil）
+### 切片（sliceutil）
 
-+ **Unique** 数组去重，求并集
-+ **Contains** 数组是否包含某个值
-+ **Join** 整型拼接
-+ **Concat** 数组拼接
-+ **Intersect** 求多个数组的交集，数组中的元素存在时会先去重
++ **Unique** 切片去重，求并集
++ **Contains** 切片是否包含某个值
++ **Join** 切片拼接成字符串
++ **Concat** 切片拼接
++ **Intersect** 求多个切片的交集，元素存在时会先去重
++ **Filter** 切片过滤
 
 ### 图片（imageutil）
 
