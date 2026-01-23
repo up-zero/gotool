@@ -33,10 +33,10 @@ func Unique[T comparable](elems ...[]T) []T {
 //
 // # Params:
 //
-//	arr: 待遍历的切片
+//	s: 待遍历的切片
 //	target: 目标值
-func Contains[T gotool.Number | string | bool](arr []T, target T) bool {
-	return slices.Contains(arr, target)
+func Contains[T gotool.Number | string | bool](s []T, target T) bool {
+	return slices.Contains(s, target)
 }
 
 // Join 切片拼接成字符串
@@ -129,14 +129,28 @@ func Intersect[T comparable](elems ...[]T) []T {
 //
 // # Params:
 //
-//	arr: 待过滤的切片
+//	s: 待过滤的切片
 //	f: 过滤函数
-func Filter[T any](arr []T, f func(T) bool) []T {
+func Filter[T any](s []T, f func(T) bool) []T {
 	res := make([]T, 0)
-	for _, v := range arr {
+	for _, v := range s {
 		if f(v) {
 			res = append(res, v)
 		}
 	}
 	return res
+}
+
+// Map 切片类型转换
+//
+// # Params:
+//
+//	s: 待转换的切片
+//	iteratee: 转换函数
+func Map[T any, R any](s []T, iteratee func(item T) R) []R {
+	result := make([]R, len(s))
+	for i, item := range s {
+		result[i] = iteratee(item)
+	}
+	return result
 }

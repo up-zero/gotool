@@ -1,6 +1,7 @@
 package sliceutil
 
 import (
+	"fmt"
 	"github.com/up-zero/gotool/testutil"
 	"testing"
 )
@@ -45,4 +46,8 @@ func TestIntersect(t *testing.T) {
 
 func TestFilter(t *testing.T) {
 	testutil.Equal(t, Filter([]int{12, 13, 1}, func(v int) bool { return v > 10 }), []int{12, 13})
+}
+
+func TestMap(t *testing.T) {
+	testutil.Equal(t, Map([]int{12, 13, 1}, func(v int) string { return fmt.Sprintf("->%v", v) }), []string{"->12", "->13", "->1"})
 }
