@@ -1220,3 +1220,39 @@ func GenerateSolid(width, height int, c color.Color) image.Image {
 
 	return img
 }
+
+// ToWritable 将 image.Image 转换为可写的 draw.Image
+//
+// # Params:
+//
+//	src: 源图片
+func ToWritable(src image.Image) draw.Image {
+	if src == nil {
+		return nil
+	}
+
+	if writable, ok := src.(draw.Image); ok {
+		return writable
+	}
+
+	bounds := src.Bounds()
+	var dst draw.Image
+
+	switch src.ColorModel() {
+	case color.GrayModel:
+		dst = image.NewGray(bounds)
+	case color.Gray16Model:
+		dst = image.NewGray16(bounds)
+	case color.CMYKModel:
+		dst = image.NewCMYK(bounds)
+	case color.NRGBAModel:
+		dst = image.NewNRGBA(bounds)
+	default:
+		// 默认降级方案：创建通用的 RGBA 画布
+		// 即使是 NRGBA (非预乘) 在绘图操作中也通常转换为 RGBA 处理更标准
+		dst = image.NewRGBA(bounds)
+	}
+
+	draw.Draw(dst, bounds, src, bounds.Min, draw.Src)
+	return dst
+}

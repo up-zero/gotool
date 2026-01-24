@@ -275,6 +275,7 @@ func main() {
 + **AHash** 平均哈希
 + **DHash** 差异哈希
 + **PHash** 感知哈希
++ **ToWritable** 将 image.Image 转换为可写的 draw.Image
 
 ### 条件判断（conditionutil）
 
