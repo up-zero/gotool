@@ -213,6 +213,7 @@ func main() {
 + **Intersect** 求多个切片的交集，元素存在时会先去重
 + **Filter** 切片过滤
 + **Map** 切片类型转换
++ **GroupBy** 将切片按指定的 Key 进行分组
 
 ### 图片（imageutil）
 

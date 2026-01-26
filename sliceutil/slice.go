@@ -154,3 +154,18 @@ func Map[T any, R any](s []T, iteratee func(item T) R) []R {
 	}
 	return result
 }
+
+// GroupBy 将切片按指定的 Key 进行分组
+//
+// # Params:
+//
+//	s: 待分组的切片
+//	iteratee: 分组函数
+func GroupBy[T any, K comparable](s []T, iteratee func(item T) K) map[K][]T {
+	res := make(map[K][]T)
+	for _, v := range s {
+		key := iteratee(v)
+		res[key] = append(res[key], v)
+	}
+	return res
+}

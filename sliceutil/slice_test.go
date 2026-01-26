@@ -51,3 +51,7 @@ func TestFilter(t *testing.T) {
 func TestMap(t *testing.T) {
 	testutil.Equal(t, Map([]int{12, 13, 1}, func(v int) string { return fmt.Sprintf("->%v", v) }), []string{"->12", "->13", "->1"})
 }
+
+func TestGroupBy(t *testing.T) {
+	testutil.Equal(t, GroupBy([]int{12, 13, 1}, func(v int) string { return fmt.Sprintf("%v", v%2) }), map[string][]int{"0": {12}, "1": {13, 1}})
+}
