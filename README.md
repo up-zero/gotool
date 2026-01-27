@@ -214,6 +214,7 @@ func main() {
 + **Filter** 切片过滤
 + **Map** 切片类型转换
 + **GroupBy** 将切片按指定的 Key 进行分组
++ **Chunk** 将切片按指定大小切分为多个小切片
 
 ### 图片（imageutil）
 

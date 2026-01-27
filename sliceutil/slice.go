@@ -169,3 +169,24 @@ func GroupBy[T any, K comparable](s []T, iteratee func(item T) K) map[K][]T {
 	}
 	return res
 }
+
+// Chunk 将切片按指定大小切分为多个小切片
+//
+// # Params:
+//
+//	s: 待切分的切片
+//	size: 切片大小
+func Chunk[T any](s []T, size int) [][]T {
+	if size <= 0 {
+		return nil
+	}
+	var res [][]T
+	for i := 0; i < len(s); i += size {
+		end := i + size
+		if end > len(s) {
+			end = len(s)
+		}
+		res = append(res, s[i:end])
+	}
+	return res
+}
