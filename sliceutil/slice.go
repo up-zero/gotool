@@ -190,3 +190,18 @@ func Chunk[T any](s []T, size int) [][]T {
 	}
 	return res
 }
+
+// Difference 求差集 (s1 - s2)，返回在 s1 中但不在 s2 中的元素
+func Difference[T comparable](s1, s2 []T) []T {
+	m := make(map[T]struct{}, len(s2))
+	for _, v := range s2 {
+		m[v] = struct{}{}
+	}
+	res := make([]T, 0)
+	for _, v := range s1 {
+		if _, ok := m[v]; !ok {
+			res = append(res, v)
+		}
+	}
+	return res
+}

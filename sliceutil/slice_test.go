@@ -59,3 +59,7 @@ func TestGroupBy(t *testing.T) {
 func TestChunk(t *testing.T) {
 	testutil.Equal(t, Chunk([]int{12, 13, 1}, 2), [][]int{{12, 13}, {1}})
 }
+
+func TestDifference(t *testing.T) {
+	testutil.Equal(t, Difference([]int{1, 2, 3, 4, 5}, []int{2, 4, 6, 8}), []int{1, 3, 5})
+}
