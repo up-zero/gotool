@@ -77,3 +77,15 @@ func IsIpv6(s string) bool {
 	}
 	return ip.To4() == nil && ip.To16() != nil
 }
+
+// IsChinese 判断字符串是否包含中文字符
+func IsChinese(s string) bool {
+	for _, r := range s {
+		if r >= 0x4e00 && r <= 0x9fa5 ||
+			(r >= 0x3000 && r <= 0x303f) ||
+			(r >= 0xff00 && r <= 0xffef) {
+			return true
+		}
+	}
+	return false
+}
