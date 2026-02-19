@@ -44,10 +44,10 @@ func TestIsIpv6(t *testing.T) {
 	t.Log(IsIpv6("::1"))                                     // true
 }
 
-func TestIsChinese(t *testing.T) {
-	testutil.Equal(t, IsChinese("你好"), true)
-	testutil.Equal(t, IsChinese("Hello"), false)
-	testutil.Equal(t, IsChinese("，"), true)
-	testutil.Equal(t, IsChinese(","), false)
-	testutil.Equal(t, IsChinese("こんにちは"), false)
+func TestContainChinese(t *testing.T) {
+	testutil.Equal(t, ContainChinese("你好"), true)
+	testutil.Equal(t, ContainChinese("Hello"), false)
+	testutil.Equal(t, ContainChinese("，"), true)
+	testutil.Equal(t, ContainChinese(","), false)
+	testutil.Equal(t, ContainChinese("こんにちは"), false)
 }
