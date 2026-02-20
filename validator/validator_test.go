@@ -51,3 +51,8 @@ func TestContainChinese(t *testing.T) {
 	testutil.Equal(t, ContainChinese(","), false)
 	testutil.Equal(t, ContainChinese("こんにちは"), false)
 }
+
+func TestIsEmail(t *testing.T) {
+	testutil.Equal(t, IsEmail("test@example.com"), true)
+	testutil.Equal(t, IsEmail("name <user@example.com>"), false)
+}

@@ -324,6 +324,7 @@ func main() {
 + **IsAlphaNumeric** 验证字符串是否为 Unicode 字符或数字
 + **IsIpv4** 验证字符串是否为 IPv4 地址
 + **IsIpv6** 验证字符串是否为 IPv6 地址
++ **IsEmail** 判断字符串是否为有效的电子邮件地址
 + **ContainChinese** 判断字符串是否包含中文字符
 
 ### 测试（testutil）

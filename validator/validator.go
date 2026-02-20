@@ -2,6 +2,7 @@ package validator
 
 import (
 	"net"
+	"net/mail"
 	"unicode"
 )
 
@@ -88,4 +89,13 @@ func ContainChinese(s string) bool {
 		}
 	}
 	return false
+}
+
+// IsEmail 判断字符串是否为有效的电子邮件地址
+func IsEmail(email string) bool {
+	addr, err := mail.ParseAddress(email)
+	if err != nil {
+		return false
+	}
+	return addr.Address == email
 }
