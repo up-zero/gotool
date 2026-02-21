@@ -28,6 +28,11 @@ func TestIsAlphaNumeric(t *testing.T) {
 	t.Log(IsAlphaNumeric("你好,123"))    // false
 }
 
+func TestIsIp(t *testing.T) {
+	testutil.Equal(t, IsIp("192.168.1.1"), true)
+	testutil.Equal(t, IsIp("256.0.0.0"), false)
+}
+
 func TestIsIpv4(t *testing.T) {
 	t.Log(IsIpv4("192.168.1.1"))                             // true
 	t.Log(IsIpv4("256.0.0.1"))                               // false

@@ -61,6 +61,11 @@ func IsAlphaNumeric(s string) bool {
 	return true
 }
 
+// IsIp 检查字符串是否为有效的 IPv4 或 IPv6 地址
+func IsIp(ipStr string) bool {
+	return net.ParseIP(ipStr) != nil
+}
+
 // IsIpv4 验证字符串是否为 IPv4 地址
 func IsIpv4(s string) bool {
 	ip := net.ParseIP(s)
