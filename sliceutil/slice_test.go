@@ -63,3 +63,9 @@ func TestChunk(t *testing.T) {
 func TestDifference(t *testing.T) {
 	testutil.Equal(t, Difference([]int{1, 2, 3, 4, 5}, []int{2, 4, 6, 8}), []int{1, 3, 5})
 }
+
+func TestShuffle(t *testing.T) {
+	a := []int{1, 2, 3, 4, 5}
+	Shuffle(a)
+	t.Log(a)
+}

@@ -217,6 +217,7 @@ func main() {
 + **GroupBy** 将切片按指定的 Key 进行分组
 + **Chunk** 将切片按指定大小切分为多个小切片
 + **Difference** 求差集 (s1 - s2)，返回在 s1 中但不在 s2 中的元素
++ **Shuffle** 切片洗牌
 
 ### 图片（imageutil）
 

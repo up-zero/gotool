@@ -2,10 +2,10 @@ package sliceutil
 
 import (
 	"fmt"
+	"math/rand/v2"
+	"slices"
 	"strconv"
 	"strings"
-
-	"slices"
 
 	"github.com/up-zero/gotool"
 )
@@ -204,4 +204,11 @@ func Difference[T comparable](s1, s2 []T) []T {
 		}
 	}
 	return res
+}
+
+// Shuffle 切片洗牌
+func Shuffle[T any](slice []T) {
+	rand.Shuffle(len(slice), func(i, j int) {
+		slice[i], slice[j] = slice[j], slice[i]
+	})
 }
