@@ -1,7 +1,9 @@
 package convertutil
 
 import (
+	"encoding/json"
 	"fmt"
+	"reflect"
 	"strconv"
 )
 
@@ -85,6 +87,92 @@ func Int64ToStr(num int64) string {
 // Uint64ToStr uint64转换为字符串
 func Uint64ToStr(num uint64) string {
 	return strconv.FormatUint(num, 10)
+}
+
+// ToStr 将任意类型的值转换为字符串
+//
+// # Params
+//
+//	value: 待转换的值
+//
+// # Examples:
+//
+//	ToStr(123) // 123
+//	ToStr("123") // 123
+//	ToStr(123.456) // 123.456
+//	ToStr([]int{1, 2, 3}) // [1,2,3]
+func ToStr(value any) string {
+	if value == nil {
+		return ""
+	}
+
+	switch val := value.(type) {
+	case string:
+		return val
+	case int:
+		return strconv.Itoa(val)
+	case int64:
+		return strconv.FormatInt(val, 10)
+	case int32:
+		return strconv.FormatInt(int64(val), 10)
+	case int16:
+		return strconv.FormatInt(int64(val), 10)
+	case int8:
+		return strconv.FormatInt(int64(val), 10)
+	case uint:
+		return strconv.FormatUint(uint64(val), 10)
+	case uint64:
+		return strconv.FormatUint(val, 10)
+	case uint32:
+		return strconv.FormatUint(uint64(val), 10)
+	case uint16:
+		return strconv.FormatUint(uint64(val), 10)
+	case uint8:
+		return strconv.FormatUint(uint64(val), 10)
+	case float64:
+		return strconv.FormatFloat(val, 'f', -1, 64)
+	case float32:
+		return strconv.FormatFloat(float64(val), 'f', -1, 32)
+	case bool:
+		return strconv.FormatBool(val)
+	case []byte:
+		return string(val)
+	case error:
+		return val.Error()
+	case fmt.Stringer:
+		return val.String()
+	}
+
+	rv := reflect.ValueOf(value)
+
+	// 递归解指针
+	if rv.Kind() == reflect.Ptr {
+		if rv.IsNil() {
+			return ""
+		}
+		return ToStr(rv.Elem().Interface())
+	}
+
+	// 处理自定义别名类型
+	switch rv.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return strconv.FormatInt(rv.Int(), 10)
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return strconv.FormatUint(rv.Uint(), 10)
+	case reflect.Float32, reflect.Float64:
+		return strconv.FormatFloat(rv.Float(), 'f', -1, 64)
+	case reflect.Bool:
+		return strconv.FormatBool(rv.Bool())
+	case reflect.String:
+		return rv.String()
+	}
+
+	// 对结构体、Map、Slice 等序列化
+	b, err := json.Marshal(value)
+	if err != nil {
+		return ""
+	}
+	return string(b)
 }
 
 // Float64ToStr float64转换为字符串

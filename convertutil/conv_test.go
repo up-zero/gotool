@@ -67,6 +67,15 @@ func TestUint64ToStr(t *testing.T) {
 	testutil.Equal(t, Uint64ToStr(1231111111), "1231111111")
 }
 
+func TestToStr(t *testing.T) {
+	testutil.Equal(t, ToStr(123), "123")
+	testutil.Equal(t, ToStr("123"), "123")
+	testutil.Equal(t, ToStr(123.456), "123.456")
+	type MyInt int
+	testutil.Equal(t, ToStr(MyInt(123)), "123")
+	testutil.Equal(t, ToStr([]int{1, 2, 3}), "[1,2,3]")
+}
+
 func TestFloat64ToStr(t *testing.T) {
 	testutil.Equal(t, Float64ToStr(123.123), "123.123")
 	testutil.Equal(t, Float64ToStr(123.123, 2), "123.12")
