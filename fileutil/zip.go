@@ -9,11 +9,6 @@ import (
 	"strings"
 )
 
-type UnzipNotify struct {
-	Progress int    `json:"progress"` // 解压进度
-	FPath    string `json:"f_path"`   // 解压文件的路径
-}
-
 // Zip 文件夹压缩
 //
 // # Params:

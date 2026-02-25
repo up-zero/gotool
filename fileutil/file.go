@@ -1,6 +1,7 @@
 package fileutil
 
 import (
+	"bufio"
 	"encoding/json"
 	"github.com/up-zero/gotool"
 	"io"
@@ -240,4 +241,32 @@ func IsDir(path string) bool {
 func IsFile(path string) bool {
 	info, err := os.Stat(path)
 	return err == nil && !info.IsDir()
+}
+
+// FileReadLine 按行流式读取文件
+//
+// # Params:
+//
+//	filePath: 文件路径
+//	callback: 读取每一行数据的回调函数，返回false则停止读取
+func FileReadLine(filePath string, callback ReadLineCallback) error {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	lineNum := 1
+	for scanner.Scan() {
+		if !callback(lineNum, scanner.Text()) {
+			break
+		}
+		lineNum++
+	}
+
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+	return nil
 }

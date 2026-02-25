@@ -1,6 +1,7 @@
 package fileutil
 
 import (
+	"fmt"
 	"github.com/up-zero/gotool/testutil"
 	"testing"
 )
@@ -70,4 +71,11 @@ func TestIsDir(t *testing.T) {
 
 func TestIsFile(t *testing.T) {
 	testutil.Equal(t, IsFile("./file.go"), true)
+}
+
+func TestFileReadLine(t *testing.T) {
+	FileReadLine("../LICENSE", func(lineNum int, line string) bool {
+		fmt.Printf("%2d %s\n", lineNum, line)
+		return true
+	})
 }
