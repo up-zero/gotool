@@ -61,3 +61,11 @@ func TestIsEmail(t *testing.T) {
 	testutil.Equal(t, IsEmail("test@example.com"), true)
 	testutil.Equal(t, IsEmail("name <user@example.com>"), false)
 }
+
+func TestIsUrl(t *testing.T) {
+	testutil.Equal(t, IsURL("https://getcharzp.cn"), true)
+	testutil.Equal(t, IsURL("http://getcharzp.cn"), true)
+	testutil.Equal(t, IsURL("example.com"), false)
+	testutil.Equal(t, IsURL("ftp://getcharzp.cn"), true)
+	testutil.Equal(t, IsURL("https://getcharzp.cn/path/to/file.html"), true)
+}

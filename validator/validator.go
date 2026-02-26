@@ -3,6 +3,7 @@ package validator
 import (
 	"net"
 	"net/mail"
+	"net/url"
 	"unicode"
 )
 
@@ -103,4 +104,19 @@ func IsEmail(email string) bool {
 		return false
 	}
 	return addr.Address == email
+}
+
+// IsURL 验证字符串是否为有效的 URL
+//
+// # Params:
+//
+//	str: 待验证的字符串
+//
+// # Examples:
+//
+//	IsURL("https://getcharzp.cn") // true
+//	IsURL("ftp://getcharzp.cn") // true
+func IsURL(str string) bool {
+	u, err := url.ParseRequestURI(str)
+	return err == nil && u.Scheme != "" && u.Host != ""
 }
