@@ -176,3 +176,30 @@ func TrimFirstSuffix(s string, suffixes ...string) string {
 	}
 	return s
 }
+
+// Ellipsis 截取字符串，并在末尾添加省略号
+//
+// # Params:
+//
+//	str: 待截取的字符串
+//	maxLength: 最大长度
+//
+// # Examples:
+//
+//	Ellipsis("hello world", 5) // he...
+//	Ellipsis("你好 世界!", 3) // ...
+//	Ellipsis("你好 世界!", 5) // 你好...
+func Ellipsis(str string, maxLength int) string {
+	str = strings.TrimSpace(str)
+	runes := []rune(str)
+
+	if len(runes) <= maxLength {
+		return str
+	}
+
+	if maxLength <= 3 {
+		return "..."
+	}
+
+	return string(runes[:maxLength-3]) + "..."
+}

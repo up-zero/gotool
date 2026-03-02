@@ -50,3 +50,9 @@ func TestTrimFirstPrefix(t *testing.T) {
 func TestTrimFirstSuffix(t *testing.T) {
 	testutil.Equal(t, TrimFirstSuffix("hello_world", "world", "hello_"), "hello_")
 }
+
+func TestEllipsis(t *testing.T) {
+	testutil.Equal(t, Ellipsis("hello world", 5), "he...")
+	testutil.Equal(t, Ellipsis("你好 世界!", 3), "...")
+	testutil.Equal(t, Ellipsis("你好 世界!", 5), "你好...")
+}

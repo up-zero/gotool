@@ -318,6 +318,7 @@ func main() {
 + **SnakeToPascal** 将下划线连接的字符串转换为大驼峰式（PascalCase）
 + **TrimFirstPrefix** 移除字符串中首个匹配的前缀
 + **TrimFirstSuffix** 移除字符串中首个匹配的后缀
++ **Ellipsis** 截取字符串，并在末尾添加省略号
 
 ### 验证器（validator）
 
