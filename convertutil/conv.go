@@ -212,3 +212,14 @@ func HexToInt64(str string) int64 {
 	num, _ := strconv.ParseInt(str, 16, 64)
 	return num
 }
+
+// StrToCBytes 字符串转换为C字节数组
+//
+// # Examples:
+//
+//	StrToCBytes("hello") // 返回 []byte{0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x0}
+func StrToCBytes(s string) []byte {
+	b := make([]byte, len(s)+1)
+	copy(b, s)
+	return b
+}
