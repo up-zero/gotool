@@ -109,6 +109,7 @@ func main() {
 + **StrToFloat32** 字符串转换为float32
 + **StrToFloat64** 字符串转换为float64
 + **StrToCBytes** 字符串转换为C字节数组
++ **StrToCPtr** 字符串转换为C指针
 + **Int64ToStr** int64转换为字符串
 + **Uint64ToStr** uint64转换为字符串
 + **ToStr** 将任意类型的值转换为字符串

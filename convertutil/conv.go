@@ -223,3 +223,9 @@ func StrToCBytes(s string) []byte {
 	copy(b, s)
 	return b
 }
+
+// StrToCPtr 字符串转换为C指针
+func StrToCPtr(s string) *byte {
+	b := StrToCBytes(s)
+	return &b[0]
+}
