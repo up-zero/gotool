@@ -93,3 +93,7 @@ func TestHexToInt64(t *testing.T) {
 func TestStrToCBytes(t *testing.T) {
 	testutil.Equal(t, StrToCBytes("Hello"), []byte("Hello\x00"))
 }
+
+func TestCBytesToStr(t *testing.T) {
+	testutil.Equal(t, CBytesToStr([]byte("hello\x00 wolrd")), "hello")
+}

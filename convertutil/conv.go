@@ -1,6 +1,7 @@
 package convertutil
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"reflect"
@@ -228,4 +229,17 @@ func StrToCBytes(s string) []byte {
 func StrToCPtr(s string) *byte {
 	b := StrToCBytes(s)
 	return &b[0]
+}
+
+// CBytesToStr C字节数组转换为字符串
+//
+// # Examples:
+//
+//	CBytesToStr([]byte("hello\x00")) // hello
+func CBytesToStr(b []byte) string {
+	n := bytes.IndexByte(b, 0)
+	if n == -1 {
+		return string(b)
+	}
+	return string(b[:n])
 }
