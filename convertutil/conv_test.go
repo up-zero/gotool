@@ -97,3 +97,7 @@ func TestStrToCBytes(t *testing.T) {
 func TestCBytesToStr(t *testing.T) {
 	testutil.Equal(t, CBytesToStr([]byte("hello\x00 wolrd")), "hello")
 }
+
+func TestCPtrToStr(t *testing.T) {
+	testutil.Equal(t, CPtrToStr(StrToCPtr("hello\x00 world")), "hello")
+}

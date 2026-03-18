@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"unsafe"
 )
 
 // StrToInt 字符串转换为int
@@ -242,4 +243,25 @@ func CBytesToStr(b []byte) string {
 		return string(b)
 	}
 	return string(b[:n])
+}
+
+// CPtrToStr C指针转换为字符串
+func CPtrToStr(p *byte) string {
+	if p == nil {
+		return ""
+	}
+
+	var n uintptr
+	for {
+		if *(*byte)(unsafe.Add(unsafe.Pointer(p), n)) == 0 {
+			break
+		}
+		n++
+	}
+
+	if n == 0 {
+		return ""
+	}
+
+	return unsafe.String(p, n)
 }
