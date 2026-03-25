@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/up-zero/gotool"
 	"reflect"
 	"strconv"
 	"unsafe"
@@ -91,7 +92,13 @@ func Uint64ToStr(num uint64) string {
 	return strconv.FormatUint(num, 10)
 }
 
-// ToStr 将任意类型的值转换为字符串
+// ToStr 常用类型转换为字符串，适用于以下类型：
+// int, int64, int32, int16, int8, uint, uint64, uint32, uint16, uint8, float64, float32, bool,
+// []byte, error, fmt.Stringer, ptr, map, slice, struct
+//
+// # Note:
+//
+//	结构体、Map、Slice 等类型，是返回 json 序列化后的字符串
 //
 // # Params
 //
@@ -207,6 +214,54 @@ func Int64ToHex(num int64, args ...string) string {
 		format = args[0]
 	}
 	return fmt.Sprintf("%"+format+"X", num)
+}
+
+// FormatHex 整数转换为十六进制字符串
+//
+// # Params
+//
+//	v: 待转换的整数
+//	width: 可选参数, 用于指定输出的长度, 默认为其字节数*2
+//
+// # Examples:
+//
+//	FormatHex(uint8(15)) // 输出 0F
+//	FormatHex(uint16(255)) // 输出 00FF
+//	FormatHex(int8(-15)) // 输出 F1
+func FormatHex[T gotool.Integer](v T, width ...int) string {
+	const digits = "0123456789ABCDEF"
+
+	// 输出长度
+	typeSize := int(unsafe.Sizeof(v)) * 2
+	actualWidth := typeSize
+	if len(width) > 0 && width[0] > 0 {
+		actualWidth = width[0]
+	}
+	if actualWidth > 16 {
+		actualWidth = 16
+	}
+
+	// 统一转为 uint64 处理
+	var u64 uint64
+	switch unsafe.Sizeof(v) {
+	case 1:
+		u64 = uint64(uint8(v))
+	case 2:
+		u64 = uint64(uint16(v))
+	case 4:
+		u64 = uint64(uint32(v))
+	case 8:
+		u64 = uint64(v)
+	}
+
+	// 位移转换
+	var buf [16]byte
+	for i := actualWidth - 1; i >= 0; i-- {
+		buf[i] = digits[u64&0xF]
+		u64 >>= 4
+	}
+
+	return string(buf[:actualWidth])
 }
 
 // HexToInt64 十六进制字符串转换为int64

@@ -114,9 +114,10 @@ func main() {
 + **CPtrToStr** C指针转换为字符串
 + **Int64ToStr** int64转换为字符串
 + **Uint64ToStr** uint64转换为字符串
-+ **ToStr** 将任意类型的值转换为字符串
++ **ToStr** 常用类型转换为字符串
 + **Float64ToStr** float64转换为字符串
 + **Int64ToHex** int64转换为十六进制字符串
++ **FormatHex** 整数转换为十六进制字符串
 + **HexToInt64** 十六进制字符串转换为int64
 + **CopyProperties** 复制结构体的属性
 + **DigitToChinese** 数字逐位转汉字
