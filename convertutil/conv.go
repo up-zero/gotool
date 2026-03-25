@@ -216,7 +216,7 @@ func Int64ToHex(num int64, args ...string) string {
 	return fmt.Sprintf("%"+format+"X", num)
 }
 
-// FormatHex 整数转换为十六进制字符串
+// IntToHex 整数转换为十六进制字符串
 //
 // # Params
 //
@@ -225,10 +225,10 @@ func Int64ToHex(num int64, args ...string) string {
 //
 // # Examples:
 //
-//	FormatHex(uint8(15)) // 输出 0F
-//	FormatHex(uint16(255)) // 输出 00FF
-//	FormatHex(int8(-15)) // 输出 F1
-func FormatHex[T gotool.Integer](v T, width ...int) string {
+//	IntToHex(uint8(15)) // 输出 0F
+//	IntToHex(uint16(255)) // 输出 00FF
+//	IntToHex(int8(-15)) // 输出 F1
+func IntToHex[T gotool.Integer](v T, width ...int) string {
 	const digits = "0123456789ABCDEF"
 
 	// 输出长度

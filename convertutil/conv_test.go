@@ -87,9 +87,9 @@ func TestInt64ToHex(t *testing.T) {
 }
 
 func TestHex(t *testing.T) {
-	testutil.Equal(t, FormatHex(uint8(15)), "0F")
-	testutil.Equal(t, FormatHex(uint16(255)), "00FF")
-	testutil.Equal(t, FormatHex(int8(-15)), "F1")
+	testutil.Equal(t, IntToHex(uint8(15)), "0F")
+	testutil.Equal(t, IntToHex(uint16(255)), "00FF")
+	testutil.Equal(t, IntToHex(int8(-15)), "F1")
 }
 
 func TestHexToInt64(t *testing.T) {
