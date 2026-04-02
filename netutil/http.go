@@ -22,8 +22,8 @@ var defaultTimeout = 5 * time.Second
 //
 //	url: 请求地址
 //	header: 请求头
-func HttpGet(url string, header ...byte) ([]byte, error) {
-	return httpRequest(url, "GET", []byte{}, header, defaultTimeout)
+func HttpGet(url string, header ...map[string]string) ([]byte, error) {
+	return httpRequest(url, "GET", []byte{}, getHeader(header), defaultTimeout)
 }
 
 // HttpPost http post 请求
@@ -33,8 +33,8 @@ func HttpGet(url string, header ...byte) ([]byte, error) {
 //	url: 请求地址
 //	data: 请求参数
 //	header: 请求头
-func HttpPost(url string, data any, header ...byte) ([]byte, error) {
-	return httpRequest(url, "POST", data, header, defaultTimeout)
+func HttpPost(url string, data any, header ...map[string]string) ([]byte, error) {
+	return httpRequest(url, "POST", data, getHeader(header), defaultTimeout)
 }
 
 // HttpPut http put 请求
@@ -44,8 +44,8 @@ func HttpPost(url string, data any, header ...byte) ([]byte, error) {
 //	url: 请求地址
 //	data: 请求参数
 //	header: 请求头
-func HttpPut(url string, data any, header ...byte) ([]byte, error) {
-	return httpRequest(url, "PUT", data, header, defaultTimeout)
+func HttpPut(url string, data any, header ...map[string]string) ([]byte, error) {
+	return httpRequest(url, "PUT", data, getHeader(header), defaultTimeout)
 }
 
 // HttpDelete http delete 请求
@@ -54,8 +54,8 @@ func HttpPut(url string, data any, header ...byte) ([]byte, error) {
 //
 //	url: 请求地址
 //	header: 请求头
-func HttpDelete(url string, header ...byte) ([]byte, error) {
-	return httpRequest(url, "DELETE", []byte{}, header, defaultTimeout)
+func HttpDelete(url string, header ...map[string]string) ([]byte, error) {
+	return httpRequest(url, "DELETE", []byte{}, getHeader(header), defaultTimeout)
 }
 
 // HttpGetWithTimeout http get 请求
@@ -65,8 +65,8 @@ func HttpDelete(url string, header ...byte) ([]byte, error) {
 //	url: 请求地址
 //	timeout: 超时时间
 //	header: 请求头
-func HttpGetWithTimeout(url string, timeout time.Duration, header ...byte) ([]byte, error) {
-	return httpRequest(url, "GET", []byte{}, header, timeout)
+func HttpGetWithTimeout(url string, timeout time.Duration, header ...map[string]string) ([]byte, error) {
+	return httpRequest(url, "GET", []byte{}, getHeader(header), timeout)
 }
 
 // HttpPostWithTimeout http post 请求
@@ -77,8 +77,8 @@ func HttpGetWithTimeout(url string, timeout time.Duration, header ...byte) ([]by
 //	data: 请求参数
 //	timeout: 超时时间
 //	header: 请求头
-func HttpPostWithTimeout(url string, data any, timeout time.Duration, header ...byte) ([]byte, error) {
-	return httpRequest(url, "POST", data, header, timeout)
+func HttpPostWithTimeout(url string, data any, timeout time.Duration, header ...map[string]string) ([]byte, error) {
+	return httpRequest(url, "POST", data, getHeader(header), timeout)
 }
 
 // HttpPutWithTimeout http put 请求
@@ -89,8 +89,8 @@ func HttpPostWithTimeout(url string, data any, timeout time.Duration, header ...
 //	data: 请求参数
 //	timeout: 超时时间
 //	header: 请求头
-func HttpPutWithTimeout(url string, data any, timeout time.Duration, header ...byte) ([]byte, error) {
-	return httpRequest(url, "PUT", data, header, timeout)
+func HttpPutWithTimeout(url string, data any, timeout time.Duration, header ...map[string]string) ([]byte, error) {
+	return httpRequest(url, "PUT", data, getHeader(header), timeout)
 }
 
 // HttpDeleteWithTimeout http delete 请求带超时时长
@@ -100,8 +100,8 @@ func HttpPutWithTimeout(url string, data any, timeout time.Duration, header ...b
 //	url: 请求地址
 //	timeout: 超时时间
 //	header: 请求头
-func HttpDeleteWithTimeout(url string, timeout time.Duration, header ...byte) ([]byte, error) {
-	return httpRequest(url, "DELETE", []byte{}, header, timeout)
+func HttpDeleteWithTimeout(url string, timeout time.Duration, header ...map[string]string) ([]byte, error) {
+	return httpRequest(url, "DELETE", []byte{}, getHeader(header), timeout)
 }
 
 // ParseResponse 解析响应
@@ -136,8 +136,16 @@ var httpClient = &http.Client{
 	},
 }
 
+// getHeader 获取请求头
+func getHeader(headers []map[string]string) map[string]string {
+	if len(headers) > 0 {
+		return headers[0]
+	}
+	return nil
+}
+
 // httpRequest .
-func httpRequest(url, method string, data any, header []byte, timeout time.Duration) ([]byte, error) {
+func httpRequest(url, method string, data any, header map[string]string, timeout time.Duration) ([]byte, error) {
 	var dataBytes []byte
 	var err error
 
@@ -163,17 +171,9 @@ func httpRequest(url, method string, data any, header []byte, timeout time.Durat
 
 	request.Header.Set("Content-Type", "application/json;charset=UTF-8")
 	// 处理 header
-	if len(header) > 0 {
-		headerMap := new(map[string]interface{})
-		err = json.Unmarshal(header, headerMap)
-		if err != nil {
-			return nil, err
-		}
-		for k, v := range *headerMap {
-			if k == "" || v == "" {
-				continue
-			}
-			request.Header.Set(k, v.(string))
+	for k, v := range header {
+		if k != "" && v != "" {
+			request.Header.Set(k, v)
 		}
 	}
 
