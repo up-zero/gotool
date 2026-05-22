@@ -102,60 +102,52 @@ func buildBlobForegroundChecker(img image.Image, threshold uint8) func(x, y int)
 	}
 }
 
-// FindBlobs 查找 Mask 图片的连通区域
+func normalizeBlobThreshold(threshold []uint8) uint8 {
+	if len(threshold) > 0 {
+		return threshold[0]
+	}
+	return 127
+}
+
+// scanBlobs 封装公共连通域扫描逻辑。
 //
-// # Params:
-//
-//	img: 输入的图片
-//	threshold: 像素值大于此值被视为前景，默认：127
-func FindBlobs(img image.Image, threshold ...uint8) *BlobResult {
+// collectPoints: 是否收集每个 Blob 的原始像素点
+// keepAll:       是否保留全部 Blob 结果；否则仅保留最大 Blob
+func scanBlobs(img image.Image, threshold uint8, collectPoints bool, keepAll bool) (*BlobResult, *Blob) {
 	bounds := img.Bounds()
 	w, h := bounds.Dx(), bounds.Dy()
 	result := &BlobResult{Width: w, Height: h}
 	if w == 0 || h == 0 {
-		return result
+		return result, nil
 	}
 
-	bThreshold := uint8(127)
-	if len(threshold) > 0 {
-		bThreshold = threshold[0]
-	}
-
-	// 使用位图压缩访问标记。
 	visited := newBlobBitset(w * h)
-
-	blobID := 0
 	baseX, baseY := bounds.Min.X, bounds.Min.Y
-	isForeground := buildBlobForegroundChecker(img, bThreshold)
+	isForeground := buildBlobForegroundChecker(img, threshold)
+	blobID := 0
+	var largest *Blob
 
-	// 遍历全图
 	for y := 0; y < h; y++ {
 		for x := 0; x < w; x++ {
 			idx := y*w + x
 
-			// 如果已经判定过（无论前景还是背景），直接跳过。
 			if visited.Has(idx) {
 				continue
 			}
 
-			// 背景点也立即标记，避免后续重复判定。
 			if !isForeground(x+baseX, y+baseY) {
 				visited.Set(idx)
 				continue
 			}
 
-			// 发现新的 Blob，开始基于扫描线的 flood fill。
 			blobID++
-			currentBlob := Blob{
-				ID:     blobID,
-				Points: make([]image.Point, 0, 128),
+			currentBlob := Blob{ID: blobID}
+			if collectPoints {
+				currentBlob.Points = make([]image.Point, 0, 128)
 			}
 
-			// 队列中保存的是“同一行上的连续前景段”，而不是每一个像素点。
 			queue := make([]blobSpan, 0, 64)
 			head := 0
-
-			// 统计变量初始化
 			minX, minY, maxX, maxY := x, y, x, y
 			sumX, sumY := 0, 0
 			count := 0
@@ -197,8 +189,9 @@ func FindBlobs(img image.Image, threshold ...uint8) *BlobResult {
 					}
 
 					visited.Set(pointIdx)
-					p := image.Point{X: px, Y: spanY}
-					currentBlob.Points = append(currentBlob.Points, p)
+					if collectPoints {
+						currentBlob.Points = append(currentBlob.Points, image.Point{X: px, Y: spanY})
+					}
 
 					count++
 					sumX += px
@@ -223,14 +216,12 @@ func FindBlobs(img image.Image, threshold ...uint8) *BlobResult {
 				return span
 			}
 
-			// 先把起始点所在行扩展成一个 span。
 			growSpan(x, y)
 
 			for head < len(queue) {
 				span := queue[head]
 				head++
 
-				// 由于是 8 邻域，上一行和下一行只需要检查 [x1-1, x2+1]。
 				for ny := span.y - 1; ny <= span.y+1; ny += 2 {
 					if ny < 0 || ny >= h {
 						continue
@@ -258,25 +249,59 @@ func FindBlobs(img image.Image, threshold ...uint8) *BlobResult {
 							continue
 						}
 
-						// 命中新的前景点后，直接把这一整段连续前景都扩展出来。
 						nextSpan := growSpan(nx, ny)
 						nx = nextSpan.x2 + 1
 					}
 				}
 			}
 
-			// 填充 Blob 统计特征
 			currentBlob.Area = count
 			currentBlob.Bounds = image.Rect(minX, minY, maxX+1, maxY+1)
 			if count > 0 {
 				currentBlob.Centroid = image.Point{X: sumX / count, Y: sumY / count}
 			}
 
-			result.Blobs = append(result.Blobs, currentBlob)
+			if keepAll {
+				result.Blobs = append(result.Blobs, currentBlob)
+				continue
+			}
+
+			blobCopy := currentBlob
+			if largest == nil || blobCopy.Area > largest.Area {
+				largest = &blobCopy
+			}
 		}
 	}
 
+	return result, largest
+}
+
+// FindBlobs 查找 Mask 图片的连通区域
+//
+// # Params:
+//
+//	img: 输入的图片
+//	threshold: 像素值大于此值被视为前景，默认：127
+func FindBlobs(img image.Image, threshold ...uint8) *BlobResult {
+	result, _ := scanBlobs(img, normalizeBlobThreshold(threshold), true, true)
 	return result
+}
+
+// FindLargestBlob 查找面积最大的 Blob
+//
+// 与 FindBlobs(img).GetLargestBlob() 相比，有两个关键优化：
+//   - 不构建完整的 BlobResult 列表
+//   - 不收集每个像素的 Points
+//
+// 当只关心最大连通域时，这个方法会更省内存、也更快
+//
+// # Params:
+//
+//	img: 输入的图片
+//	threshold: 像素值大于此值被视为前景，默认：127
+func FindLargestBlob(img image.Image, threshold ...uint8) *Blob {
+	_, largest := scanBlobs(img, normalizeBlobThreshold(threshold), false, false)
+	return largest
 }
 
 // GetLargestBlob 获取最大的 Blob
