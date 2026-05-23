@@ -6,6 +6,7 @@ import (
 	"image/png"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestCompression(t *testing.T) {
@@ -50,9 +51,21 @@ func TestCrop(t *testing.T) {
 }
 
 func TestResizeFile(t *testing.T) {
-	if err := ResizeFile("test.png", "resized.png", 200, 0); err != nil {
-		t.Fatal("Error resizing image:", err)
+	b := time.Now()
+	img, err := Open("c_1.jpg")
+
+	t.Log("Open Image Time cost:", time.Since(b))
+	if err != nil {
+		t.Fatal(err)
 	}
+
+	b = time.Now()
+	dstImg := Resize(img, 24578, 19968)
+	t.Log("Resize Time cost:", time.Since(b))
+
+	b = time.Now()
+	Save("resized.jpg", dstImg, 100)
+	t.Log("Save Image Time cost:", time.Since(b))
 }
 
 func TestRotateFile(t *testing.T) {
